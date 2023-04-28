@@ -1,6 +1,6 @@
 from PortMap import *
-distance=100
 def spiral():
+    distance=100
     while True:
         driveBase.straight(distance)
         driveBase.turn(90)
