@@ -6,15 +6,17 @@ from PortMap import * #PortMap has all the import
 # center button for our menu. So we can disable the stop button.
 hub.system.set_stop_button(None)
 
-missionList = ["1","2","3","B"] #add here for new mission
+missionList = ["1","2","3","B","t"] #add here for new mission
 
 def runProgram(mission):
     if mission == "1":
         mission1()
     elif mission == "2":
         mission2()
-    elif mission == "B"
+    elif mission == "B":
         import autobalancePID
+    elif mission == "t":
+        import TimsCode
     else:
         print("There is no mission:{mission}")
 
