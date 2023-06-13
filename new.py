@@ -11,12 +11,9 @@ class Pose: # pose is the postion of a robot at an x y angle
         self.x=x
         self.y=y
         self.a=a
-    
-    
-def superFunction(destination,location):
-    """
-    drives from location to the destination where both location and destination are poses
-    """
+
+
+def superFunction(destination,location): # drives from location to the destination where both location and destination are poses
     vector=tuple((destination.x-location.x,destination.y-location.y)) # creating a vector between location and destination
     direction = jmath.atan2(vector[0],vector[1]) # using the arc tangent to detirmine the angle of the vector
     turn = jmath.shortestDirectionBetweenBearings(direction,location.a) # detirmine the shortest correction between our current angle and the angle of the shortest path
@@ -49,7 +46,7 @@ def go_between_points_avoid_obstacles(destination, location):
 
 if __name__=='__main__':
     driveBase.settings(turn_rate=60) # reduces the turn rate for smoother corrections
-    start=Pose(-50,25,0) # 
+    start=Pose(-50,25,0)
     target=Pose(-610,990,0)
     #start=Pose(0,0,0)
     #target=Pose(0,0,-90)
@@ -57,4 +54,3 @@ if __name__=='__main__':
     superFunction(target,start)
     wait(2000)
     superFunction(start,target)
-
