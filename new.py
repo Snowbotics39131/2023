@@ -1,4 +1,4 @@
-from PortMap import driveBase, wait
+from PortMap import *
 import jmath
 from shortest_path import shortest_path
 obstacleMap = list([[[-44,68],[-51,68],[-44,91],[-51,91]]]) # input obstacle you want to avoid
