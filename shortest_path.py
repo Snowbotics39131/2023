@@ -6,7 +6,7 @@ def intersect(a, b, c, d, norecurse=False):
         intersection=point_of_intersection(a[0], a[1], b[0], b[1], c[0], c[1], d[0], d[1])
     except ZeroDivisionError:
         if not norecurse:
-            return intersect(*([i[1], i[0]] for i in [a, b, c, d]), norecurse=True) #rotate 90 degrees
+            return intersect(*([i[1], i[0]] for i in [a, b, c, d]), norecurse=True)
         return 0
     if intersection[0]>min(max(a[0], b[0]), max(c[0], d[0])) or intersection[0]<max(min(a[0], b[0]), min(c[0], d[0])):
         return 0
