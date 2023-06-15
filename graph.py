@@ -49,7 +49,7 @@ class Graph:
         if self.check_connected(vertex1, vertex2):
             vertex1=self.get_coordinates_from_id(vertex1)
             vertex2=self.get_coordinates_from_id(vertex2)
-            return ((vertex1[0]-vertex2[0])**2+(vertex1[1]-vertex2[1])**2)**0.5 #Pythagorean Theorem
+            return ((vertex1[0]-vertex2[0])**2+(vertex1[1]-vertex2[1])**2)**0.5
         else:
             raise ValueError('vertices not connected')
     def plot(self):
