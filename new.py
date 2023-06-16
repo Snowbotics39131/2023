@@ -45,12 +45,12 @@ def go_between_points_avoid_obstacles(destination, location):
     do_path(path, start_angle, end_angle)
 
 if __name__=='__main__':
-    #driveBase.settings(turn_rate=60) # reduces the turn rate for smoother corrections
+    driveBase.settings(turn_rate=60) # reduces the turn rate for smoother corrections
     #start=Pose(-50,25,0)
     #target=Pose(-610,990,0)
     #start=Pose(0,0,0)
     #target=Pose(0,0,-90)
-    #print(driveBase.settings())
+    print(driveBase.settings())
     #superFunction(target,start)
     #wait(2000)
     #superFunction(start,target)
