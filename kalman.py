@@ -2,7 +2,6 @@ try: #PyBricks
     from umath import e, pi
 except ImportError: #CPython
     from math import e, pi
-from Kinematics import Dimension
 class Kalman1D:
     def __init__(self, mean_funcs, variances):
         self.mean_funcs=mean_funcs
