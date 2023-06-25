@@ -1,6 +1,6 @@
 try: #PyBricks
     from umath import e, pi
-except ImportError: #CPython
+except ModuleNotFoundError: #CPython
     from math import e, pi
 class Kalman1D:
     def __init__(self, mean_funcs, variances):
@@ -19,7 +19,7 @@ class Kalman2D:
 def gaussian(o, u, x):
     return (1/(o*(2*pi)**0.5))*(e**(((-0.5*(x-u)**2))/o**2))
 if __name__=='__main__':
-    testfilter=Kalman1D([lambda:0, lambda:1], [0.8, 0.5])
+    testfilter=Kalman1D([lambda: 0, lambda :1], [0.8, 0.5])
     o=[0.8, 0.5]
     u=[0, 1]
     print(testfilter.estimate())
