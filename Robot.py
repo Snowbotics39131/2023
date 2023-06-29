@@ -1,4 +1,4 @@
-from Mission1 import mission1 
+#from Mission1 import mission1 
 from Mission2 import mission2
 from PortMap import * #PortMap has all the import
 
@@ -6,22 +6,21 @@ from PortMap import * #PortMap has all the import
 # center button for our menu. So we can disable the stop button.
 hub.system.set_stop_button(None)
 
-missionList = ["1","2","3","B","t"] #add here for new mission
+missionList = ["1","2","3","B"] #add here for new mission
 
 def runProgram(mission):
     if mission == "1":
-        mission1()
+        import Tim_autbalance_
     elif mission == "2":
         mission2()
     elif mission == "B":
         import autobalancePID
-    elif mission == "t":
-        import TimsCode
     else:
         print("There is no mission:{mission}")
 
 pressed={}
-n = 0
+runBytes = hub.system.storage(offset=0,read=1,)
+n=int.from_bytes(runBytes, 'big')
 while True:
     hub.display.char(missionList[n])
 
@@ -48,4 +47,6 @@ while True:
 hub.light.on(Color.GREEN)
 wait(50)
 hub.system.set_stop_button(Button.CENTER) # Now we want to use the Center button as the stop button again.
+runBytes = n.to_bytes(1, 'big')
+hub.system.storage(offset=0,write=runBytes)
 runProgram(missionList[n])

@@ -65,11 +65,11 @@ class LineFollow2:
         self.followleftpid=myPID(colorSensorLeft.reflection, self.followleftfunc, reflecttarget, kP, kI, kD) #checkfeedback does not work at all
         self.followrightpid=myPID(colorSensorRight.reflection, self.followrightfunc, reflecttarget, kP, kI, kD)
     def followrightfunc(self, turn):
-        MotorLeft.run(200*(1-turn))
-        MotorRight.run(200*(1+turn))
+        motorLeft.run(200*(1-turn))
+        motorRight.run(200*(1+turn))
     def followleftfunc(self, turn):
-        MotorLeft.run(200*(1+turn))
-        MotorRight.run(200*(1-turn))
+        motorLeft.run(200*(1+turn))
+        motorRight.run(200*(1-turn))
     def follow_left(self, distance):
         while driveBase.distance()<distance:
             self.followleftpid.cycle()
@@ -128,8 +128,8 @@ class LineFollow:
             except ZeroDivisionError:
                 print('turn is 0 percents pdi')
             #print(turn,error,Derror)
-            MotorLeft.run(speed*(1-turn*2)) # 1- turn ensures that corrections are porportional to the speed.
-            MotorRight.run(speed*(1+turn))
+            motorLeft.run(speed*(1-turn*2)) # 1- turn ensures that corrections are porportional to the speed.
+            motorRight.run(speed*(1+turn))
             olderror=error # out with the old data in with the new.
             print(timer.time(), 'timer') # prints the current timer
             # remember when doing something sequentially after this not stopping the motors would affect the program
@@ -162,8 +162,8 @@ class LineFollow:
             except ZeroDivisionError:
                 print('turn is 0 percents pdi')
             #print(turn,error,Derror)
-            MotorLeft.run(speed*(1+turn*2)) # 1- turn ensures that corrections are porportional to the speed.
-            MotorRight.run(speed*(1-turn))
+            motorLeft.run(speed*(1+turn*2)) # 1- turn ensures that corrections are porportional to the speed.
+            motorRight.run(speed*(1-turn))
             olderror=error # out with the old data in with the new.
             print(timer.time(), 'timer') # prints the current timer
             # remember when doing something sequentially after this not stopping the motors would affect the program
@@ -207,13 +207,13 @@ class LineFollow:
         while abs(plerror)>0:
             plerror=(colorSensorLeft.reflection()-self.reflecttarget)/self.reflecttarget
             plDerror=plerror-plolderror
-            MotorLeft.run_angle(50, plkP*plerror+plkD*plDerror)
+            motorLeft.run_angle(50, plkP*plerror+plkD*plDerror)
             plolderror=plerror
     def find_line_3(self):
         state_left='start'
         state_right='start'
-        MotorLeft.run(100)
-        MotorRight.run(100)
+        motorLeft.run(100)
+        motorRight.run(100)
         i=0
         while True:
             i+=1
@@ -235,7 +235,7 @@ class LineFollow:
                     print('left found')
             if state_left=='found':
                 self.pid_left()
-                MotorLeft.stop()
+                motorLeft.stop()
                 #print('left stopped')
             if state_right=='start':
                 if colorSensorRight.reflection()>70:
@@ -250,7 +250,7 @@ class LineFollow:
                     state_right='found'
                     print('right found')
             if state_right=='found':
-                MotorRight.stop()
+                motorRight.stop()
                 #print('right stopped')
             if state_left=='found' and state_right=='found':
                 break

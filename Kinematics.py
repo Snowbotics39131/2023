@@ -56,7 +56,7 @@ class Kinematics:
     def update(self):
         self.angle.velocity = hub.imu.angular_velocity(Axis.Z)-self.angle.velocityError
         self.x.acceleration = hub.imu.acceleration(Axis.Y)-self.angle.accelerationError
-        self.x.velocity = (MotorLeft.speed()+MotorRight.speed())*176/(360*2)
+        self.x.velocity = (motorLeft.speed()+motorRight.speed())*176/(360*2)
         #self.angle.position = hub.imu.heading()
         tempTime =self.time.time()
         self.xVestimate = self.xVestimate + self.x.acceleration*(tempTime-self.log[len(self.log)-1][0])/1000

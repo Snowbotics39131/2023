@@ -40,15 +40,15 @@ class LineFollow:
         self.findleftpid=PID_(pm.colorSensorLeft.reflection, self.findleftfunc, reflecttarget, kP, kI, kD)
         self.findrightpid=PID_(pm.colorSensorRight.reflection, self.findrightfunc, reflecttarget, kP, kI, kD)
     def followrightfunc(self, turn):
-        pm.MotorLeft.run(200*(1-turn))
-        pm.MotorRight.run(200*(1+turn))
+        pm.motorLeft.run(200*(1-turn))
+        pm.motorRight.run(200*(1+turn))
     def followleftfunc(self, turn):
-        pm.MotorLeft.run(200*(1+turn))
-        pm.MotorRight.run(200*(1-turn))
+        pm.motorLeft.run(200*(1+turn))
+        pm.motorRight.run(200*(1-turn))
     def findleftfunc(self, speed):
-        pm.MotorLeft.run(50*speed)
+        pm.motorLeft.run(50*speed)
     def findrightfunc(self, speed):
-        pm.MotorRight.run(50*speed)
+        pm.motorRight.run(50*speed)
     def follow_left(self, distance):
         while pm.driveBase.distance()<distance:
             self.followleftpid.cycle()
@@ -62,8 +62,8 @@ class LineFollow:
         logging.info('left start')
         state_right='start'
         logging.info('right start')
-        pm.MotorLeft.run(100)
-        pm.MotorRight.run(100)
+        pm.motorLeft.run(100)
+        pm.motorRight.run(100)
         while state_left!='done' or state_right!='done':
             logging.debug(str(pm.colorSensorLeft.reflection())+' '+str(pm.colorSensorRight.reflection())+' '+str(timer.time()))
             if state_left=='start':
@@ -76,13 +76,13 @@ class LineFollow:
                     logging.info('left black')
             if state_left=='black':
                 if pm.colorSensorLeft.reflection()>=white:
-                    pm.MotorLeft.brake()
+                    pm.motorLeft.brake()
                     state_left='pid'
                     logging.info('left pid')
             if state_left=='pid':
                 self.findleftpid.cycle()
                 if abs(self.findleftpid.target-self.findleftpid.getfunc())<=2:
-                    pm.MotorLeft.hold()
+                    pm.motorLeft.hold()
                     state_left='done'
                     logging.info('left done')
             if state_right=='start':
@@ -95,13 +95,13 @@ class LineFollow:
                     logging.info('right black')
             if state_right=='black':
                 if pm.colorSensorRight.reflection()>=white:
-                    pm.MotorRight.brake()
+                    pm.motorRight.brake()
                     state_right='pid'
                     logging.info('right pid')
             if state_right=='pid':
                 self.findrightpid.cycle()
                 if abs(self.findrightpid.target-self.findrightpid.getfunc())<=1:
-                    pm.MotorRight.hold()
+                    pm.motorRight.hold()
                     state_right='done'
                     logging.info('right done')
 if __name__=='__main__':

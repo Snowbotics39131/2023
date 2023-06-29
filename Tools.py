@@ -21,11 +21,11 @@ class LineFollow: # creats class for following 35 which is the ideal mix of whit
             Ierror+= error # adding Ierror to error
             Derror=error-lastError # defining difference in errors between the last cycle and the current cycle
             correction=(error*self.kP) + (Ierror*self.kI) +(Derror*self.kD) # PID controller 
-            MotorLeft.run(speed*(1+correction)) 
-            MotorRight.run(speed*(1-correction)) # ensures the correction is porportional to the speed of travel
+            motorLeft.run(speed*(1+correction)) 
+            motorRight.run(speed*(1-correction)) # ensures the correction is porportional to the speed of travel
             lastError=error # resets the error out with the old in with the new
-        MotorLeft.stop 
-        MotorRight.stop
+        motorLeft.stop 
+        motorRight.stop
 
     def Right(self,speed, distance):
         driveBase.reset()
@@ -38,9 +38,9 @@ class LineFollow: # creats class for following 35 which is the ideal mix of whit
             Ierror+= error 
             Derror=error-lastError
             correction=(error*self.kP) + (Ierror*self.kI) +(Derror*self.kD)
-            MotorLeft.run(speed*(1-correction*1.20))
-            MotorRight.run(speed*(1+correction))
+            motorLeft.run(speed*(1-correction*1.20))
+            motorRight.run(speed*(1+correction))
             lastError=error
-        MotorLeft.stop
-        MotorRight.stop
+        motorLeft.stop
+        motorRight.stop
 

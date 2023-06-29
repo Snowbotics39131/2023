@@ -5,8 +5,12 @@ from pybricks.robotics import DriveBase
 from pybricks.tools import wait, StopWatch
 
 hub = PrimeHub()
-MotorLeft = Motor(Port.E,Direction.COUNTERCLOCKWISE)
-MotorRight = Motor(Port.A,Direction.CLOCKWISE)
-driveBase = DriveBase(MotorLeft,MotorRight,56,113)
-colorSensorLeft=ColorSensor(Port.F)
-colorSensorRight=ColorSensor(Port.B)
+motorLeft = Motor(Port.E,Direction.COUNTERCLOCKWISE) 
+motorRight = Motor(Port.A,Direction.CLOCKWISE)
+driveBase = DriveBase(motorLeft,motorRight,56,115)
+try:
+    colorSensorLeft=ColorSensor(Port.F)
+    colorSensorRight=ColorSensor(Port.B)
+    name = "Main"
+except:
+    name = "Bug"
