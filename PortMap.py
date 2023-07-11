@@ -1,61 +1,50 @@
-try:
-    from pybricks.hubs import *
+try:# all imports here
     from pybricks.parameters import *
     from pybricks.pupdevices import *
     from pybricks.robotics import *
     from pybricks.tools import *
-except Exception:
-    pass
+except Exception: print("Import error")
 
-def hubType():
-    try:
-        hub = CityHub()
-        return 'city'
-    except: pass
-    try:
-        hub = MoveHub()
-        return 'move'
-    except: pass
-    try:
-        hub = EV3Brick()
-        return 'EV3'
-    except: pass
-    try:
-        hub = TechnicHub()
-        return 'technic'
-    except: pass 
-    try:
-        hub = PrimeHub()
-        return 'prime'
-    except: pass
-        try:
-        hub = EssentialHub()
-        return 'essential'
-    except: pass
-    return 'virtual'
+try: from PortMapPlus import * 
+except: print("PortMapPlus Needed")
 
 hubName = hubType()
+if hubName == 'prime':
+    #if you are using the spike this is all you need to mess with
+    motorRight=Motor(Port.A, Direction.CLOCKWISE)
+    motorLeft=Motor(Port.E, Direction.COUNTERCLOCKWISE)
+    try:
+        colorSensorLeft=ColorSensor(Port.F)
+        colorSensorLight=ColorSensor(Port.B)
+        driveBase=DriveBase(motorLeft, motorRight, 56, 114)
+        hubName += 'snow'
+    except:
+        driveBase=DriveBase(motorLeft, motorRight, 50, 50)
+        hubName += 'bug'
 
+# don't mess with the below unless you are not using the spike
 if hubName == 'city':
     pass
 if hubName == 'move':
-    motorLeft=Motor(Port.B, Direction.COUNTERCLOCKWISE)
-    motorRight=Motor(Port.A, Direction.CLOCKWISE)
-    drivebase=DriveBase(motorLeft, motorRight, 50, 50)
+    try:
+        motorLeft=Motor(Port.B, Direction.COUNTERCLOCKWISE)
+        motorRight=Motor(Port.A, Direction.CLOCKWISE)
+        driveBase=DriveBase(motorLeft, motorRight, 50, 50)
+    except: print("Check Motors")
 if hubName == 'EV3':
     pass
 if hubName == 'technic':
     pass
-if hubName == 'prime':
-    motorRight=Motor(Port.A, Direction.CLOCKWISE)
-    motorLeft=Motor(Port.E, Direction.COUNTERCLOCKWISE)
-    try:
-        drivebase=DriveBase(motorLeft, motorRight, 56, 114)
-        colorSensorLeft=ColorSensor(Port.F)
-        colorSensorLight=ColorSensor(Port.B)
-        hubName += 'snow'
-    except:
-        drivebase=DriveBase(motorLeft, motorRight, 50, 50)
-        hubName += 'bug'
 if hubName == 'essential':
     pass
+
+device = Device()
+
+#demo remove later
+'''
+print(device.has_motorLeft)
+print(device.has_motorRight)
+print(device.has_colorSensorLeft)
+print(device.has_colorSensorRight)
+print(device.has_driveBase)
+'''
