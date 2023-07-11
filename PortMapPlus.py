@@ -1,6 +1,7 @@
 from pybricks.hubs import *
 #split to another file to make it easier for the inexperienced 
 def hubType():
+    global hub
     try:
         hub = CityHub()
         return 'city'
@@ -26,7 +27,8 @@ def hubType():
         return 'essential'
     except: pass
     return 'virtual'
-    
+
+def hubDef(): return hub     
 class Device:
     devicesList=["motorLeft","motorRight","driveBase","colorSensorLeft","colorSensorRight"] #offical name list
     output = "PortMap.Device("

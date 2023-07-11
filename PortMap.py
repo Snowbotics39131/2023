@@ -1,11 +1,12 @@
 try:# all imports here
+    from pybricks.hubs import *
     from pybricks.parameters import *
     from pybricks.pupdevices import *
     from pybricks.robotics import *
     from pybricks.tools import *
 except Exception: print("Import error")
 
-try: from PortMapPlus import * 
+try: from PortMapPlus import *
 except: print("PortMapPlus Needed")
 
 hubName = hubType()
@@ -38,6 +39,7 @@ if hubName == 'technic':
 if hubName == 'essential':
     pass
 
+hub = hubDef()
 device = Device()
 
 #demo remove later
