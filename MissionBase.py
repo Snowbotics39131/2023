@@ -1,6 +1,8 @@
 from PortMap import *
 from Actions import *
 
+class MissionEndedException(Exception):
+    pass
 
 '''https://github.com/Team254/FRC-2022-Public/blob/main/src/main/java/com/team254/frc2022/auto/modes/AutoModeBase.java'''
 
@@ -8,17 +10,19 @@ class MissionBase:
     mUpdateRate = 1.0/10.0
     mActive = False
     mIsInterrupted = False
+
     def setStart(self):
         pass
 
     def run(self):
         self.mActive=True
         try:
-            routine()
-        except:
+           
+            self.routine()
+        except MissionEndedException:
             print("MISSION DONE!!!! ENDED EARLY!!!!")
             return
-        done()
+        self.done()
             
     def done(self):
         pass
@@ -28,7 +32,11 @@ class MissionBase:
 
     def isActive(self):
         return self.mActive
-        '''add some error checking'''
+       
+
+    def isActiveWithRaise(self):
+        if(not self.mActive): raise MissionEndedException()
+        return self.isActive()
 
     def interrupt(self): 
         self.mIsInterrupted = True
@@ -39,11 +47,13 @@ class MissionBase:
         print("Mission resumed")
     
     def runAction(self,action): #Action action
-
+        self.isActiveWithRaise()
+        
+        waitTime = (self.mUpdateRate*1000)
         action.start()
-
-        while(self.isActive() and not action.isFinished() and not self.mIsInterrupted):
+        while(self.isActiveWithRaise() and (not action.isFinished()) and (not self.mIsInterrupted)):
             action.update()
+            wait(waitTime)
             #wait/sleep and error catches?
             #threading?
         action.done()

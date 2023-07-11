@@ -14,6 +14,8 @@ if hubName == 'prime':
     #if you are using the spike this is all you need to mess with
     motorRight=Motor(Port.A, Direction.CLOCKWISE)
     motorLeft=Motor(Port.E, Direction.COUNTERCLOCKWISE)
+    try: motorCenter=Motor(Port.C, Direction.CLOCKWISE)
+    except: pass
     try:
         colorSensorLeft=ColorSensor(Port.F)
         colorSensorLight=ColorSensor(Port.B)

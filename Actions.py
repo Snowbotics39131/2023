@@ -24,23 +24,52 @@ class ParallelAction(Action):
     #override
     def start(self):
         ''' Run code once when the action is started, for setup'''
-        for Action in self.mActions: Action.start() 
+        for action in self.mActions: action.start() 
     #override    
     def update(self):
-        for Action in self.mActions: Action.update() 
         '''Called by runAction in AutoModeBase iteratively until isFinished returns true.'''
+        for action in self.mActions: action.update() 
         pass
     #override    
     def isFinished(self):
         '''Returns whether or not the code has finished execution'''
-        for Action in self.mActions: 
-            if not Action.isFinished():
+        for action in self.mActions: 
+            if not action.isFinished():
                 return False
         return True
     #override
     def done(self):
         ''' Run code once when the action finishes, usually for clean up'''
-        for Action in self.mActions: Action.done() 
+        for action in self.mActions: action.done() 
+
+class SeriesAction(Action):
+    mCurrentAction = None
+    mRemainingActions = []
+    def __init__(self,*actions):
+        self.mRemainingActions = list(actions)
+
+    #override
+    def start(self):
+        pass
+    #override    
+    def update(self):
+        if(self.mCurrentAction == None):
+            if(not self.mRemainingActions): return
+            self.mCurrentAction = self.mRemainingActions.pop(0)
+            self.mCurrentAction.start()
+        self.mCurrentAction.update()
+        if(self.mCurrentAction.isFinished()):
+            self.mCurrentAction.done()
+            self.mCurrentAction = None
+
+        pass
+    #override    
+    def isFinished(self):
+        return not self.mRemainingActions and self.mCurrentAction == None
+    #override
+    def done(self):
+        pass
+
 
 
 class DriveStraightAction(Action):
@@ -51,13 +80,13 @@ class DriveStraightAction(Action):
 
     #overriding the method in the parent class
     def start(self):
-        driveBase.straight(self.distance,wait=True)
+        driveBase.straight(self.distance,wait=False)
     #override
     def update(self): pass
     #override
     def isFinished(self):
         if (driveBase.done()):
-            System.out.println("Drive finished")
+            print("Drive finished")
             return True    
         return False
     #override    
@@ -66,18 +95,20 @@ class DriveStraightAction(Action):
 class SpinMotor(Action):
 
     def __init__(self,*args,**kwargs):
-        '''same as Motor.run_angle'''
+        '''run_angle(speed: Number, rotation_angle: Number, then: Stop=Stop.HOLD, wait: bool=True) -> None'''
         self.args = args
         self.kwargs = kwargs
+        self.kwargs['wait'] = False
 
     def start(self):
-        motorCenter.run_angle(args,ka)
+        motorCenter.run_angle(*self.args,**self.kwargs)
+
     #override
     def update(self): pass
     #override
     def isFinished(self):
-        if (driveBase.done()):
-            System.out.println("Drive finished")
+        if (motorCenter.done()):
+            print("Motor finished")
             return True    
         return False
     #override    
