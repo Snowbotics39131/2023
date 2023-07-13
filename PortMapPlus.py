@@ -1,5 +1,5 @@
 from pybricks.hubs import *
-#split to another file to make it easier for the inexperienced 
+#split to another file to make it easier for the inexperienced
 def hubType():
     global hub
     try:
@@ -17,7 +17,7 @@ def hubType():
     try:
         hub = TechnicHub()
         return 'technic'
-    except: pass 
+    except: pass
     try:
         hub = PrimeHub()
         return 'prime'
@@ -28,7 +28,7 @@ def hubType():
     except: pass
     return 'virtual'
 
-def hubDef(): return hub     
+def hubDef(): return hub
 class Device:
     devicesList=["motorLeft","motorRight","driveBase","colorSensorLeft","colorSensorRight"] #offical name list
     output = "PortMap.Device("
@@ -37,7 +37,7 @@ class Device:
         for device in self.devicesList:
             try: exec(device)
             except: exec("self.has_"+device+"=False",{'self':self}) #check this out!
-            else: 
+            else:
                 exec("self.has_"+device+"=True",{'self':self})
                 self.output += device + ', '
     def __str__(self):
