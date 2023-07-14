@@ -52,6 +52,8 @@ if hubName == 'technic':
     pass
 if hubName == 'essential':
     pass
+if hubName == 'CPython':
+    driveBase = DriveBase()
 
 hub = hubDef()
 device = Device()

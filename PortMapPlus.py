@@ -1,4 +1,5 @@
-from pybricks.hubs import *
+try: from pybricks.hubs import *
+except ImportError: from Cpython.CPythonHub import *
 #split to another file to make it easier for the inexperienced
 def hubType():
     global hub
@@ -26,11 +27,15 @@ def hubType():
         hub = EssentialHub()
         return 'essential'
     except: pass
+    try:
+        hub = CPythonHub()
+        return 'CPython'
+    except: pass
     return 'virtual'
 
 def hubDef(): return hub
 class Device:
-    devicesList=["motorLeft","motorRight","driveBase","colorSensorLeft","colorSensorRight"] #offical name list
+    devicesList=["motorLeft","motorRight","driveBase","colorSensorLeft","colorSensorRight","motorCenter"] #offical name list
     output = "PortMap.Device("
     def __init__(self):
         "procedurally generates variables like has_{capability}  ex: device.has_motorLeft"

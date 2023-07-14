@@ -1,6 +1,7 @@
 from PortMap import *
 from MissionBase import *
 from Actions import *
+from BasicDriveActions import *
 
 class SampleMission1(MissionBase):
     def __init__(self):
@@ -8,8 +9,8 @@ class SampleMission1(MissionBase):
     
     def routine(self):
         #self.runAction(DriveStraightAction(1000))
-        self.runAction(ParallelAction(DriveStraightAction(1000),SpinMotor(1000,1000)))
-        self.runAction(ParallelAction(DriveStraightAction(-1000),
+        self.runAction(ParallelAction(DriveStraightAction(600),SpinMotor(1000,1000)))
+        self.runAction(ParallelAction(DriveStraightAction(-100),
                                       SeriesAction(
                                       SpinMotor(1000,-1000),
                                       SpinMotor(1000,1000))))
