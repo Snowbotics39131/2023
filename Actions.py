@@ -17,7 +17,7 @@ class Action:
         ''' Run code once when the action finishes, usually for clean up'''
         pass
  
-class ParallelAction(Action):
+class ParallelAction(Action): #child class of class Action
  
     def __init__(self,*actions):
         self.mActions = actions

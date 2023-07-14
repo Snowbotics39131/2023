@@ -2,7 +2,17 @@
 
 Hello! this is a readme file to describe the repository. This repository is code for the FLL team #39131 Snowbotics team from Colorado.
 
-Here is some of the code structure:
+@UxuginPython
+This is a big thing to work on I have been trying to think of an overall structure for the code 
+here is one example I adapted from here https://github.com/Team254/FRC-2022-Public/tree/main/src/main/java/com/team254/frc2022/auto
+here are the rules to the structure 
+1. Robot.py runs missions
+2. Missions are made of Actions
+3. Actions can access subsystems
+4. Actions can be made of other Actions
+5. Subsystems include the default driveBase and motors as well as custom subsystems like the Estimation
+
+Here is some of the code structure in a fancy mermaid chart:
 
 ```mermaid
 flowchart TD
@@ -20,22 +30,19 @@ flowchart TD
     J[HubActions]
     end
     subgraph Subsystems
-    L[DriveBaseSubsystems]
-    M[MotorSubsystems]
+    L[driveBase]
+    M[Motors]
     N[SensorSubsystems]
+	S[Kinematics/Estimation]
     end
     B & C & D -.- Q(are made of)
     Q -.- H & I & J
-    H & I & J -.- P(are made of)
-    P -.- L & M & N 
-
+    H & I & J -.- P(access)
+    P -.- L & M & N & S
+    S -.-> Actions
     E[MissionBase.py] -.-> Missions  
     F[PortMap.py] --> A
     G[PortMapPlus.py] --> F
     K[Actions.py] -.-> Actions
-    R[Subsystems.py] --> Subsystems
-    S[Kinimatics] -.- Subsystems
-    T[Looper] -.- S
-    T -..- Missions
-    S -.-> H
+
 ```
