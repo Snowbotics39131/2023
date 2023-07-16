@@ -1,3 +1,4 @@
+#!/usr/bin/env pybricks-micropython
 from PortMap import *
 from Actions import *
 import jmath
@@ -55,7 +56,7 @@ class Pose:  # pose is the postion of a robot at an x y angle
         self.a = a
 
 
-class GoToPoint(SerialAction):
+class GoToPoint(SeriesAction):
     class StartTurn(DriveTurnAction):
         # pylint: disable-next=super-init-not-called
         def __init__(self, selfself):
