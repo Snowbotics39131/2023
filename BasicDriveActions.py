@@ -56,26 +56,25 @@ class Pose:  # pose is the postion of a robot at an x y angle
 
 
 class GoToPoint_StartTurn(DriveTurnAction):
-    def __init__(self, selfself):
-        self.angle = selfself.turn
+    def __init__(self, gtpc):
+        self.angle = gtpc.turn
 
 
 class GoToPoint_Straight(DriveStraightAction):
-    def __init__(self, selfself):
+    def __init__(self, gtpc):
         # drive along the vector with magnitude
-        self.distance = (selfself.vector[0]**2+selfself.vector[1] ** 2)**0.5
+        self.distance = (gtpc.vector[0]**2+gtpc.vector[1] ** 2)**0.5
 
 
 class GoToPoint_EndTurn(DriveTurnAction):
-    def __init__(self, selfself):
+    def __init__(self, gtpc):
         # turning to final orientation should be inline with destination
         self.angle = jmath.shortestDirectionBetweenBearings(
-            selfself.destination.a, selfself.direction)
+            gtpc.destination.a, gtpc.direction)
 
 
-class GoToPoint(SeriesAction):
-    def __init__(self, destination, location, *actions):
-        self.mRemainingActions = actions
+class GoToPoint_Calculations:
+    def __init__(self, destination, location):
         self.destination = destination
         self.location = location
         # creating a vector between location and destination
@@ -86,9 +85,7 @@ class GoToPoint(SeriesAction):
         self.turn = jmath.shortestDirectionBetweenBearings(direction, location.a)
 
 
-# required to assign destination, location, vector, direction, turn
-gtp = GoToPoint(Pose(0, 0, 0), Pose(-250, 500, 180))
-gtp = GoToPoint(Pose(0, 0, 0), Pose(-250, 500, 180),
-                GoToPoint_StartTurn(gtp),
-                GoToPoint_Straight(gtp),
-                GoToPoint_EndTurn(gtp))
+gtpc = GoToPoint_Calculations(Pose(0, 0, 0), Pose(-250, 500, 180))
+gtp = SerialAction(GoToPoint_StartTurn(gtpc),
+                   GoToPoint_Straight(gtpc),
+                   GoToPoint_EndTurn(gtpc))
