@@ -57,33 +57,18 @@ class Pose:  # pose is the postion of a robot at an x y angle
 
 
 class GoToPoint(SeriesAction):
-    class StartTurn(DriveTurnAction):
-        # pylint: disable-next=super-init-not-called
-        def __init__(self, selfself):
-            self.angle = selfself.turn
-
-    class Straight(DriveStraightAction):
-        # pylint: disable-next=super-init-not-called
-        def __init__(self, selfself):
-            # drive along the vector with magnitude
-            self.distance = (selfself.vector[0]**2+selfself.vector[1]**2)**0.5
-
-    class EndTurn(DriveTurnAction):
-        # pylint: disable-next=super-init-not-called
-        def __init__(self, selfself):
-            # turning to final orientation should be inline with destination
-            self.angle = jmath.shortestDirectionBetweenBearings(selfself.destination.a, selfself.direction)
-
     def __init__(self, location, destination):
         self.destination = destination
         self.location = location
         # creating a vector between location and destination
-        self.vector = tuple((destination.x-location.x, destination.y-location.y))
+        vector = tuple((destination.x-location.x, destination.y-location.y))
         # using the arc tangent to detirmine the angle of the vector
-        self.direction = jmath.atan2(self.vector[0], self.vector[1])
+        direction = jmath.atan2(vector[0], vector[1])
         # detirmine the shortest correction between our current angle and the angle of the shortest path
-        self.turn = jmath.shortestDirectionBetweenBearings(self.direction, location.a)
-        super().__init__(self.StartTurn(self), self.Straight(self), self.EndTurn(self))
+        turn = jmath.shortestDirectionBetweenBearings(direction, location.a)
+        super().__init__(DriveTurnAction(turn),
+                         DriveStraightAction((vector[0]**2+vector[1]**2)**0.5),
+                         DriveTurnAction(jmath.shortestDirectionBetweenBearings(destination.a, direction)))
 
 
 if __name__ == '__main__':
