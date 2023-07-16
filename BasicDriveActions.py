@@ -80,9 +80,9 @@ class GoToPoint_Calculations:
         # creating a vector between location and destination
         self.vector = tuple((destination.x-location.x, destination.y-location.y))
         # using the arc tangent to detirmine the angle of the vector
-        self.direction = jmath.atan2(vector[0], vector[1])
+        self.direction = jmath.atan2(self.vector[0], self.vector[1])
         # detirmine the shortest correction between our current angle and the angle of the shortest path
-        self.turn = jmath.shortestDirectionBetweenBearings(direction, location.a)
+        self.turn = jmath.shortestDirectionBetweenBearings(self.direction, location.a)
 
 
 gtpc = GoToPoint_Calculations(Pose(0, 0, 0), Pose(-250, 500, 180))
