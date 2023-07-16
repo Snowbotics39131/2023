@@ -41,22 +41,23 @@ class DriveTurnAction(Action):
     #override    
     def done(self): pass
 
-#make a Action that drives to a point like the functions in new.py using sub actions shown above hint look at the SeriesAction 
+#make a Action that drives to a point like the functions in new.py using sub actions shown above hint look at the SeriesAction
+
+
+class Pose:  # pose is the postion of a robot at an x y angle
+    x = 0  # is from the left wall of the field are negative
+    y = 0  # is from the orgin to the non orgin
+    a = 0  # angle
+
+    def __init__(self, x, y, a):  # constructor defines intial position
+        self.x = x
+        self.y = y
+        self.a = a
+
+
 class GoToPoint_StartTurn(DriveTurnAction):
     def __init__(self, selfself):
-        # creating a vector between location and destination
-        vector = tuple((selfself.destination.x-selfself.location.x,
-                       selfself.destination.y-selfself.location.y))
-        # using the arc tangent to detirmine the angle of the vector
-        direction = jmath.atan2(vector[0], vector[1])
-        # detirmine the shortest correction between our current angle and the angle of the shortest path
-        turn = jmath.shortestDirectionBetweenBearings(direction, selfself.location.a)
-        self.angle = turn
-        self.vector = vector
-        self.direction = direction
-        selfself.angle = turn
-        selfself.vector = vector
-        selfself.direction = direction
+        self.angle = selfself.turn
 
 
 class GoToPoint_Straight(DriveStraightAction):
@@ -72,9 +73,22 @@ class GoToPoint_EndTurn(DriveTurnAction):
             selfself.destination.a, selfself.direction)
 
 
-GoToPoint = SeriesAction()
-GoToPoint = SeriesAction(GoToPoint_StartTurn(GoToPoint),
-                         GoToPoint_Straight(GoToPoint),
-                         GoToPoint_EndTurn(GoToPoint))
-for i in enumerate(GoToPoint.mRemainingActions):
-    GoToPoint.mRemainingActions[i[0]].selfself = GoToPoint
+class GoToPoint(SeriesAction):
+    def __init__(self, destination, location, *actions):
+        self.mRemainingActions = actions
+        self.destination = destination
+        self.location = location
+        # creating a vector between location and destination
+        self.vector = tuple((destination.x-location.x, destination.y-location.y))
+        # using the arc tangent to detirmine the angle of the vector
+        self.direction = jmath.atan2(vector[0], vector[1])
+        # detirmine the shortest correction between our current angle and the angle of the shortest path
+        self.turn = jmath.shortestDirectionBetweenBearings(direction, location.a)
+
+
+# required to assign destination, location, vector, direction, turn
+gtp = GoToPoint(Pose(0, 0, 0), Pose(-250, 500, 180))
+gtp = GoToPoint(Pose(0, 0, 0), Pose(-250, 500, 180),
+                GoToPoint_StartTurn(gtp),
+                GoToPoint_Straight(gtp),
+                GoToPoint_EndTurn(gtp))
