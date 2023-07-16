@@ -4,7 +4,7 @@ import jmath
 
 class DriveStraightAction(Action):
 
-#example action should probably share a drive actions file  
+#example action should probably share a drive actions file
     def __init__(self,distance):
         self.distance = distance
 
@@ -17,13 +17,13 @@ class DriveStraightAction(Action):
     def isFinished(self):
         if (driveBase.done()):
             print("Drive finished")
-            return True    
+            return True
         return False
-    #override    
+    #override
     def done(self): pass
 
 class DriveTurnAction(Action):
- 
+
     def __init__(self,angle):
         self.angle = angle
 
@@ -36,9 +36,9 @@ class DriveTurnAction(Action):
     def isFinished(self):
         if (driveBase.done()):
             print("Drive finished")
-            return True    
+            return True
         return False
-    #override    
+    #override
     def done(self): pass
 
 #make a Action that drives to a point like the functions in new.py using sub actions shown above hint look at the SeriesAction
@@ -55,26 +55,25 @@ class Pose:  # pose is the postion of a robot at an x y angle
         self.a = a
 
 
-class GoToPoint_StartTurn(DriveTurnAction):
-    def __init__(self, gtpc):
-        self.angle = gtpc.turn
+class GoToPoint(SerialAction):
+    class StartTurn(DriveTurnAction):
+        # pylint: disable-next=super-init-not-called
+        def __init__(self, selfself):
+            self.angle = selfself.turn
 
+    class Straight(DriveStraightAction):
+        # pylint: disable-next=super-init-not-called
+        def __init__(self, selfself):
+            # drive along the vector with magnitude
+            self.distance = (selfself.vector[0]**2+selfself.vector[1]**2)**0.5
 
-class GoToPoint_Straight(DriveStraightAction):
-    def __init__(self, gtpc):
-        # drive along the vector with magnitude
-        self.distance = (gtpc.vector[0]**2+gtpc.vector[1] ** 2)**0.5
+    class EndTurn(DriveTurnAction):
+        # pylint: disable-next=super-init-not-called
+        def __init__(self, selfself):
+            # turning to final orientation should be inline with destination
+            self.angle = jmath.shortestDirectionBetweenBearings(selfself.destination.a, selfself.direction)
 
-
-class GoToPoint_EndTurn(DriveTurnAction):
-    def __init__(self, gtpc):
-        # turning to final orientation should be inline with destination
-        self.angle = jmath.shortestDirectionBetweenBearings(
-            gtpc.destination.a, gtpc.direction)
-
-
-class GoToPoint_Calculations:
-    def __init__(self, destination, location):
+    def __init__(self, location, destination):
         self.destination = destination
         self.location = location
         # creating a vector between location and destination
@@ -83,9 +82,10 @@ class GoToPoint_Calculations:
         self.direction = jmath.atan2(self.vector[0], self.vector[1])
         # detirmine the shortest correction between our current angle and the angle of the shortest path
         self.turn = jmath.shortestDirectionBetweenBearings(self.direction, location.a)
+        super().__init__(self.StartTurn(self), self.Straight(self), self.EndTurn(self))
 
 
-gtpc = GoToPoint_Calculations(Pose(0, 0, 0), Pose(-250, 500, 180))
-gtp = SerialAction(GoToPoint_StartTurn(gtpc),
-                   GoToPoint_Straight(gtpc),
-                   GoToPoint_EndTurn(gtpc))
+if __name__ == '__main__':
+    gtp = GoToPoint(Pose(0, 0, 0), Pose(-250, 500, 180))
+    while not gtp.isFinished():
+        gtp.update()
