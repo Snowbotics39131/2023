@@ -5,7 +5,7 @@ import jmath
 
 class DriveStraightAction(Action):
 
-#example action should probably share a drive actions file
+#example action should probably share a drive actions file  
     def __init__(self,distance):
         self.distance = distance
 
@@ -18,13 +18,13 @@ class DriveStraightAction(Action):
     def isFinished(self):
         if (driveBase.done()):
             print("Drive finished")
-            return True
+            return True    
         return False
-    #override
+    #override    
     def done(self): pass
 
 class DriveTurnAction(Action):
-
+ 
     def __init__(self,angle):
         self.angle = angle
 
@@ -37,12 +37,12 @@ class DriveTurnAction(Action):
     def isFinished(self):
         if (driveBase.done()):
             print("Drive finished")
-            return True
+            return True    
         return False
-    #override
+    #override    
     def done(self): pass
 
-#make a Action that drives to a point like the functions in new.py using sub actions shown above hint look at the SeriesAction
+#make a Action that drives to a point like the functions in new.py using sub actions shown above hint look at the SeriesAction 
 
 
 class Pose:  # pose is the postion of a robot at an x y angle
