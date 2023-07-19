@@ -1,15 +1,15 @@
 from PortMap import *
 from MissionBase import *
 from Actions import *
-
+from BasicDriveActions import *
 class SampleMission1(MissionBase):
     def __init__(self):
         pass #starting pose
     
     def routine(self):
         #self.runAction(DriveStraightAction(1000))
-        self.runAction(ParallelAction(DriveStraightAction(1000),SpinMotor(1000,1000)))
-        self.runAction(ParallelAction(DriveStraightAction(-1000),
+        self.runAction(ParallelAction(DriveStraightAction(100),SpinMotor(1000,1000)))
+        self.runAction(ParallelAction(GoToPoint(Pose(0, 0, 0), Pose(-250, 500, 180)),
                                       SeriesAction(
                                       SpinMotor(1000,-1000),
                                       SpinMotor(1000,1000))))
