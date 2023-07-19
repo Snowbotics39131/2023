@@ -1,16 +1,19 @@
 #!/usr/bin/env pybricks-micropython
 from PortMap import *
 from Actions import *
+from Estimation import *
 import jmath
 
 class DriveStraightAction(Action):
 
-#example action should probably share a drive actions file  
+#example action should probably share a drive actions file
+    name = "DriveStraightAction"
     def __init__(self,distance):
         self.distance = distance
-
+        
     #overriding the method in the parent class
     def start(self):
+        simpleEstimate.addAction(self.name)
         driveBase.straight(self.distance,wait=False)
     #override
     def update(self): pass
@@ -21,15 +24,19 @@ class DriveStraightAction(Action):
             return True    
         return False
     #override    
-    def done(self): pass
+    def done(self):
+        simpleEstimate.linearChange(driveBase.distance()) #better way
+        simpleEstimate.removeAction(self.name)
+
 
 class DriveTurnAction(Action):
- 
+    name = "DriveTurnAction"
     def __init__(self,angle):
         self.angle = angle
 
     #overriding the method in the parent class
     def start(self):
+        simpleEstimate.addAction(self.name)
         driveBase.turn(self.angle,wait=False)
     #override
     def update(self): pass
@@ -40,7 +47,9 @@ class DriveTurnAction(Action):
             return True    
         return False
     #override    
-    def done(self): pass
+    def done(self): 
+        simpleEstimate.bestPose.a = driveBase.angle() #better way
+        simpleEstimate.removeAction(self.name)
 
 #make a Action that drives to a point like the functions in new.py using sub actions shown above hint look at the SeriesAction 
 
@@ -57,9 +66,9 @@ class Pose:  # pose is the postion of a robot at an x y angle
 
 
 class GoToPoint(SeriesAction):
-    def __init__(self, location, destination):
-        self.destination = destination
-        self.location = location
+    name = "GotoToPoint"
+    def __init__(self, destination):
+        location = simpleEstimate.getCurrentPose()
         # creating a vector between location and destination
         vector = tuple((destination.x-location.x, destination.y-location.y))
         # using the arc tangent to detirmine the angle of the vector
@@ -69,9 +78,8 @@ class GoToPoint(SeriesAction):
         super().__init__(DriveTurnAction(turn),
                          DriveStraightAction((vector[0]**2+vector[1]**2)**0.5),
                          DriveTurnAction(jmath.shortestDirectionBetweenBearings(destination.a, direction)))
-
-
+    
 if __name__ == '__main__':
-    gtp = GoToPoint(Pose(0, 0, 0), Pose(-250, 500, 180))
+    gtp = GoToPoint(Pose(-250, 500, 180))
     while not gtp.isFinished():
         gtp.update()

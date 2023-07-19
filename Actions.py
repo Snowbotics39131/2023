@@ -1,6 +1,7 @@
 from PortMap import *
-
+from Estimation import *
 class Action:
+    name = ""
     def start(self):
         ''' Run code once when the action is started, for setup'''
         pass
@@ -71,7 +72,7 @@ class SeriesAction(Action):
         pass
 
 class SpinMotor(Action):
-
+    name = "SpinMotor"
     def __init__(self,*args,**kwargs):
         '''run_angle(speed: Number, rotation_angle: Number, then: Stop=Stop.HOLD, wait: bool=True) -> None'''
         self.args = args
@@ -79,6 +80,7 @@ class SpinMotor(Action):
         self.kwargs['wait'] = False
 
     def start(self):
+        simpleEstimate.addAction(self.name)
         motorCenter.run_angle(*self.args,**self.kwargs)
 
     #override
@@ -90,4 +92,5 @@ class SpinMotor(Action):
             return True    
         return False
     #override    
-    def done(self): pass
+    def done(self): 
+        simpleEstimate.removeAction(self.name)
