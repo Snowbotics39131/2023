@@ -70,28 +70,6 @@ class SeriesAction(Action):
     def done(self):
         pass
 
-
-
-class DriveStraightAction(Action):
-
-#example action should probably share a drive actions file  
-    def __init__(self,distance):
-        self.distance = distance
-
-    #overriding the method in the parent class
-    def start(self):
-        driveBase.straight(self.distance,wait=False)
-    #override
-    def update(self): pass
-    #override
-    def isFinished(self):
-        if (driveBase.done()):
-            print("Drive finished")
-            return True    
-        return False
-    #override    
-    def done(self): pass
-
 class SpinMotor(Action):
 
     def __init__(self,*args,**kwargs):
