@@ -6,7 +6,7 @@ def line_intersects_polygon(line, polygon):
     for i in range(len(polygon)):
         x3, y3 = polygon[i]
         x4, y4 = polygon[(i + 1) % len(polygon)]
-        
+        print(x3,y3,x4,y4)
         dx1, dy1 = x2 - x1, y2 - y1
         dx2, dy2 = x4 - x3, y4 - y3
 
@@ -104,7 +104,7 @@ if __name__=='__main__':
     driver([[[0, 1], [2, 2], [0, 3]], [[2, 3], [0, 4], [2, 5]], [[0, 5], [2, 6], [0, 7]]], [1, 0], [1, 8])'''
 print(line_intersects_polygon([[0, 0], [3, 3]],[[1, 1], [1, 2], [2, 2], [2, 1]]))
 print(line_intersects_polygon([[0, 1], [3, 4]],[[1, 1], [1, 2], [2, 2], [2, 1]]))
-print(line_intersects_polygon([[0, 1], [3, 4]],[[1, 1], [1, 2], [2, 2], [2, 1]]))
+print(line_intersects_polygon([[0, 1], [3, 3]],[[1, 1], [1, 2], [2, 2], [2, 1]]))
 
 '''
 def length_of_path(path):
