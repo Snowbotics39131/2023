@@ -5,8 +5,8 @@ def autobalance():
     pitch = 100
     balanced = False
     p=0
-    tresholdmax = 3
-    tresholdmin = 3
+    tresholdmax = 2
+    tresholdmin = 2
     speed = 2500
     mode = "Balancing"
     timer = StopWatch()
@@ -35,7 +35,6 @@ def autobalance():
             timer.resume
         if mode == "Balanced" and timer.time() > 10000:
             break
-    motorLeft.run(0)
-    motorRight.run(0)
+
     hub.speaker.beep()
 autobalance()
