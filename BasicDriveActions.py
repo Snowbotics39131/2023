@@ -203,6 +203,9 @@ class FindLine(Action):
         self.black = 30
         self.state_left = 'start'
         self.state_right = 'start'
+        self.old_angle = 0
+        self.old_distance = 0
+        driveBase.reset()
         motorLeft.run(100)
         motorRight.run(100)
 
@@ -238,6 +241,12 @@ class FindLine(Action):
             if abs(self.pid_right.target-self.pid_right.getfunc()) <= 2:
                 motorRight.hold()
                 self.state_right = 'done'
+        new_angle = driveBase.angle()
+        new_distance = driveBase.distance()
+        simpleEstimate.changeInPose(Pose(0, 0, new_angle-self.old_angle))
+        simpleEstimate.linearChange(new_distance-self.old_distance)
+        self.old_angle = new_angle
+        self.old_distance = new_distance
 
     def isFinished(self):
         return self.state_left == 'done' and self.state_right == 'done'
