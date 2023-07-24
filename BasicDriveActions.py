@@ -140,7 +140,7 @@ class FollowLineLeft(Action):
         self.pid.cycle()
 
     def isFinished(self):
-        return driveBase.distance() < self.distance
+        return driveBase.distance() >= self.distance
 
 
 class FollowLineRight(Action):
@@ -169,7 +169,7 @@ class FollowLineRight(Action):
         self.pid.cycle()
 
     def isFinished(self):
-        return driveBase.distance() < self.distance
+        return driveBase.distance() >= self.distance
 
 
 class FindLine(Action):
