@@ -54,17 +54,6 @@ class DriveTurnAction(Action):
 #make a Action that drives to a point like the functions in new.py using sub actions shown above hint look at the SeriesAction 
 
 
-class Pose:  # pose is the postion of a robot at an x y angle
-    x = 0  # is from the left wall of the field are negative
-    y = 0  # is from the orgin to the non orgin
-    a = 0  # angle
-
-    def __init__(self, x, y, a):  # constructor defines intial position
-        self.x = x
-        self.y = y
-        self.a = a
-
-
 class GoToPoint(SeriesAction):
     name = "GotoToPoint"
 
@@ -134,10 +123,18 @@ class FollowLineLeft(Action):
                                  self.kP,
                                  self.kI,
                                  self.kD)
+        self.old_angle = 0
+        self.old_distance = 0
         driveBase.reset()
 
     def update(self):
         self.pid.cycle()
+        new_angle = driveBase.angle()
+        new_distance = driveBase.distance()
+        simpleEstimate.changeInPose(Pose(0, 0, new_angle-old_angle))
+        simpleEstimate.linearChange(new_distance-old_distance)
+        self.old_angle = new_angle
+        self.old_distance = new_distance
 
     def isFinished(self):
         return driveBase.distance() >= self.distance
@@ -163,10 +160,18 @@ class FollowLineRight(Action):
                                  self.kP,
                                  self.kI,
                                  self.kD)
+        self.old_angle = 0
+        self.old_distance = 0
         driveBase.reset()
 
     def update(self):
         self.pid.cycle()
+        new_angle = driveBase.angle()
+        new_distance = driveBase.distance()
+        simpleEstimate.changeInPose(Pose(0, 0, new_angle-old_angle))
+        simpleEstimate.linearChange(new_distance-old_distance)
+        self.old_angle = new_angle
+        self.old_distance = new_distance
 
     def isFinished(self):
         return driveBase.distance() >= self.distance
