@@ -131,8 +131,8 @@ class FollowLineLeft(Action):
         self.pid.cycle()
         new_angle = driveBase.angle()
         new_distance = driveBase.distance()
-        simpleEstimate.changeInPose(Pose(0, 0, new_angle-old_angle))
-        simpleEstimate.linearChange(new_distance-old_distance)
+        simpleEstimate.changeInPose(Pose(0, 0, new_angle-self.old_angle))
+        simpleEstimate.linearChange(new_distance-self.old_distance)
         self.old_angle = new_angle
         self.old_distance = new_distance
 
@@ -168,8 +168,8 @@ class FollowLineRight(Action):
         self.pid.cycle()
         new_angle = driveBase.angle()
         new_distance = driveBase.distance()
-        simpleEstimate.changeInPose(Pose(0, 0, new_angle-old_angle))
-        simpleEstimate.linearChange(new_distance-old_distance)
+        simpleEstimate.changeInPose(Pose(0, 0, new_angle-self.old_angle))
+        simpleEstimate.linearChange(new_distance-self.old_distance)
         self.old_angle = new_angle
         self.old_distance = new_distance
 
