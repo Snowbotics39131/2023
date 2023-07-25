@@ -112,8 +112,6 @@ class FollowLineLeft(Action):
         self.kI = kI
         self.kD = kD
         self.reflecttarget = reflecttarget
-
-    def start(self):
         def setfunc(self, turn):
             motorLeft.run(200*(1+turn))
             motorRight.run(200*(1-turn))
@@ -125,6 +123,8 @@ class FollowLineLeft(Action):
                                  self.kD)
         self.old_angle = 0
         self.old_distance = 0
+
+    def start(self):
         driveBase.reset()
 
     def update(self):
@@ -149,8 +149,6 @@ class FollowLineRight(Action):
         self.kI = kI
         self.kD = kD
         self.reflecttarget = reflecttarget
-
-    def start(self):
         def setfunc(self, turn):
             motorLeft.run(200*(1-turn))
             motorRight.run(200*(1+turn))
@@ -162,6 +160,8 @@ class FollowLineRight(Action):
                                  self.kD)
         self.old_angle = 0
         self.old_distance = 0
+
+    def start(self):
         driveBase.reset()
 
     def update(self):
@@ -185,8 +185,6 @@ class FindLine(Action):
         self.kI = kI
         self.kD = kD
         self.reflecttarget = reflecttarget
-
-    def start(self):
         self.pid_left = PIDController(colorSensorLeft.reflection,
                                       lambda speed: motorLeft.run(50*speed),
                                       self.reflecttarget,
@@ -205,6 +203,8 @@ class FindLine(Action):
         self.state_right = 'start'
         self.old_angle = 0
         self.old_distance = 0
+
+    def start(self):
         driveBase.reset()
         motorLeft.run(100)
         motorRight.run(100)
