@@ -3,6 +3,7 @@ from PortMap import *
 from Actions import *
 from Estimation import *
 import jmath
+simpleEstimate.initial(0, 0, 0)  # not really sure what to do here
 
 class DriveStraightAction(Action):
 
@@ -112,7 +113,7 @@ class FollowLineLeft(Action):
         self.kI = kI
         self.kD = kD
         self.reflecttarget = reflecttarget
-        def setfunc(self, turn):
+        def setfunc(turn):
             motorLeft.run(200*(1+turn))
             motorRight.run(200*(1-turn))
         self.pid = PIDController(colorSensorLeft.reflection,
@@ -149,7 +150,7 @@ class FollowLineRight(Action):
         self.kI = kI
         self.kD = kD
         self.reflecttarget = reflecttarget
-        def setfunc(self, turn):
+        def setfunc(turn):
             motorLeft.run(200*(1-turn))
             motorRight.run(200*(1+turn))
         self.pid = PIDController(colorSensorRight.reflection,
