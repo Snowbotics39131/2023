@@ -113,6 +113,7 @@ class FollowLineLeft(Action):
         self.kI = kI
         self.kD = kD
         self.reflecttarget = reflecttarget
+
         def setfunc(turn):
             motorLeft.run(200*(1+turn))
             motorRight.run(200*(1-turn))
@@ -140,6 +141,10 @@ class FollowLineLeft(Action):
     def isFinished(self):
         return driveBase.distance() >= self.distance
 
+    def done(self):
+        motorLeft.brake()
+        motorRight.brake()
+
 
 class FollowLineRight(Action):
     name = 'FollowLineRight'
@@ -150,6 +155,7 @@ class FollowLineRight(Action):
         self.kI = kI
         self.kD = kD
         self.reflecttarget = reflecttarget
+
         def setfunc(turn):
             motorLeft.run(200*(1-turn))
             motorRight.run(200*(1+turn))
@@ -176,6 +182,10 @@ class FollowLineRight(Action):
 
     def isFinished(self):
         return driveBase.distance() >= self.distance
+
+    def done(self):
+        motorLeft.brake()
+        motorRight.brake()
 
 
 class FindLine(Action):
@@ -257,12 +267,8 @@ if __name__ == '__main__':
     # gtp = GoToPoint(Pose(-250, 500, 180))
     # while not gtp.isFinished():
     #     gtp.update()
-    example = SeriesAction(FindLine(),
-                           # -57 will probably need to be changed.
-                           DriveStraightAction(-57),
-                           DriveTurnAction(90),
-                           FollowLineLeft(500),
-                           DriveTurnAction(180),
-                           FollowLineRight(500))
+    example = FollowLineRight(300)
+    example.start()
     while not example.isFinished():
         example.update()
+    example.done()
