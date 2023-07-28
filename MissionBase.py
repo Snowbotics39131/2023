@@ -1,5 +1,6 @@
 from PortMap import *
 from Actions import *
+from Estimation import *
 
 class MissionEndedException(Exception):
     pass
@@ -48,7 +49,6 @@ class MissionBase:
     
     def runAction(self,action): #Action action
         self.isActiveWithRaise()
-        
         waitTime = (self.mUpdateRate*1000)
         action.start()
         while(self.isActiveWithRaise() and (not action.isFinished()) and (not self.mIsInterrupted)):
@@ -57,6 +57,7 @@ class MissionBase:
             #wait/sleep and error catches?
             #threading?
         action.done()
+        
 
     def getIsInterrupted(self):
         return self.mIsInterrupted
