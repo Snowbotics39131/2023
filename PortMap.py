@@ -20,7 +20,7 @@ if hubName == 'prime':
     except: pass
     try:
         colorSensorLeft=ColorSensor(Port.F)
-        colorSensorLight=ColorSensor(Port.B)
+        colorSensorRight=ColorSensor(Port.B)
         driveBase=DriveBase(motorLeft, motorRight, 56, 114)
         hubName += 'snow'
     except:

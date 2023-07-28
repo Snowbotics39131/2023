@@ -34,7 +34,8 @@ class SimpleEstimate:
     def getCurrentPose(self):
         return self.bestPose
     def update(self):
-        self.log.append([self.missionTimer.time(),self.action,self.bestPose.x,self.bestPose.y,self.bestPose.a]) 
+        #self.log.append([self.missionTimer.time(),self.action,self.bestPose.x,self.bestPose.y,self.bestPose.a]) 
+        pass
     def addAction(self,name):
         self.action.append(name)
         self.update()
