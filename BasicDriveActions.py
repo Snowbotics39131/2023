@@ -267,7 +267,7 @@ if __name__ == '__main__':
     # gtp = GoToPoint(Pose(-250, 500, 180))
     # while not gtp.isFinished():
     #     gtp.update()
-    example = FollowLineRight(300)
+    example = FollowLineRight(3000)
     example.start()
     while not example.isFinished():
         example.update()
