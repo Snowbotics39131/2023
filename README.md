@@ -1,6 +1,7 @@
-﻿# FLL-Pre-Season-Code
-
+# FLL-Pre-Season-Code
 Hello! this is a readme file to describe the repository. This repository is code for the FLL team #39131 Snowbotics team from Colorado.
+The code in this repository is mostly python, as we are currently running pybricks on our lego mindstorms robots.
+
 
 @UxuginPython
 This is a big thing to work on I have been trying to think of an overall structure for the code 
