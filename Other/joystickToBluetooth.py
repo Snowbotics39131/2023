@@ -3,7 +3,9 @@ import pygame
 from pygame.locals import *
 import asyncio
 from bleak import BleakScanner, BleakClient
+import time
 
+# nRF UART Service UUID. 
 UART_SERVICE_UUID = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E"
 UART_RX_CHAR_UUID = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
 UART_TX_CHAR_UUID = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
@@ -11,6 +13,10 @@ UART_TX_CHAR_UUID = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
 # Replace this with the name of your hub if you changed
 # it when installing the Pybricks firmware.
 HUB_NAME = "Pybricks Hub"
+
+MTU = 20
+SEP = chr(183)
+
 def hub_filter(device, ad):
     return device.name and device.name.lower() == HUB_NAME.lower()
 
@@ -24,6 +30,9 @@ def handle_rx(_, data: bytearray):
 
 
 class Bluetooth: 
+    
+    buffer = []
+    busy = False
     async def setup(self):
         self.device = await BleakScanner.find_device_by_filter(hub_filter)
         self.client = BleakClient( self.device, disconnected_callback=handle_disconnect)
@@ -33,18 +42,34 @@ class Bluetooth:
             await self.client.start_notify(UART_TX_CHAR_UUID, handle_rx)
             nus = self.client.services.get_service(UART_SERVICE_UUID)
             self.rx_char = nus.get_characteristic(UART_RX_CHAR_UUID)
+            
                     # Tell user to start program on the hub.
             print("Start the program on the hub now with the button.")
         except Exception as e:
             # Handle exceptions.
             print(e)
             
-    async def send(self, client, data):
-        await client.write_gatt_char(self.rx_char, data)
-        print(data)
-    async def sendOut(self,data):
-        formated = data.to_bytes(1, 'big')
-        await self.send(self.client,formated)
+    async def sendBuffer(self):
+        global MTU
+        self.busy = True
+        chunk = self.buffer[:MTU]
+        self.buffer = self.buffer[MTU:]
+        data = bytes(chunk)
+        await self.client.write_gatt_char(self.rx_char, data)
+        if self.buffer:
+            self.sendBuffer()
+        else:
+            self.busy = False
+        
+       
+        
+    async def pushString(self,s):
+        if not self.busy:
+            print ("push: " + s)
+            for c in s:
+                self.buffer.append(ord(c))
+            await self.sendBuffer()
+    
         
     async def update():
         pass
@@ -160,27 +185,38 @@ class Joystick():
             "Button8":self.joystick.button[8],
             "Button9":self.joystick.button[9],
         }'''
-        joyDict= 2+ self.joystick.button[0]
-        return joyDict
+        buttonHolder = 0
+        for i in range(0,len(self.joystick.button)):
+            buttonHolder += self.joystick.button[i]*2^i
+        clampYAxis = int((-self.joystick.axis[1]+1)*50)
+        clampXAxis = int((-self.joystick.axis[0]+1)*50)
+        joyDict = [clampYAxis,clampXAxis,self.joystick.button[0]]
+        return ",".join(map(str, joyDict))
         
         
 class Main():
+    
     def __init__(self):
         self.joystick = Joystick()
         self.bluetooth = Bluetooth()
     async def setup(self):
         self.joystick.setup()
-        await self.bluetooth.setup()        
+        await self.bluetooth.setup() 
     
+    async def sendMessage(self,command,value):
+        global SEP
+        print("sendMessage")
+        await self.bluetooth.pushString(command + SEP + value + '\n')
+        
     async def update(self):
         self.joystick.update()
-        await self.bluetooth.sendOut(self.joystick.getData())
+        await self.sendMessage("c",self.joystick.getData())
     
     async def run(self):
         await self.setup()
         while True:
-           await self.update()
-           #await asyncio.sleep(1)
+            await self.update()
+            await asyncio.sleep(.02)
 
 if __name__ == "__main__":
     main = Main()
