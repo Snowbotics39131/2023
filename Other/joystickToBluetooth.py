@@ -187,11 +187,21 @@ class Joystick():
         }'''
         buttonHolder = 0
         for i in range(0,len(self.joystick.button)):
-            buttonHolder += self.joystick.button[i]*2^i
-        clampYAxis = int((-self.joystick.axis[1]+1)*50)
-        clampXAxis = int((-self.joystick.axis[0]+1)*50)
-        joyDict = [clampYAxis,clampXAxis,self.joystick.button[0]]
-        return ",".join(map(str, joyDict))
+            buttonHolder += self.joystick.button[i]*pow(2,i)            
+            # map buttons to binary in an int 
+        buttonHolder += (self.joystick.axis[4]>0)*pow(2,len(self.joystick.button)-1)
+        buttonHolder += (self.joystick.axis[5]>0)*pow(2,len(self.joystick.button))
+        hatHolder = 0
+        hatHolder += self.joystick.hat[0][0]+1
+        hatHolder += (self.joystick.hat[0][1]+1)*3
+        clampLYAxis = int((-self.joystick.axis[1]+1)*100)
+        clampLXAxis = int((-self.joystick.axis[0]+1)*100)
+        clampRYAxis = int((-self.joystick.axis[3]+1)*100)
+        clampRXAxis = int((-self.joystick.axis[2]+1)*100)
+        
+        joyDict = [clampLYAxis,clampLXAxis,clampRYAxis,clampRXAxis,buttonHolder,hatHolder]
+        return ",".join(map(lambda n :f'{n:x}', joyDict))
+    
         
         
 class Main():
