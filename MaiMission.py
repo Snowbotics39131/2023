@@ -5,6 +5,7 @@ from BasicDriveActions import *
 from Estimation import *
 class BananaMission(MissionBase):
     def __init__(self):
+        #redzone 10 east 0 north
         simpleEstimate.initial(0,0,0)
         pass #starting pose
     def routine(self):
@@ -13,9 +14,10 @@ class BananaMission(MissionBase):
             ParallelAction( DriveStraightAction(620),SpinMotor(-270,100)),
            
             DriveTurnAction(90),
-            DriveStraightAction(430),
+            DriveStraightAction(470),
             DriveTurnAction(-90),
-            SpinMotor(270,100)
+            DriveStraightAction(60),
+            SpinMotor(360,150)
         ))
                                       
         #self.runAction(ParallelAction(DriveStraightAction(100),SpinMotor(1000,1000)))
