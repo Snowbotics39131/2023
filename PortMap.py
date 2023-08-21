@@ -14,18 +14,34 @@ except ImportError: print("PortMapPlus Needed")
 hubName = hubType()
 if hubName == 'prime':
     #if you are using the spike this is all you need to mess with
-    motorRight=Motor(Port.A, Direction.CLOCKWISE)
-    motorLeft=Motor(Port.E, Direction.COUNTERCLOCKWISE)
-    try: motorCenter=Motor(Port.C, Direction.CLOCKWISE)
-    except: pass
     try:
+        motorRight=Motor(Port.A, Direction.CLOCKWISE)
+        motorLeft=Motor(Port.E, Direction.COUNTERCLOCKWISE)
         colorSensorLeft=ColorSensor(Port.F)
         colorSensorRight=ColorSensor(Port.B)
         driveBase=DriveBase(motorLeft, motorRight, 56, 114)
         hubName += 'snow'
+        try: motorCenter=Motor(Port.C, Direction.CLOCKWISE)
+        except: pass
     except:
-        driveBase=DriveBase(motorLeft, motorRight, 50, 50)
-        hubName += 'bug'
+        try:
+            motorRight=Motor(Port.F, Direction.CLOCKWISE)
+            motorLeft=Motor(Port.E, Direction.COUNTERCLOCKWISE)
+            motorTopRight=Motor(Port.A, Direction.CLOCKWISE)
+            motorTopLeft=Motor(Port.B, Direction.CLOCKWISE)
+            colorSensorLeft=ColorSensor(Port.C)
+            colorSensorRight=ColorSensor(Port.D)
+            driveBase=DriveBase(motorLeft, motorRight, 88, 128)
+            hubName +='storm'
+        except:
+            try:
+                motorRight=Motor(Port.A, Direction.CLOCKWISE)
+                motorLeft=Motor(Port.E, Direction.COUNTERCLOCKWISE)
+                driveBase=DriveBase(motorLeft, motorRight, 50, 50)
+                hubName += 'bug'
+                try: motorCenter=Motor(Port.C, Direction.CLOCKWISE)
+                except: pass
+            except: pass
 
 # don't mess with the below unless you are not using the spike
 if hubName == 'city':

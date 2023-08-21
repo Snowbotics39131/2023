@@ -262,7 +262,30 @@ class FindLine(Action):
     def isFinished(self):
         return self.state_left == 'done' and self.state_right == 'done'
 
-
+class ChangeSpeedAction(Action):
+    def __init__(self, new_speed):
+        self.new_speed=new_speed
+    def start(self):
+        driveBase.settings(straight_speed=self.new_speed)
+    def update(self):
+        pass
+    def done(self):
+        pass
+    def isFinished(self):
+        return True
+class ChangeTurnSpeedAction(Action):
+    '''Changes the max turnspeed for drivebase turn'''
+    def __init__(self, new_turnspeed):
+        self.new_turnspeed=new_turnspeed
+    def start(self):
+        driveBase.settings(turn_speed=self.new_turnspeed)
+    def update(self):
+        pass
+    def done(self):
+        pass
+        
+    def isFinished(self):
+        return True        
 if __name__ == '__main__':
     # gtp = GoToPoint(Pose(-250, 500, 180))
     # while not gtp.isFinished():
