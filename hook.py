@@ -45,6 +45,7 @@ class HookMission(MissionBase):
             #DriveTurnAction(35),
         ))
 #start this pointing towards the track in the home that says Masterpiece
+#one unit from the corner
 if __name__=='__main__':
     hook=HookMission()
     hook.run()
