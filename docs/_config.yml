@@ -1,8 +1,8 @@
-title: Just the Docs Template
-description: A starter template for a Jeykll site using the Just the Docs theme!
+title: Snowbotics Documentation 
+description: Documentation for FLL team 39131 Snowbotics code
 theme: just-the-docs
 
-url: https://just-the-docs.github.io
+url: https://snowbotics39131.github.io/SnowboticsDocumentation
 
-aux_links:
-  Template Repository: https://github.com/just-the-docs/just-the-docs-template
+aux_links: # remove if you don't want this link to appear on your pages
+  Template Repository: https://github.com/snowbotics39131/SnowboticsDocumentation
