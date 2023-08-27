@@ -22,7 +22,7 @@ class BananaMission(MissionBase):
             DriveTurnAction(45),
             DriveStraightAction(-380),
             DriveTurnAction(-90),
-            DriveStrightAction(160),
+            DriveStraightAction(160),
             DriveStraightAction(-160)
             #ParallelAction( DriveStraightAction(),SpinMotor(-270,100)),
             #SpinMotor(360,150)
