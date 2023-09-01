@@ -6,43 +6,40 @@ from Actions import *
 from BasicDriveActions import *
 from PortMap import *
 print(driveBase.settings())
-class SpinMotorForever(Action):
-    def __init__(self, speed):
+class SpinMotorTime(Action):
+    def __init__(self, speed, time):
         self.speed=speed
+        self.time=time
     def start(self):
-        motorCenter.run(self.speed)
+        motorCenter.run_time(self.speed, self.time, wait=False)
     def update(self):
         pass
     def done(self):
         pass
     def isFinished(self):
-        return False
-class ChangeTurnRateAction(Action):
-    def __init__(self, turn_rate):
-        self.turn_rate=turn_rate
-    def start(self):
-        driveBase.settings(turn_rate=self.turn_rate)
-    def update(self):
-        pass
-    def done(self):
-        pass
-    def isFinished(self):
-        return True
+        return motorCenter.done()
 class MoveCamera(MissionBase):
     def routine(self):
+        driveBase.settings(turn_rate=90)
         self.runAction(SeriesAction(
-            ChangeTurnRateAction(90),
-            SpinMotor(200, -90),
+            SpinMotor(70, -90),
             DriveTurnAction(3.7),
             DriveStraightAction(450),
-            SpinMotor(200, 90),
+            SpinMotor(70, 90),
             ParallelAction(
-                SpinMotorForever(30),
+                SpinMotorTime(30, 4000),
+                #DriveTurnAction(-10),
                 SeriesAction(
                     DriveStraightAction(-30),
-                    DriveTurnAction(-60)
+                    DriveTurnAction(-80)
                 )
-            )
+            ),
+            SpinMotor(200, -180),
+            DriveStraightAction(-200), #square
+            DriveStraightAction(80),
+            DriveTurnAction(90),
+            DriveStraightAction(-450),
+            SpinMotor(200, 180)
         ))
 if __name__=='__main__':
     move_camera=MoveCamera()
