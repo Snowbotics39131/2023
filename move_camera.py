@@ -23,22 +23,24 @@ class MoveCamera(MissionBase):
         driveBase.settings(turn_rate=90)
         self.runAction(SeriesAction(
             SpinMotor(70, -90),
-            DriveTurnAction(3.7),
-            DriveStraightAction(450),
+            #DriveTurnAction(3),
+            DriveStraightAction(465),
+            DriveTurnAction(12),
             SpinMotor(70, 90),
             ParallelAction(
                 SpinMotorTime(30, 4000),
                 #DriveTurnAction(-10),
                 SeriesAction(
-                    DriveStraightAction(-30),
-                    DriveTurnAction(-80)
+                    DriveStraightAction(-50),
+                    DriveTurnAction(-70),
+                    DriveStraightAction(-40)
                 )
             ),
             SpinMotor(200, -180),
             DriveStraightAction(-200), #square
             DriveStraightAction(80),
             DriveTurnAction(90),
-            DriveStraightAction(-450),
+            DriveStraightAction(-400),
             SpinMotor(200, 180)
         ))
 if __name__=='__main__':
