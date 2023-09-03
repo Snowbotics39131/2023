@@ -43,6 +43,25 @@ class MoveCamera(MissionBase):
             DriveStraightAction(-400),
             SpinMotor(200, 180)
         ))
+#start 12 squares north
+#with attachment up
+class Dragon(MissionBase):
+    def routine(self):
+        self.runAction(DriveTurnAction(30))
+class GetToPink(MissionBase):
+    def routine(self):
+        for i in range(2):
+            self.runAction(SeriesAction(
+                SpinMotor(400, -90),
+                DriveStraightAction(30),
+                SpinMotorTime(400, 3000),
+                DriveStraightAction(-30)
+            ))
 if __name__=='__main__':
-    move_camera=MoveCamera()
-    move_camera.run()
+    #move_camera=MoveCamera()
+    #move_camera.run()
+    #dragon=Dragon()
+    #dragon.run()
+    get_to_pink=GetToPink()
+    while True:
+        get_to_pink.run()
