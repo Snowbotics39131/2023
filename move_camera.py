@@ -63,6 +63,14 @@ class GetToPink(MissionBase):
                 SpinMotorTime(400, 2000),
                 DriveStraightAction(-30)
             ))
+#start with blue piece on back up against sliders
+class SoundMixer(MissionBase):
+    def routine(self):
+        driveBase.settings(turn_rate=90)
+        self.runAction(SeriesAction(
+            DriveStraightAction(-90),
+            DriveTurnAction(45)
+        ))
 if __name__=='__main__':
     move_camera=MoveCamera()
     move_camera.run()
@@ -71,3 +79,5 @@ if __name__=='__main__':
     #get_to_pink=GetToPink()
     #while True:
     #    get_to_pink.run()
+    #sound_mixer=SoundMixer()
+    #sound_mixer.run()
