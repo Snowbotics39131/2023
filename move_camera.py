@@ -1,6 +1,7 @@
-#start in the red home
-#3 squares north
-#facing the track
+#red home
+#4 squares north
+#1 square east
+#facing east
 from MissionBase import *
 from Actions import *
 from BasicDriveActions import *
@@ -23,13 +24,11 @@ class MoveCamera(MissionBase):
         driveBase.settings(turn_rate=90)
         self.runAction(SeriesAction(
             SpinMotor(70, -90),
-            #DriveTurnAction(3),
             DriveStraightAction(465),
             DriveTurnAction(12),
             SpinMotor(70, 90),
             ParallelAction(
                 SpinMotorTime(30, 4000),
-                #DriveTurnAction(-10),
                 SeriesAction(
                     DriveStraightAction(-50),
                     DriveTurnAction(-70),
@@ -43,25 +42,32 @@ class MoveCamera(MissionBase):
             DriveStraightAction(-400),
             SpinMotor(200, 180)
         ))
-#start 12 squares north
-#with attachment up
+#red home
+#13 squares north
+#1 square east
+#facing north
+#attachment up
 class Dragon(MissionBase):
     def routine(self):
         self.runAction(DriveTurnAction(30))
+#near red home
+#580mm north
+#230mm east
+#facing north
 class GetToPink(MissionBase):
     def routine(self):
         for i in range(2):
             self.runAction(SeriesAction(
                 SpinMotor(400, -90),
                 DriveStraightAction(30),
-                SpinMotorTime(400, 3000),
+                SpinMotorTime(400, 2000),
                 DriveStraightAction(-30)
             ))
 if __name__=='__main__':
-    #move_camera=MoveCamera()
-    #move_camera.run()
+    move_camera=MoveCamera()
+    move_camera.run()
     #dragon=Dragon()
     #dragon.run()
-    get_to_pink=GetToPink()
-    while True:
-        get_to_pink.run()
+    #get_to_pink=GetToPink()
+    #while True:
+    #    get_to_pink.run()
