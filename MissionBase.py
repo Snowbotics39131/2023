@@ -1,6 +1,7 @@
-from PortMap import *
 from Actions import *
+from BasicDriveActions import *
 from Estimation import *
+from PortMap import *
 
 class MissionEndedException(Exception):
     pass
@@ -11,6 +12,8 @@ class MissionBase:
     mUpdateRate = 1.0/10.0
     mActive = False
     mIsInterrupted = False
+    startPose = None
+    endPose = None
 
     def setStart(self):
         pass
@@ -61,3 +64,12 @@ class MissionBase:
 
     def getIsInterrupted(self):
         return self.mIsInterrupted
+
+
+class Sequence:
+    def __init__(self, *missions):
+        self.missions = missions
+    def run(self):
+        for i in self.missions:
+            GoToPoint(i.startPose).run()
+            i.run()
