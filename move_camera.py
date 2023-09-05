@@ -55,8 +55,18 @@ class Dragon(MissionBase):
 #230mm east
 #facing north
 class GetToPink(MissionBase):
+    def __init__(self, color='pink'):
+        self.color=color
     def routine(self):
-        for i in range(2):
+        if self.color=='blue':
+            times=0
+        elif self.color in ('orange', 'yellow'):
+            times=1
+        elif self.color=='pink':
+            times=2
+        else:
+            raise ValueError(f'Invalid color: {self.color}')
+        for i in range(times):
             self.runAction(SeriesAction(
                 SpinMotor(400, -90),
                 DriveStraightAction(30),
@@ -71,13 +81,31 @@ class SoundMixer(MissionBase):
             DriveStraightAction(-90),
             DriveTurnAction(45)
         ))
+class Chicken(MissionBase):
+    def routine(self):
+        while True:
+            self.runAction(SeriesAction(
+                SpinMotor(200, -135),
+                ParallelAction(
+                    SpinMotor(200, 135),
+                    DriveStraightAction(-30)
+                ),
+                DriveStraightAction(30)
+            ))
 if __name__=='__main__':
     move_camera=MoveCamera()
     move_camera.run()
+
     #dragon=Dragon()
     #dragon.run()
-    #get_to_pink=GetToPink()
+
+    #get_to_pink=GetToPink('orange')
     #while True:
     #    get_to_pink.run()
+    #get_to_pink.run()
+
     #sound_mixer=SoundMixer()
     #sound_mixer.run()
+
+    #chicken=Chicken()
+    #chicken.run()
