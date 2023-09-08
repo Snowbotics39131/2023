@@ -71,9 +71,11 @@ class DirectGoToPoint(SeriesAction):
                          DriveStraightAction((vector[0]**2+vector[1]**2)**0.5),
                          DriveTurnAction(jmath.shortestDirectionBetweenBearings(destination.a, direction)))
 class FollowPath(SeriesAction):
+    name='FollowPath'
     def __init__(self, *poses):
         super().__init__(*(DirectGoToPoint(i) for i in poses))
 class AvoidGoToPoint(FollowPath):
+    name='AvoidGoToPoint'
     def __init__(self, destination):
         super().__init__(*shortest_path(simpleEstimate.bestPose, destination))
 
