@@ -21,11 +21,11 @@ class SpinMotorTime(Action):
         return motorCenter.done()
 class MoveCamera(MissionBase):
     def routine(self):
-        driveBase.settings(turn_rate=90)
+        driveBase.settings(straight_speed=100, turn_rate=30)
         self.runAction(SeriesAction(
             SpinMotor(70, -90),
             DriveStraightAction(465),
-            DriveTurnAction(12),
+            DriveTurnAction(13.5),
             SpinMotor(70, 90),
             ParallelAction(
                 SpinMotorTime(30, 4000),
@@ -36,10 +36,11 @@ class MoveCamera(MissionBase):
                 )
             ),
             SpinMotor(200, -180),
+            DriveTurnAction(-30),
             DriveStraightAction(-200), #square
             DriveStraightAction(80),
             DriveTurnAction(90),
-            DriveStraightAction(-400),
+            DriveStraightAction(-375),
             SpinMotor(200, 180)
         ))
 #red home
