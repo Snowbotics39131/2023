@@ -1,6 +1,6 @@
 ---
-title: Home
-layout: home
+title: Test Page
+layout: whatisalayout
 ---
 ## Test Page
 Hello! This is a test page.
