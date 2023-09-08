@@ -3,6 +3,7 @@ from PortMap import *
 from Actions import *
 from Estimation import *
 import jmath
+from shortest_path import *
 simpleEstimate.initial(0, 0, 0)  # not really sure what to do here
 
 class DriveStraightAction(Action):
@@ -55,8 +56,8 @@ class DriveTurnAction(Action):
 #make a Action that drives to a point like the functions in new.py using sub actions shown above hint look at the SeriesAction 
 
 
-class GoToPoint(SeriesAction):
-    name = "GotoToPoint"
+class DirectGoToPoint(SeriesAction):
+    name = "DirectGoToPoint"
 
     def __init__(self, destination):
         location = simpleEstimate.getCurrentPose()
@@ -69,6 +70,12 @@ class GoToPoint(SeriesAction):
         super().__init__(DriveTurnAction(turn),
                          DriveStraightAction((vector[0]**2+vector[1]**2)**0.5),
                          DriveTurnAction(jmath.shortestDirectionBetweenBearings(destination.a, direction)))
+class FollowPath(SeriesAction):
+    def __init__(self, *poses):
+        super().__init__(*(DirectGoToPoint(i) for i in poses))
+class AvoidGoToPoint(FollowPath):
+    def __init__(self, destination):
+        super().__init__(*shortest_path(simpleEstimate.bestPose, destination))
 
 
 class PIDController:

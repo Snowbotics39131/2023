@@ -13,7 +13,6 @@ class MissionBase:
     mActive = False
     mIsInterrupted = False
     startPose = None
-    endPose = None
 
     def setStart(self):
         pass
@@ -71,5 +70,5 @@ class Sequence:
         self.missions = missions
     def run(self):
         for i in self.missions:
-            GoToPoint(i.startPose).run()
+            AvoidGoToPoint(i.startPose).run()
             i.run()
