@@ -1,12 +1,10 @@
-#red home
-#4 squares north
-#1 square east
-#facing east
 from MissionBase import *
 from Actions import *
 from BasicDriveActions import *
 from PortMap import *
+from Estimation import Pose
 print(driveBase.settings())
+print(hub.battery.voltage())
 class SpinMotorTime(Action):
     def __init__(self, speed, time):
         self.speed=speed
@@ -19,7 +17,12 @@ class SpinMotorTime(Action):
         pass
     def isFinished(self):
         return motorCenter.done()
+#red home
+#4 squares north
+#1 square east
+#facing east
 class MoveCamera(MissionBase):
+    startPose=Pose(25, 100, 0)
     def routine(self):
         driveBase.settings(straight_speed=100, turn_rate=30)
         self.runAction(SeriesAction(
@@ -49,6 +52,7 @@ class MoveCamera(MissionBase):
 #facing north
 #attachment up
 class Dragon(MissionBase):
+    startPose=Pose(25, 325, -90)
     def routine(self):
         self.runAction(DriveTurnAction(30))
 #near red home
@@ -56,6 +60,7 @@ class Dragon(MissionBase):
 #230mm east
 #facing north
 class GetToPink(MissionBase):
+    startPose=Pose(230, 580, -90)
     def __init__(self, color='pink'):
         self.color=color
     def routine(self):
@@ -94,19 +99,5 @@ class Chicken(MissionBase):
                 DriveStraightAction(30)
             ))
 if __name__=='__main__':
-    move_camera=MoveCamera()
-    move_camera.run()
-
-    #dragon=Dragon()
-    #dragon.run()
-
-    #get_to_pink=GetToPink('orange')
-    #while True:
-    #    get_to_pink.run()
-    #get_to_pink.run()
-
-    #sound_mixer=SoundMixer()
-    #sound_mixer.run()
-
-    #chicken=Chicken()
-    #chicken.run()
+    seq_test=Sequence(GetToPink(), Dragon(), MoveCamera())
+    seq_test.run()
