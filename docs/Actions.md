@@ -14,6 +14,7 @@ Run before starting the `update` loop. Used for setup.
 ## `update`
 Run repeatedly until `isFinished` returns `True`.
 # `ParallelAction`
+
 |Argument  |Type    |Default|Description        |
 |----------|--------|-------|-------------------|
 |`*actions`|iterable|N/A    |Iterable of actions|
@@ -28,6 +29,7 @@ Start all actions.
 ## `update`
 Update all actions.
 # `SeriesAction`
+
 |Argument  |Type    |Default|Description        |
 |----------|--------|-------|-------------------|
 |`*actions`|iterable|N/A    |Iterable of actions|
@@ -38,6 +40,7 @@ Check if all actions are complete.
 ## `update`
 Update current action, or switch to next action.
 # `SpinMotor`
+
 |Argument        |Type    |Default    |Description                                      |
 |----------------|--------|-----------|-------------------------------------------------|
 |`speed`         |`Number`|N/A        |The speed of the motor.                          |
