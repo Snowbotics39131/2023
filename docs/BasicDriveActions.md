@@ -1,5 +1,5 @@
 ---
-title: Actions
+title: BasicDriveActions
 layout: default
 ---
 # `DriveStraightAction`
