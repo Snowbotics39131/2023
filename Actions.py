@@ -17,6 +17,11 @@ class Action:
     def done(self):
         ''' Run code once when the action finishes, usually for clean up'''
         pass
+    def run(self):
+        self.start()
+        while not self.isFinished():
+            self.update()
+        self.done()
  
 class ParallelAction(Action): #child class of class Action
  
