@@ -114,9 +114,10 @@ if __name__=='__main__':
     #4 north
     #0 east
     #facing east
+    driveBase.settings(straight_speed=100, turn_rate=90)
     DriveStraightAction(170).run()
     DriveTurnAction(-90).run()
-    DriveStraightAction(550).run()
+    DriveStraightAction(530).run()
     DriveTurnAction(-20).run()
     DriveStraightAction(5).run()
     GetToPink().run()
