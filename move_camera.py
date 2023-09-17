@@ -6,6 +6,8 @@ from MissionBase import *
 from Actions import *
 from BasicDriveActions import *
 from PortMap import *
+SPEED_GEAR_RATIO=-2
+ANGLE_GEAR_RATIO=2
 print(driveBase.settings())
 class SpinMotorTime(Action):
     def __init__(self, speed, time):
@@ -19,29 +21,43 @@ class SpinMotorTime(Action):
         pass
     def isFinished(self):
         return motorCenter.done()
+class SpinMotorUntilStalled(Action):
+    def __init__(self, *args, **kwargs):
+        #kwargs['wait']=False
+        self.args=args
+        self.kwargs=kwargs
+    def start(self):
+        motorCenter.run_until_stalled(*self.args, **self.kwargs)
+    def update(self):
+        pass
+    def done(self):
+        pass
+    def isFinished(self):
+        return motorCenter.done()
+
 class MoveCamera(MissionBase):
     def routine(self):
         driveBase.settings(straight_speed=100, turn_rate=30)
         self.runAction(SeriesAction(
-            SpinMotor(70, -90),
+            SpinMotor(70*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO),
             DriveStraightAction(465),
             DriveTurnAction(13.5),
-            SpinMotor(70, 90),
+            SpinMotor(70*SPEED_GEAR_RATIO, 90*ANGLE_GEAR_RATIO),
             ParallelAction(
-                SpinMotorTime(30, 4000),
+                SpinMotorTime(30*SPEED_GEAR_RATIO, 4000),
                 SeriesAction(
                     DriveStraightAction(-50),
                     DriveTurnAction(-70),
                     DriveStraightAction(-40)
                 )
             ),
-            SpinMotor(200, -180),
+            SpinMotor(200*SPEED_GEAR_RATIO, -180*ANGLE_GEAR_RATIO),
             DriveTurnAction(-30),
             DriveStraightAction(-200), #square
             DriveStraightAction(80),
             DriveTurnAction(90),
             DriveStraightAction(-375),
-            SpinMotor(200, 180)
+            SpinMotor(200*SPEED_GEAR_RATIO, 180*ANGLE_GEAR_RATIO)
         ))
 #red home
 #13 squares north
@@ -69,9 +85,10 @@ class GetToPink(MissionBase):
             raise ValueError(f'Invalid color: {self.color}')
         for i in range(times):
             self.runAction(SeriesAction(
-                SpinMotor(400, -90),
+                SpinMotor(400*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO),
                 DriveStraightAction(30),
-                SpinMotorTime(400, 2000),
+                #SpinMotorTime(400*SPEED_GEAR_RATIO, 2000),
+                SpinMotorUntilStalled(400*SPEED_GEAR_RATIO),
                 DriveStraightAction(-30)
             ))
 #start with blue piece on back up against sliders
@@ -86,16 +103,16 @@ class Chicken(MissionBase):
     def routine(self):
         while True:
             self.runAction(SeriesAction(
-                SpinMotor(200, -135),
+                SpinMotor(200*SPEED_GEAR_RATIO, -135*ANGLE_GEAR_RATIO),
                 ParallelAction(
-                    SpinMotor(200, 135),
+                    SpinMotor(200*SPEED_GEAR_RATIO, 135*ANGLE_GEAR_RATIO),
                     DriveStraightAction(-30)
                 ),
                 DriveStraightAction(30)
             ))
 class ThrowGuyMission(MissionBase):
     def routine(self):
-        self.runAction(SpinMotor(1000, -180))
+        self.runAction(SpinMotor(1000*SPEED_GEAR_RATIO, -180*ANGLE_GEAR_RATIO))
 if __name__=='__main__':
     #move_camera=MoveCamera()
     #move_camera.run()
@@ -121,13 +138,14 @@ if __name__=='__main__':
     DriveStraightAction(170).run()
     DriveTurnAction(-90).run()
     DriveStraightAction(530).run()
-    DriveTurnAction(-20).run()
+    DriveTurnAction(-10).run()
     DriveStraightAction(5).run()
-    while True:
-        GetToPink().run()
+    GetToPink().run()
+    #while True:
+    #    GetToPink().run()
     DriveTurnAction(20).run()
     DriveStraightAction(-300).run()
-    SpinMotor(200, -180).run()
+    SpinMotor(200*SPEED_GEAR_RATIO, -180*ANGLE_GEAR_RATIO).run()
     DriveTurnAction(-90).run()
     DriveStraightAction(230).run()
     DriveTurnAction(90).run()
