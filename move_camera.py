@@ -139,7 +139,7 @@ if __name__=='__main__':
     DriveTurnAction(-90).run()
     DriveStraightAction(530).run()
     DriveTurnAction(-10).run()
-    DriveStraightAction(5).run()
+    #DriveStraightAction(3).run()
     GetToPink().run()
     #while True:
     #    GetToPink().run()
@@ -147,7 +147,7 @@ if __name__=='__main__':
     DriveStraightAction(-300).run()
     SpinMotor(200*SPEED_GEAR_RATIO, -180*ANGLE_GEAR_RATIO).run()
     DriveTurnAction(-90).run()
-    DriveStraightAction(230).run()
+    DriveStraightAction(210).run()
     DriveTurnAction(90).run()
     DriveStraightAction(25).run()
     Dragon().run()
