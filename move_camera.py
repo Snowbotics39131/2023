@@ -131,13 +131,15 @@ if __name__=='__main__':
     #chicken=Chicken()
     #chicken.run()
     
-    #4 north
-    #0 east
-    #facing east
+    #1 north
+    #15.5 east
+    #attachment up
+    #facing north
     driveBase.settings(straight_speed=100, turn_rate=90)
-    DriveStraightAction(170).run()
-    DriveTurnAction(-90).run()
-    DriveStraightAction(530).run()
+    #DriveStraightAction(170).run()
+    #DriveTurnAction(-90).run()
+    SpinMotor(200*SPEED_GEAR_RATIO, 225*ANGLE_GEAR_RATIO).run()
+    DriveStraightAction(570).run() #try 565
     DriveTurnAction(-10).run()
     #DriveStraightAction(3).run()
     GetToPink().run()
