@@ -53,6 +53,7 @@ class MoveCamera(MissionBase):
             ),
             SpinMotor(200*SPEED_GEAR_RATIO, -180*ANGLE_GEAR_RATIO),
             DriveTurnAction(-30),
+            #driveBase.settings(straight_speed=300, turn_rate=180)
             DriveStraightAction(-200), #square
             DriveStraightAction(80),
             DriveTurnAction(90),
@@ -85,7 +86,7 @@ class GetToPink(MissionBase):
             raise ValueError(f'Invalid color: {self.color}')
         for i in range(times):
             self.runAction(SeriesAction(
-                SpinMotor(400*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO),
+                #SpinMotor(400*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO),
                 DriveStraightAction(30),
                 #SpinMotorTime(400*SPEED_GEAR_RATIO, 2000),
                 SpinMotorUntilStalled(400*SPEED_GEAR_RATIO),
@@ -97,7 +98,7 @@ class SoundMixer(MissionBase):
         driveBase.settings(turn_rate=90)
         self.runAction(SeriesAction(
             DriveStraightAction(-90),
-            DriveTurnAction(45)
+            DriveTurnAction(90)
         ))
 class Chicken(MissionBase):
     def routine(self):
@@ -113,6 +114,17 @@ class Chicken(MissionBase):
 class ThrowGuyMission(MissionBase):
     def routine(self):
         self.runAction(SpinMotor(1000*SPEED_GEAR_RATIO, -180*ANGLE_GEAR_RATIO))
+def zero_pad(number, digits):
+    number=str(number)
+    return '0'*(digits-len(number))+number
+def countdown(time, message=''):
+    print(message)
+    for i in range(time):
+        print(zero_pad(time-i, len(str(time))), end='\r')
+        hub.display.number(time-i)
+        wait(1000)
+    print('now')
+    hub.display.off()
 if __name__=='__main__':
     #move_camera=MoveCamera()
     #move_camera.run()
@@ -132,24 +144,47 @@ if __name__=='__main__':
     #chicken.run()
     
     #1 north
-    #15.5 east
-    #attachment up
+    #15.75 east
+    #attachment 90
     #facing north
     driveBase.settings(straight_speed=100, turn_rate=90)
     #DriveStraightAction(170).run()
     #DriveTurnAction(-90).run()
-    SpinMotor(200*SPEED_GEAR_RATIO, 225*ANGLE_GEAR_RATIO).run()
-    DriveStraightAction(570).run() #try 565
+    #SpinMotor(200*SPEED_GEAR_RATIO, 100*ANGLE_GEAR_RATIO).run()
+    #SpinMotor(400*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO).run()
+    DriveStraightAction(553).run()
     DriveTurnAction(-10).run()
     #DriveStraightAction(3).run()
+    #wait(3000)
     GetToPink().run()
     #while True:
     #    GetToPink().run()
-    DriveTurnAction(20).run()
+    DriveTurnAction(13).run()
     DriveStraightAction(-300).run()
-    SpinMotor(200*SPEED_GEAR_RATIO, -180*ANGLE_GEAR_RATIO).run()
+    SpinMotor(200*SPEED_GEAR_RATIO, -135*ANGLE_GEAR_RATIO).run()
     DriveTurnAction(-90).run()
     DriveStraightAction(210).run()
     DriveTurnAction(90).run()
-    DriveStraightAction(25).run()
+    DriveStraightAction(27).run()
     Dragon().run()
+    DriveTurnAction(-45).run()
+    Dragon().run()
+    DriveTurnAction(-30).run()
+    DriveStraightAction(-50).run()
+    DriveTurnAction(90).run()
+    DriveStraightAction(300).run()
+    DriveTurnAction(135).run()
+    DriveStraightAction(70).run()
+    SpinMotor(200*SPEED_GEAR_RATIO, -70*ANGLE_GEAR_RATIO).run()
+    DriveStraightAction(-45).run()
+    SoundMixer().run()
+    driveBase.settings(straight_speed=500, turn_rate=360)
+    DriveStraightAction(150).run()
+    DriveTurnAction(-45).run()
+    DriveStraightAction(800).run()
+    SpinMotor(500*SPEED_GEAR_RATIO, 180*ANGLE_GEAR_RATIO).run()
+    print('Prepare for camera mission and press left or right')
+    while not hub.buttons.pressed():
+        pass
+    driveBase.settings(straight_speed=100, turn_rate=90)
+    MoveCamera().run()
