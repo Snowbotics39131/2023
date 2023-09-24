@@ -49,10 +49,12 @@ class ChangeDriveBaseSettings(Action):
         return True
     def done(self):
         pass
+wait=True
 def waitForButtonPressWithMessage(message):
     print(message)
-    while not hub.buttons.pressed():
-        pass
+    if wait:
+        while not hub.buttons.pressed():
+            pass
 class MoveCamera(MissionBase):
     def routine(self):
         ChangeDriveBaseSettings(straight_speed=50, turn_rate=45)
@@ -150,10 +152,10 @@ def countdown(time, message=''):
     print('now')
     hub.display.off()
 if __name__=='__main__':
-    MoveCamera().run()
-    print('Stop me')
-    while True:
-        pass
+    #MoveCamera().run()
+    #print('Stop me')
+    #while True:
+    #    pass
     #1 north
     #15.75 east
     #attachment 90
