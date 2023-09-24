@@ -34,15 +34,36 @@ class SpinMotorUntilStalled(Action):
         pass
     def isFinished(self):
         return motorCenter.done()
+class ChangeDriveBaseSettings(Action):
+    def __init__(self, *args, **kwargs):
+        self.args=args
+        self.kwargs=kwargs
+    def start(self):
+        driveBase.settings(*self.args, **self.kwargs)
+    def update(self):
+        pass
+    def isFinished(self):
+        return True
+    def done(self):
+        pass
 
 class MoveCamera(MissionBase):
     def routine(self):
-        driveBase.settings(straight_speed=100, turn_rate=30)
         self.runAction(SeriesAction(
+            DriveTurnAction(-90),
+            DriveStraightAction(-200), #square
+            DriveStraightAction(40),
+            DriveTurnAction(90),
+            SpinMotor(200*SPEED_GEAR_RATIO, 90*ANGLE_GEAR_RATIO),
+            ChangeDriveBaseSettings(straight_speed=100, turn_rate=30),
             SpinMotor(70*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO),
-            DriveStraightAction(465),
+            DriveStraightAction(30),
             DriveTurnAction(13.5),
-            SpinMotor(70*SPEED_GEAR_RATIO, 90*ANGLE_GEAR_RATIO),
+            DriveStraightAction(25),
+            ParallelAction(
+                DriveTurnAction(-15),
+                SpinMotor(70*SPEED_GEAR_RATIO, 110*ANGLE_GEAR_RATIO),
+            ),
             ParallelAction(
                 SpinMotorTime(30*SPEED_GEAR_RATIO, 4000),
                 SeriesAction(
@@ -53,12 +74,12 @@ class MoveCamera(MissionBase):
             ),
             SpinMotor(200*SPEED_GEAR_RATIO, -180*ANGLE_GEAR_RATIO),
             DriveTurnAction(-30),
-            #driveBase.settings(straight_speed=300, turn_rate=180)
+            ChangeDriveBaseSettings(straight_speed=300, turn_rate=180),
             DriveStraightAction(-200), #square
             DriveStraightAction(80),
             DriveTurnAction(90),
             DriveStraightAction(-375),
-            SpinMotor(200*SPEED_GEAR_RATIO, 180*ANGLE_GEAR_RATIO)
+            SpinMotor(200*SPEED_GEAR_RATIO, 90*ANGLE_GEAR_RATIO)
         ))
 #red home
 #13 squares north
@@ -126,65 +147,26 @@ def countdown(time, message=''):
     print('now')
     hub.display.off()
 if __name__=='__main__':
-    #move_camera=MoveCamera()
-    #move_camera.run()
-
-    #dragon=Dragon()
-    #dragon.run()
-
-    #get_to_pink=GetToPink('orange')
-    #while True:
-    #    get_to_pink.run()
-    #get_to_pink.run()
-
-    #sound_mixer=SoundMixer()
-    #sound_mixer.run()
-
-    #chicken=Chicken()
-    #chicken.run()
-    
     #1 north
     #15.75 east
     #attachment 90
     #facing north
     driveBase.settings(straight_speed=100, turn_rate=90)
-    #DriveStraightAction(170).run()
-    #DriveTurnAction(-90).run()
-    #SpinMotor(200*SPEED_GEAR_RATIO, 100*ANGLE_GEAR_RATIO).run()
-    #SpinMotor(400*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO).run()
-    DriveStraightAction(553).run()
+    DriveStraightAction(550).run()
     DriveTurnAction(-10).run()
-    #DriveStraightAction(3).run()
-    #wait(3000)
     GetToPink().run()
-    #while True:
-    #    GetToPink().run()
     DriveTurnAction(13).run()
     DriveStraightAction(-300).run()
     SpinMotor(200*SPEED_GEAR_RATIO, -135*ANGLE_GEAR_RATIO).run()
     DriveTurnAction(-90).run()
     DriveStraightAction(210).run()
     DriveTurnAction(90).run()
-    DriveStraightAction(27).run()
+    DriveStraightAction(33).run()
     Dragon().run()
     DriveTurnAction(-45).run()
     Dragon().run()
     DriveTurnAction(-30).run()
-    DriveStraightAction(-50).run()
-    DriveTurnAction(90).run()
-    DriveStraightAction(300).run()
-    DriveTurnAction(135).run()
-    DriveStraightAction(70).run()
-    SpinMotor(200*SPEED_GEAR_RATIO, -70*ANGLE_GEAR_RATIO).run()
-    DriveStraightAction(-45).run()
-    SoundMixer().run()
-    driveBase.settings(straight_speed=500, turn_rate=360)
-    DriveStraightAction(150).run()
-    DriveTurnAction(-45).run()
-    DriveStraightAction(800).run()
-    SpinMotor(500*SPEED_GEAR_RATIO, 180*ANGLE_GEAR_RATIO).run()
-    print('Prepare for camera mission and press left or right')
-    while not hub.buttons.pressed():
-        pass
-    driveBase.settings(straight_speed=100, turn_rate=90)
+    DriveStraightAction(-260).run()
+    DriveTurnAction(95).run()
+    DriveStraightAction(450).run()
     MoveCamera().run()
