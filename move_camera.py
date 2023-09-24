@@ -56,27 +56,35 @@ def waitForButtonPressWithMessage(message):
 class MoveCamera(MissionBase):
     def routine(self):
         ChangeDriveBaseSettings(straight_speed=50, turn_rate=45)
-        waitForButtonPressWithMessage('I will doing the first SpinMotorUntilStalled')
+        waitForButtonPressWithMessage('I will do the first SpinMotorUntilStalled')
         self.runAction(SpinMotorUntilStalled(300*SPEED_GEAR_RATIO))
-        waitForButtonPressWithMessage('I will turning the motor -25 degrees')
-        self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, -25*ANGLE_GEAR_RATIO))
-        waitForButtonPressWithMessage('I will turning 10 degrees')
+        waitForButtonPressWithMessage('I will turn the motor -25 degrees')
+        self.runAction(SpinMotor(100*SPEED_GEAR_RATI), -25*ANGLE_GEAR_RATIO))
+        waitForButtonPressWithMessage('I will turn 10 degrees')
         self.runAction(DriveTurnAction(10))
-        waitForButtonPressWithMessage('I will driving 25mm')
-        self.runAction(DriveStraightAction(25))
-        waitForButtonPressWithMessage('I will turning -30 degrees')
-        self.runAction(DriveTurnAction(-30))
-        waitForButtonPressWithMessage('I will running the second SpinMotorUntilStalled')
+        waitForButtonPressWithMessage('I will driv 28mm')
+        self.runAction(DriveStraightAction(28))
+        waitForButtonPressWithMessage('I will turn -20 degrees')
+        self.runAction(DriveTurnAction(-20))
+        waitForButtonPressWithMessage('I will move over the orange thing')
+        self.runAction(SpinMotor(200*SPEED_GEAR_RATIO, -45*ANGLE_GEAR_RATIO))
+        self.runAction(DriveTurnAction(-3))
+        self.runAction(SpinMotor(200*SPEED_GEAR_RATIO, 45*ANGLE_GEAR_RATIO))
+        #waitForButtonPressWithMessage('I will drive back 30mm')
+        #self.runAction(DriveStraightAction(-30))
+        waitForButtonPressWithMessage('I will runn the second SpinMotorUntilStalled')
         self.runAction(SpinMotorUntilStalled(300*SPEED_GEAR_RATIO))
-        waitForButtonPressWithMessage('I will holding the motor down for 3 seconds and driving')
+        waitForButtonPressWithMessage('I will hold the motor down for 3 seconds and driving')
         self.runAction(ParallelAction(
             SpinMotorTime(30*SPEED_GEAR_RATIO, 3000),
             SeriesAction(
                 DriveStraightAction(-50),
-                DriveTurnAction(-45)
+                DriveTurnAction(-45),
+                DriveStraightAction(50),
+                DriveTurnAction(-90)
             )
         ))
-        waitForButtonPressWithMessage('I will turning the motor 90 degrees')
+        waitForButtonPressWithMessage('I will turn the motor -90 degrees')
         self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
 #red home
 #13 squares north
