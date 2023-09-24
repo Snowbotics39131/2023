@@ -49,7 +49,7 @@ class ChangeDriveBaseSettings(Action):
         return True
     def done(self):
         pass
-wait=True
+wait=False
 def waitForButtonPressWithMessage(message):
     print(message)
     if wait:
