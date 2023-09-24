@@ -70,8 +70,6 @@ class MoveCamera(MissionBase):
         self.runAction(SpinMotor(200*SPEED_GEAR_RATIO, -45*ANGLE_GEAR_RATIO))
         self.runAction(DriveTurnAction(-3))
         self.runAction(SpinMotor(200*SPEED_GEAR_RATIO, 45*ANGLE_GEAR_RATIO))
-        #waitForButtonPressWithMessage('I will drive back 30mm')
-        #self.runAction(DriveStraightAction(-30))
         waitForButtonPressWithMessage('I will run the second SpinMotorUntilStalled')
         self.runAction(SpinMotorUntilStalled(300*SPEED_GEAR_RATIO))
         waitForButtonPressWithMessage('I will hold the motor down for 3 seconds and drive')
@@ -80,7 +78,7 @@ class MoveCamera(MissionBase):
             SeriesAction(
                 DriveStraightAction(-50),
                 DriveTurnAction(-45),
-                DriveStraightAction(50),
+                DriveStraightAction(100),
                 DriveTurnAction(-90)
             )
         ))
