@@ -1,7 +1,7 @@
 # only tested in CPython
 try:
     from pybricks.tools import StopWatch
-except:
+except ImportError:
     from time import perf_counter
 
     class StopWatch:
