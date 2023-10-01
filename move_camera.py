@@ -23,9 +23,6 @@ class SpinMotorTime(Action):
         return motorCenter.done()
 class SpinMotorUntilStalled(Action):
     def __init__(self, *args, **kwargs):
-        '''
-        speed, then=Stop.COAST, duty_limit=None
-        '''
         #kwargs['wait']=False
         self.args=args
         self.kwargs=kwargs
@@ -49,43 +46,31 @@ class ChangeDriveBaseSettings(Action):
         return True
     def done(self):
         pass
-wait=False
-def waitForButtonPressWithMessage(message):
-    print(message)
-    if wait:
-        while not hub.buttons.pressed():
-            pass
+##63mm north 2.5 squares
+##415mm east
+#19 east <-- this, not mm measurements
+#1 north
 class MoveCamera(MissionBase):
     def routine(self):
-        ChangeDriveBaseSettings(straight_speed=50, turn_rate=45)
-        waitForButtonPressWithMessage('I will do the first SpinMotorUntilStalled')
-        self.runAction(SpinMotorUntilStalled(300*SPEED_GEAR_RATIO))
-        waitForButtonPressWithMessage('I will turn the motor -25 degrees')
-        self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, -25*ANGLE_GEAR_RATIO))
-        waitForButtonPressWithMessage('I will turn 10 degrees')
-        self.runAction(DriveTurnAction(10))
-        waitForButtonPressWithMessage('I will drive 28mm')
-        self.runAction(DriveStraightAction(28))
-        waitForButtonPressWithMessage('I will turn -20 degrees')
-        self.runAction(DriveTurnAction(-20))
-        waitForButtonPressWithMessage('I will move over the lever')
-        self.runAction(SpinMotor(200*SPEED_GEAR_RATIO, -45*ANGLE_GEAR_RATIO))
-        self.runAction(DriveTurnAction(-3))
-        self.runAction(SpinMotor(200*SPEED_GEAR_RATIO, 45*ANGLE_GEAR_RATIO))
-        waitForButtonPressWithMessage('I will run the second SpinMotorUntilStalled')
-        self.runAction(SpinMotorUntilStalled(300*SPEED_GEAR_RATIO))
-        waitForButtonPressWithMessage('I will hold the motor down for 3 seconds and drive')
+        driveBase.settings(straight_speed=100, turn_rate=90)
+        self.runAction(DriveStraightAction(-100))
+        self.runAction(DriveStraightAction(40))
+        self.runAction(SpinMotor(200*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
+        self.runAction(DriveTurnAction(90))
+        self.runAction(DriveStraightAction(30))
+        self.runAction(DriveTurnAction(2))
+        self.runAction(DriveStraightAction(20))
+        self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, 110*ANGLE_GEAR_RATIO))
         self.runAction(ParallelAction(
-            SpinMotorTime(30*SPEED_GEAR_RATIO, 3000),
+            SpinMotorTime(20*SPEED_GEAR_RATIO, 4000),
             SeriesAction(
-                DriveStraightAction(-50),
-                DriveTurnAction(-45),
-                DriveStraightAction(100),
-                DriveTurnAction(-90)
+                DriveStraightAction(-60),
+                DriveTurnAction(-70)
             )
         ))
-        waitForButtonPressWithMessage('I will turn the motor -90 degrees')
         self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
+        self.runAction(DriveTurnAction(45))
+        self.runAction(DriveStraightAction(-450))
 #red home
 #13 squares north
 #1 square east
@@ -151,17 +136,19 @@ def countdown(time, message=''):
         wait(1000)
     print('now')
     hub.display.off()
+wait=True
+def waitForButtonPressWithMessage(message):
+    print(message)
+    if wait:
+        while not hub.buttons.pressed():
+            pass
 if __name__=='__main__':
-    #MoveCamera().run()
-    #print('Stop me')
-    #while True:
-    #    pass
     #1 north
-    #15.75 east
+    #16 east
     #attachment 90
     #facing north
     driveBase.settings(straight_speed=100, turn_rate=90)
-    DriveStraightAction(550).run()
+    DriveStraightAction(553).run()
     DriveTurnAction(-10).run()
     GetToPink().run()
     DriveTurnAction(13).run()
@@ -170,12 +157,16 @@ if __name__=='__main__':
     DriveTurnAction(-90).run()
     DriveStraightAction(210).run()
     DriveTurnAction(90).run()
-    DriveStraightAction(33).run()
+    DriveStraightAction(40).run()
     Dragon().run()
     DriveTurnAction(-45).run()
     Dragon().run()
     DriveTurnAction(-30).run()
-    DriveStraightAction(-260).run()
-    DriveTurnAction(95).run()
-    DriveStraightAction(450).run()
+    DriveStraightAction(-400).run()
+    DriveStraightAction(70).run()
+    DriveTurnAction(90).run()
+    DriveStraightAction(455).run() #TODO: make this check brightness change from
+    DriveTurnAction(-90).run()     #white to light blue instead of fixed value
+    SpinMotor(300*SPEED_GEAR_RATIO, 100*ANGLE_GEAR_RATIO).run()
+    #waitForButtonPressWithMessage('Starting MoveCamera on button press')
     MoveCamera().run()
