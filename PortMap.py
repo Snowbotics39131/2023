@@ -21,6 +21,7 @@ if hubName == 'prime':
     try:
         colorSensorLeft=ColorSensor(Port.F)
         colorSensorRight=ColorSensor(Port.B)
+        motorBack=Motor(Port.D, Direction.COUNTERCLOCKWISE)
         driveBase=DriveBase(motorLeft, motorRight, 56, 114)
         hubName += 'snow'
     except:
