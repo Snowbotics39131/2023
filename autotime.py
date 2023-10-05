@@ -1,4 +1,3 @@
-# only tested in CPython
 try:
     from pybricks.tools import StopWatch
 except ImportError:
