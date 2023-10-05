@@ -6,6 +6,7 @@ from MissionBase import *
 from Actions import *
 from BasicDriveActions import *
 from PortMap import *
+import autotime
 SPEED_GEAR_RATIO=-2
 ANGLE_GEAR_RATIO=2
 print(driveBase.settings())
@@ -137,11 +138,13 @@ def countdown(time, message=''):
     print('now')
     hub.display.off()
 wait=True
-def waitForButtonPressWithMessage(message):
-    print(message)
+def wait_for_button_press(message=None, checkpoint_message=None):
+    if message is not None:
+        print(message)
     if wait:
         while not hub.buttons.pressed():
             pass
+        autotime.checkpoint(f'wait_for_button_press({repr(message)})' if checkpoint_message is None else checkpoint_message, False)
 if __name__=='__main__':
     #1 north
     #16 east
@@ -151,6 +154,7 @@ if __name__=='__main__':
     DriveStraightAction(553).run()
     DriveTurnAction(-10).run()
     GetToPink().run()
+    autotime.checkpoint('GetToPink', True)
     DriveTurnAction(13).run()
     DriveStraightAction(-300).run()
     SpinMotor(200*SPEED_GEAR_RATIO, -135*ANGLE_GEAR_RATIO).run()
@@ -161,6 +165,7 @@ if __name__=='__main__':
     Dragon().run()
     DriveTurnAction(-45).run()
     Dragon().run()
+    autotime.checkpoint('Dragon', True)
     DriveTurnAction(-30).run()
     DriveStraightAction(-400).run()
     DriveStraightAction(70).run()
@@ -168,5 +173,7 @@ if __name__=='__main__':
     DriveStraightAction(455).run() #TODO: make this check brightness change from
     DriveTurnAction(-90).run()     #white to light blue instead of fixed value
     SpinMotor(300*SPEED_GEAR_RATIO, 100*ANGLE_GEAR_RATIO).run()
-    #waitForButtonPressWithMessage('Starting MoveCamera on button press')
+    #wait_for_button_press('Starting MoveCamera on button press')
     MoveCamera().run()
+    autotime.checkpoint('MoveCamera', True)
+    autotime.print_all_deltas()
