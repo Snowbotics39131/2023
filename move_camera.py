@@ -55,11 +55,11 @@ class ChangeDriveBaseSettings(Action):
 class MoveCamera(MissionBase):
     def routine(self):
         driveBase.settings(straight_speed=100, turn_rate=90)
-        self.runAction(DriveStraightAction(-200*STRAIGHT_FACTOR)) #square I think
+        self.runAction(DriveStraightAction(-200*STRAIGHT_FACTOR)) #square
         self.runAction(DriveStraightAction(40*STRAIGHT_FACTOR))
         self.runAction(SpinMotor(200*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
         self.runAction(DriveTurnAction(90*TURN_FACTOR))
-        self.runAction(DriveStraightAction(30*STRAIGHT_FACTOR))
+        self.runAction(DriveStraightAction(25*STRAIGHT_FACTOR))
         self.runAction(DriveTurnAction(9*TURN_FACTOR))
         self.runAction(DriveStraightAction(30*STRAIGHT_FACTOR))
         self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, 110*ANGLE_GEAR_RATIO))
@@ -170,7 +170,7 @@ if __name__=='__main__':
     DriveStraightAction(-400*STRAIGHT_FACTOR).run()
     DriveStraightAction(70*STRAIGHT_FACTOR).run()
     DriveTurnAction(90*TURN_FACTOR).run()
-    DriveStraightAction(390*STRAIGHT_FACTOR).run() #TODO: make this check brightness change from
+    DriveStraightAction(385*STRAIGHT_FACTOR).run() #TODO: make this check brightness change from
     DriveTurnAction(-90*TURN_FACTOR).run()         #white to light blue instead of fixed value
     SpinMotor(300*SPEED_GEAR_RATIO, 100*ANGLE_GEAR_RATIO).run()
     wait_for_button_press('Starting MoveCamera on button press')
