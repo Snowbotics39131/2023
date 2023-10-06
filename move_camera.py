@@ -6,13 +6,9 @@ from MissionBase import *
 from Actions import *
 from BasicDriveActions import *
 from PortMap import *
-import autotime
 SPEED_GEAR_RATIO=-2
 ANGLE_GEAR_RATIO=2
-TURN_FACTOR=2
-STRAIGHT_FACTOR=1
 print(driveBase.settings())
-print(hub.battery.voltage())
 class SpinMotorTime(Action):
     def __init__(self, speed, time):
         self.speed=speed
@@ -50,28 +46,31 @@ class ChangeDriveBaseSettings(Action):
         return True
     def done(self):
         pass
-#19 east
+##63mm north 2.5 squares
+##415mm east
+#19 east <-- this, not mm measurements
 #1 north
 class MoveCamera(MissionBase):
     def routine(self):
         driveBase.settings(straight_speed=100, turn_rate=90)
-        self.runAction(DriveStraightAction(-200*STRAIGHT_FACTOR)) #square
-        self.runAction(DriveStraightAction(40*STRAIGHT_FACTOR))
+        self.runAction(DriveStraightAction(-100))
+        self.runAction(DriveStraightAction(40))
         self.runAction(SpinMotor(200*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
-        self.runAction(DriveTurnAction(90*TURN_FACTOR))
-        self.runAction(DriveStraightAction(25*STRAIGHT_FACTOR))
-        self.runAction(DriveTurnAction(9*TURN_FACTOR))
-        self.runAction(DriveStraightAction(30*STRAIGHT_FACTOR))
+        self.runAction(DriveTurnAction(90))
+        self.runAction(DriveStraightAction(30))
+        self.runAction(DriveTurnAction(2))
+        self.runAction(DriveStraightAction(20))
         self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, 110*ANGLE_GEAR_RATIO))
         self.runAction(ParallelAction(
-            SpinMotorTime(-20, 4000),
+            SpinMotorTime(20*SPEED_GEAR_RATIO, 4000),
             SeriesAction(
-                DriveStraightAction(-60*STRAIGHT_FACTOR),
-                DriveTurnAction(-150*TURN_FACTOR)
+                DriveStraightAction(-60),
+                DriveTurnAction(-70)
             )
         ))
         self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
-        self.runAction(DriveTurnAction(45*TURN_FACTOR))
+        self.runAction(DriveTurnAction(45))
+        self.runAction(DriveStraightAction(-450))
 #red home
 #13 squares north
 #1 square east
@@ -79,7 +78,7 @@ class MoveCamera(MissionBase):
 #attachment up
 class Dragon(MissionBase):
     def routine(self):
-        self.runAction(DriveTurnAction(45*TURN_FACTOR))
+        self.runAction(DriveTurnAction(45))
 #near red home
 #580mm north
 #230mm east
@@ -99,18 +98,18 @@ class GetToPink(MissionBase):
         for i in range(times):
             self.runAction(SeriesAction(
                 #SpinMotor(400*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO),
-                DriveStraightAction(30*STRAIGHT_FACTOR),
+                DriveStraightAction(30),
                 #SpinMotorTime(400*SPEED_GEAR_RATIO, 2000),
                 SpinMotorUntilStalled(400*SPEED_GEAR_RATIO),
-                DriveStraightAction(-30*STRAIGHT_FACTOR)
+                DriveStraightAction(-30)
             ))
 #start with blue piece on back up against sliders
 class SoundMixer(MissionBase):
     def routine(self):
         driveBase.settings(turn_rate=90)
         self.runAction(SeriesAction(
-            DriveStraightAction(-90*STRAIGHT_FACTOR),
-            DriveTurnAction(90*TURN_FACTOR)
+            DriveStraightAction(-90),
+            DriveTurnAction(90)
         ))
 class Chicken(MissionBase):
     def routine(self):
@@ -119,9 +118,9 @@ class Chicken(MissionBase):
                 SpinMotor(200*SPEED_GEAR_RATIO, -135*ANGLE_GEAR_RATIO),
                 ParallelAction(
                     SpinMotor(200*SPEED_GEAR_RATIO, 135*ANGLE_GEAR_RATIO),
-                    DriveStraightAction(-30*STRAIGHT_FACTOR)
+                    DriveStraightAction(-30)
                 ),
-                DriveStraightAction(30*STRAIGHT_FACTOR)
+                DriveStraightAction(30)
             ))
 class ThrowGuyMission(MissionBase):
     def routine(self):
@@ -138,43 +137,36 @@ def countdown(time, message=''):
     print('now')
     hub.display.off()
 wait=True
-def wait_for_button_press(message=None, checkpoint_message=None):
-    if message is not None:
-        print(message)
+def waitForButtonPressWithMessage(message):
+    print(message)
     if wait:
         while not hub.buttons.pressed():
             pass
-        autotime.checkpoint(f'wait_for_button_press({repr(message)})' if checkpoint_message is None else checkpoint_message, False)
 if __name__=='__main__':
     #1 north
     #16 east
     #attachment 90
     #facing north
-    driveBase.settings(straight_speed=100, turn_rate=180)
-    DriveStraightAction(500*STRAIGHT_FACTOR).run()
-    DriveTurnAction(-15*TURN_FACTOR).run()
+    driveBase.settings(straight_speed=100, turn_rate=90)
+    DriveStraightAction(553).run()
+    DriveTurnAction(-10).run()
     GetToPink().run()
-    autotime.checkpoint('GetToPink', True)
-    DriveTurnAction(13*TURN_FACTOR).run()
-    DriveStraightAction(-300*STRAIGHT_FACTOR).run()
+    DriveTurnAction(13).run()
+    DriveStraightAction(-300).run()
     SpinMotor(200*SPEED_GEAR_RATIO, -135*ANGLE_GEAR_RATIO).run()
-    DriveTurnAction(-90*TURN_FACTOR).run()
-    DriveStraightAction(210*STRAIGHT_FACTOR).run()
-    DriveTurnAction(90*TURN_FACTOR).run()
-    DriveStraightAction(50*STRAIGHT_FACTOR).run()
+    DriveTurnAction(-90).run()
+    DriveStraightAction(210).run()
+    DriveTurnAction(90).run()
+    DriveStraightAction(40).run()
     Dragon().run()
-    DriveTurnAction(-45*TURN_FACTOR).run()
+    DriveTurnAction(-45).run()
     Dragon().run()
-    autotime.checkpoint('Dragon', True)
-    DriveTurnAction(-30*TURN_FACTOR).run()
-    DriveStraightAction(-400*STRAIGHT_FACTOR).run()
-    DriveStraightAction(70*STRAIGHT_FACTOR).run()
-    DriveTurnAction(90*TURN_FACTOR).run()
-    DriveStraightAction(385*STRAIGHT_FACTOR).run() #TODO: make this check brightness change from
-    DriveTurnAction(-90*TURN_FACTOR).run()         #white to light blue instead of fixed value
+    DriveTurnAction(-30).run()
+    DriveStraightAction(-400).run()
+    DriveStraightAction(70).run()
+    DriveTurnAction(90).run()
+    DriveStraightAction(455).run() #TODO: make this check brightness change from
+    DriveTurnAction(-90).run()     #white to light blue instead of fixed value
     SpinMotor(300*SPEED_GEAR_RATIO, 100*ANGLE_GEAR_RATIO).run()
-    wait_for_button_press('Starting MoveCamera on button press')
+    #waitForButtonPressWithMessage('Starting MoveCamera on button press')
     MoveCamera().run()
-    autotime.checkpoint('MoveCamera', True)
-    DriveStraightAction(-450*STRAIGHT_FACTOR).run()
-    autotime.print_all_deltas()
