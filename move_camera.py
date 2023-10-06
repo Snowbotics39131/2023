@@ -60,9 +60,9 @@ class MoveCamera(MissionBase):
         self.runAction(SpinMotor(200*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
         self.runAction(DriveTurnAction(90*TURN_FACTOR))
         self.runAction(DriveStraightAction(25*STRAIGHT_FACTOR))
-        self.runAction(DriveTurnAction(9*TURN_FACTOR))
+        self.runAction(DriveTurnAction(7*TURN_FACTOR))
         self.runAction(DriveStraightAction(30*STRAIGHT_FACTOR))
-        self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, 110*ANGLE_GEAR_RATIO))
+        self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, 110*ANGLE_GEAR_RATIO))
         self.runAction(ParallelAction(
             SpinMotorTime(-20, 4000),
             SeriesAction(
@@ -70,7 +70,9 @@ class MoveCamera(MissionBase):
                 DriveTurnAction(-150*TURN_FACTOR)
             )
         ))
-        self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
+        self.runAction(DriveStraightAction(-10*STRAIGHT_FACTOR))
+        self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, -45*ANGLE_GEAR_RATIO))
+        #wait_for_button_press()
         self.runAction(DriveTurnAction(45*TURN_FACTOR))
 #red home
 #13 squares north
@@ -151,8 +153,9 @@ if __name__=='__main__':
     #attachment 90
     #facing north
     driveBase.settings(straight_speed=100, turn_rate=180)
-    DriveStraightAction(500*STRAIGHT_FACTOR).run()
+    DriveStraightAction(495*STRAIGHT_FACTOR).run()
     DriveTurnAction(-15*TURN_FACTOR).run()
+    autotime.checkpoint('Travel to GetToPink', True)
     GetToPink().run()
     autotime.checkpoint('GetToPink', True)
     DriveTurnAction(13*TURN_FACTOR).run()
@@ -161,7 +164,8 @@ if __name__=='__main__':
     DriveTurnAction(-90*TURN_FACTOR).run()
     DriveStraightAction(210*STRAIGHT_FACTOR).run()
     DriveTurnAction(90*TURN_FACTOR).run()
-    DriveStraightAction(50*STRAIGHT_FACTOR).run()
+    DriveStraightAction(60*STRAIGHT_FACTOR).run()
+    autotime.checkpoint('Travel to Dragon', True)
     Dragon().run()
     DriveTurnAction(-45*TURN_FACTOR).run()
     Dragon().run()
@@ -170,11 +174,24 @@ if __name__=='__main__':
     DriveStraightAction(-400*STRAIGHT_FACTOR).run()
     DriveStraightAction(70*STRAIGHT_FACTOR).run()
     DriveTurnAction(90*TURN_FACTOR).run()
-    DriveStraightAction(385*STRAIGHT_FACTOR).run() #TODO: make this check brightness change from
+    DriveStraightAction(400*STRAIGHT_FACTOR).run() #TODO: make this check brightness change from
     DriveTurnAction(-90*TURN_FACTOR).run()         #white to light blue instead of fixed value
     SpinMotor(300*SPEED_GEAR_RATIO, 100*ANGLE_GEAR_RATIO).run()
+    autotime.checkpoint('Travel to MoveCamera', True)
     wait_for_button_press('Starting MoveCamera on button press')
     MoveCamera().run()
     autotime.checkpoint('MoveCamera', True)
-    DriveStraightAction(-450*STRAIGHT_FACTOR).run()
+    #the corner of the robot should be on the 'lego education' insignia.
+    wait_for_button_press('Starting SoundMixer on button press')
+    DriveStraightAction(-200*STRAIGHT_FACTOR).run()
+    SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO).run()
+    DriveTurnAction(135*TURN_FACTOR).run()
+    DriveStraightAction(-200*STRAIGHT_FACTOR).run()
+    SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO).run()
+    SpinMotor(300*SPEED_GEAR_RATIO, 90*ANGLE_GEAR_RATIO)
+    wait_for_button_press('Press button if back attachment fell')
+    DriveStraightAction(-100*STRAIGHT_FACTOR).run()
+    autotime.checkpoint('Travel to SoundMixer', True)
+    SoundMixer().run()
+    autotime.checkpoint('SoundMixer', True)
     autotime.print_all_deltas()
