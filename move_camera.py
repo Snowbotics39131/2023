@@ -9,10 +9,24 @@ from PortMap import *
 import autotime
 SPEED_GEAR_RATIO=-2
 ANGLE_GEAR_RATIO=2
-TURN_FACTOR=2
+TURN_FACTOR=1
 STRAIGHT_FACTOR=1
+WAIT=True
+def wait_for_button_press(message=None, checkpoint_message=None):
+    if message is not None:
+        print(message)
+    if WAIT:
+        while not hub.buttons.pressed():
+            pass
+        autotime.checkpoint(f'wait_for_button_press({repr(message)})' if checkpoint_message is None else checkpoint_message, False)
 print(driveBase.settings())
-print(hub.battery.voltage())
+voltage=hub.battery.voltage()
+print(voltage)
+if voltage>=8000:
+    print('Battery OK')
+else:
+    print('Battery low')
+    wait_for_button_press('Press button to continue anyway')
 class SpinMotorTime(Action):
     def __init__(self, speed, time):
         self.speed=speed
@@ -143,21 +157,13 @@ def countdown(time, message=''):
         wait(1000)
     print('now')
     hub.display.off()
-wait=True
-def wait_for_button_press(message=None, checkpoint_message=None):
-    if message is not None:
-        print(message)
-    if wait:
-        while not hub.buttons.pressed():
-            pass
-        autotime.checkpoint(f'wait_for_button_press({repr(message)})' if checkpoint_message is None else checkpoint_message, False)
 if __name__=='__main__':
     #1 north
     #16 east
     #attachment 90
     #facing north
     driveBase.settings(straight_speed=100, turn_rate=180)
-    DriveStraightAction(495*STRAIGHT_FACTOR).run()
+    DriveStraightAction(500*STRAIGHT_FACTOR).run()
     DriveTurnAction(-15*TURN_FACTOR).run()
     autotime.checkpoint('Travel to GetToPink', True)
     GetToPink().run()
@@ -193,7 +199,7 @@ if __name__=='__main__':
     wait_for_button_press('Starting SoundMixer on button press')
     DriveStraightAction(-200*STRAIGHT_FACTOR).run()
     SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO).run()
-    DriveTurnAction(137*TURN_FACTOR).run()
+    DriveTurnAction(135*TURN_FACTOR).run()
     DriveStraightAction(-200*STRAIGHT_FACTOR).run()
     autotime.checkpoint('Travel to SoundMixer', True)
     SoundMixer().run()
