@@ -287,17 +287,31 @@ class DriveStraightUltrasonic(Action):
         motorLeft.brake()
         motorRight.brake()
     def isFinished(self):
-        #return abs(self.pid_controller.getfunc()-self.pid_controller.target)<=1
+        return abs(self.pid_controller.getfunc()-self.pid_controller.target)<=1
         #distance sensor rounds to mm, so this works
-        return self.pid_controller.getfunc()-self.pid_controller.target==0
+        #return self.pid_controller.getfunc()-self.pid_controller.target==0
+class UltrasonicSquare(Action):
+    #jigs should be at (8,2) and (2,5)
+    #robot should be just above 'Challenge' logo
+    def start(self):
+        DriveStraightAction(-200).run()
+        DriveTurnAction(90).run()
+        DriveStraightAction(-200).run() #wall square
+        DriveStraightAction(120).run()
+        DriveTurnAction(-90).run()
+        DriveStraightAction(150).run()
+        DriveStraightUltrasonic(65).run()
+        DriveTurnAction(-90).run()
+        DriveStraightUltrasonic(95).run()
+        DriveTurnAction(90).run()
+    def update(self):
+        pass
+    def done(self):
+        pass
+    def isFinished(self):
+        return True
 
 
 if __name__ == '__main__':
-    # gtp = GoToPoint(Pose(-250, 500, 180))
-    # while not gtp.isFinished():
-    #     gtp.update()
-    example = FollowLineRight(3000)
-    example.start()
-    while not example.isFinished():
-        example.update()
-    example.done()
+    us=UltrasonicSquare()
+    us.run()
