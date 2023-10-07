@@ -72,17 +72,18 @@ class GoToPoint(SeriesAction):
 
 
 class PIDController:
-    def __init__(self, getfunc, setfunc, target, kP=1, kI=0.01, kD=0.1):
+    def __init__(self, getfunc, setfunc, target, kP=1, kI=0.01, kD=0.1, verbose=False):
         self.getfunc = getfunc
         self.setfunc = setfunc
         self.target = target
         self.kP = kP
         self.kI = kI
         self.kD = kD
+        self.verbose=verbose
         self.olderror = (self.target-self.getfunc())/self.target
         self.ierror = self.olderror
 
-    def config(self, target=None, kP=None, kI=None, kD=None, getfunc=None, setfunc=None):
+    def config(self, target=None, kP=None, kI=None, kD=None, getfunc=None, setfunc=None, verbose=None):
         if target != None:
             self.target = target
         if kP != None:
@@ -95,11 +96,16 @@ class PIDController:
             self.getfunc = getfunc
         if setfunc != None:
             self.setfunc = setfunc
+        if verbose!=None:
+            self.verbose=verbose
 
     def cycle(self):
         error = (self.target-self.getfunc())/self.target
         self.ierror += error
         derror = error-self.olderror
+        if self.verbose:
+            print(f'{self.kP*error+self.kI*self.ierror+self.kD*derror}={self.kP}*{error}+{self.kI}*{self.ierror}+{self.kD}*{derror}')
+            #print(self.kP*error+self.kI*self.ierror+self.kD*derror)
         self.setfunc(self.kP*error+self.kI*self.ierror+self.kD*derror)
         self.olderror = error
 
@@ -261,6 +267,29 @@ class FindLine(Action):
 
     def isFinished(self):
         return self.state_left == 'done' and self.state_right == 'done'
+class DriveStraightUltrasonic(Action):
+    def __init__(self, distance, kP=7, kI=0, kD=3):
+        self.distance=distance
+        def setfunc(speed):
+            motorLeft.run(-100*speed)
+            motorRight.run(-100*speed)
+        self.pid_controller=PIDController(ultrasonicSensor.distance,
+                                          setfunc,
+                                          distance,
+                                          kP,
+                                          kI,
+                                          kD,)
+    def start(self):
+        pass
+    def update(self):
+        self.pid_controller.cycle()
+    def done(self):
+        motorLeft.brake()
+        motorRight.brake()
+    def isFinished(self):
+        #return abs(self.pid_controller.getfunc()-self.pid_controller.target)<=1
+        #distance sensor rounds to mm, so this works
+        return self.pid_controller.getfunc()-self.pid_controller.target==0
 
 
 if __name__ == '__main__':

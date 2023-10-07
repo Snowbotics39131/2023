@@ -12,6 +12,18 @@ try: from PortMapPlus import *
 except ImportError: print("PortMapPlus Needed")
 
 hubName = hubType()
+def attachment_change():
+    global motorBack
+    global ultrasonicSensor
+    try:
+        motorBack=Motor(Port.D, Direction.COUNTERCLOCKWISE)
+        print('motorBack detected')
+    except:
+        try:
+            ultrasonicSensor=UltrasonicSensor(Port.D)
+            print('ultrasonicSensor detected')
+        except:
+            print('Port D disconnected')
 if hubName == 'prime':
     #if you are using the spike this is all you need to mess with
     motorRight=Motor(Port.A, Direction.CLOCKWISE)
@@ -21,7 +33,7 @@ if hubName == 'prime':
     try:
         colorSensorLeft=ColorSensor(Port.F)
         colorSensorRight=ColorSensor(Port.B)
-        motorBack=Motor(Port.D, Direction.COUNTERCLOCKWISE)
+        attachment_change()
         driveBase=DriveBase(motorLeft, motorRight, 56, 114)
         hubName += 'snow'
     except:
