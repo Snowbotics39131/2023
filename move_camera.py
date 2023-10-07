@@ -54,26 +54,25 @@ class ChangeDriveBaseSettings(Action):
 #1 north
 class MoveCamera(MissionBase):
     def routine(self):
-        driveBase.settings(straight_speed=100, turn_rate=90)
+        #driveBase.settings(straight_speed=100, turn_rate=90)
         self.runAction(DriveStraightAction(-200*STRAIGHT_FACTOR)) #square
         self.runAction(DriveStraightAction(40*STRAIGHT_FACTOR))
-        self.runAction(SpinMotor(200*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
+        #self.runAction(SpinMotor(200*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
         self.runAction(DriveTurnAction(90*TURN_FACTOR))
-        self.runAction(DriveStraightAction(25*STRAIGHT_FACTOR))
-        self.runAction(DriveTurnAction(7*TURN_FACTOR))
-        self.runAction(DriveStraightAction(30*STRAIGHT_FACTOR))
-        self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, 110*ANGLE_GEAR_RATIO))
+        self.runAction(DriveStraightAction(20*STRAIGHT_FACTOR))
+        self.runAction(DriveTurnAction(8.5*TURN_FACTOR))
+        self.runAction(DriveStraightAction(23*STRAIGHT_FACTOR))
+        self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, 115*ANGLE_GEAR_RATIO))
         self.runAction(ParallelAction(
-            SpinMotorTime(-20, 4000),
+            SpinMotorTime(20*SPEED_GEAR_RATIO, 3000),
             SeriesAction(
-                DriveStraightAction(-60*STRAIGHT_FACTOR),
-                DriveTurnAction(-150*TURN_FACTOR)
+                DriveStraightAction(-40*STRAIGHT_FACTOR),
+                DriveTurnAction(-60*TURN_FACTOR)
             )
         ))
-        self.runAction(DriveStraightAction(-10*STRAIGHT_FACTOR))
-        self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, -45*ANGLE_GEAR_RATIO))
+        self.runAction(DriveStraightAction(-15*STRAIGHT_FACTOR))
+        self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, -60*ANGLE_GEAR_RATIO))
         #wait_for_button_press()
-        self.runAction(DriveTurnAction(45*TURN_FACTOR))
 #red home
 #13 squares north
 #1 square east
@@ -109,6 +108,11 @@ class GetToPink(MissionBase):
 #start with blue piece on back up against sliders
 class SoundMixer(MissionBase):
     def routine(self):
+        #SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO).run()
+        SpinMotorUntilStalled(-300*SPEED_GEAR_RATIO).run()
+        SpinMotor(300*SPEED_GEAR_RATIO, 105*ANGLE_GEAR_RATIO).run()
+        #wait_for_button_press('Press button if back attachment fell')
+        DriveStraightAction(-100*STRAIGHT_FACTOR).run()
         driveBase.settings(turn_rate=90)
         self.runAction(SeriesAction(
             DriveStraightAction(-90*STRAIGHT_FACTOR),
@@ -164,8 +168,10 @@ if __name__=='__main__':
     DriveTurnAction(-90*TURN_FACTOR).run()
     DriveStraightAction(210*STRAIGHT_FACTOR).run()
     DriveTurnAction(90*TURN_FACTOR).run()
-    DriveStraightAction(60*STRAIGHT_FACTOR).run()
+    DriveStraightAction(78*STRAIGHT_FACTOR).run()
     autotime.checkpoint('Travel to Dragon', True)
+    Dragon().run()
+    DriveTurnAction(-45*TURN_FACTOR).run()
     Dragon().run()
     DriveTurnAction(-45*TURN_FACTOR).run()
     Dragon().run()
@@ -174,23 +180,21 @@ if __name__=='__main__':
     DriveStraightAction(-400*STRAIGHT_FACTOR).run()
     DriveStraightAction(70*STRAIGHT_FACTOR).run()
     DriveTurnAction(90*TURN_FACTOR).run()
-    DriveStraightAction(400*STRAIGHT_FACTOR).run() #TODO: make this check brightness change from
+    DriveStraightAction(370*STRAIGHT_FACTOR).run() #TODO: make this check brightness change from
     DriveTurnAction(-90*TURN_FACTOR).run()         #white to light blue instead of fixed value
-    SpinMotor(300*SPEED_GEAR_RATIO, 100*ANGLE_GEAR_RATIO).run()
+    #SpinMotor(300*SPEED_GEAR_RATIO, 100*ANGLE_GEAR_RATIO).run()
     autotime.checkpoint('Travel to MoveCamera', True)
     wait_for_button_press('Starting MoveCamera on button press')
     MoveCamera().run()
     autotime.checkpoint('MoveCamera', True)
-    #the corner of the robot should be on the 'lego education' insignia.
+    DriveTurnAction(55*TURN_FACTOR).run()
+    DriveStraightAction(-160).run()
+    print("The corner of the robot should be on the 'Lego Education' insignia.")
     wait_for_button_press('Starting SoundMixer on button press')
     DriveStraightAction(-200*STRAIGHT_FACTOR).run()
     SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO).run()
-    DriveTurnAction(135*TURN_FACTOR).run()
+    DriveTurnAction(137*TURN_FACTOR).run()
     DriveStraightAction(-200*STRAIGHT_FACTOR).run()
-    SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO).run()
-    SpinMotor(300*SPEED_GEAR_RATIO, 90*ANGLE_GEAR_RATIO)
-    wait_for_button_press('Press button if back attachment fell')
-    DriveStraightAction(-100*STRAIGHT_FACTOR).run()
     autotime.checkpoint('Travel to SoundMixer', True)
     SoundMixer().run()
     autotime.checkpoint('SoundMixer', True)
