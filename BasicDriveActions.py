@@ -294,15 +294,16 @@ class UltrasonicSquare(Action):
     #jigs should be at (8,2) and (2,5)
     #robot should be just above 'Challenge' logo
     def start(self):
+        driveBase.settings(straight_speed=100, turn_rate=45)
         DriveStraightAction(-200).run()
         DriveTurnAction(90).run()
         DriveStraightAction(-200).run() #wall square
         DriveStraightAction(120).run()
         DriveTurnAction(-90).run()
         DriveStraightAction(150).run()
-        DriveStraightUltrasonic(65).run()
+        DriveStraightUltrasonic(75).run()
         DriveTurnAction(-90).run()
-        DriveStraightUltrasonic(95).run()
+        DriveStraightUltrasonic(125).run()
         DriveTurnAction(90).run()
     def update(self):
         pass
@@ -314,4 +315,5 @@ class UltrasonicSquare(Action):
 
 if __name__ == '__main__':
     us=UltrasonicSquare()
-    us.run()
+    while True:
+        us.run()
