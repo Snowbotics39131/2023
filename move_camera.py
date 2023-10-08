@@ -158,13 +158,15 @@ def countdown(time, message=''):
     print('now')
     hub.display.off()
 if __name__=='__main__':
-    #1 north
+    #10 north
     #16 east
-    #attachment 90
-    #facing north
+    #facing south
+    #attachment up
+    #very very narrow, but technically fits in home
     driveBase.settings(straight_speed=100, turn_rate=180)
-    DriveStraightAction(555*STRAIGHT_FACTOR).run()
-    DriveTurnAction(-10*TURN_FACTOR).run()
+    DriveStraightUltrasonic(300).run()
+    DriveTurnAction(180).run()
+    DriveStraightAction(90).run()
     autotime.checkpoint('Travel to GetToPink', True)
     GetToPink().run()
     autotime.checkpoint('GetToPink', True)
