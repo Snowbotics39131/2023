@@ -263,15 +263,17 @@ class FindLine(Action):
     def isFinished(self):
         return self.state_left == 'done' and self.state_right == 'done'
 class PointIntegral:
-    def __init__(self, first_point):
+    def __init__(self, first_point, name=''): #name for testing only, remove later
         self.value=0
         self.error=0
         self.prev_point=first_point
+        self.name=name
     def add_point(self, point):
         trap_added_area=0.5*(point[1]+self.prev_point[1])*(point[0]-self.prev_point[0])
         max_added_area=point[1]*(point[0]-self.prev_point[0])
         self.value+=trap_added_area
         self.error+=abs(max_added_area-trap_added_area)
+        print(f'{self.name} {trap_added_area}=0.5*({point[1]}+{self.prev_point[1]})*({point[0]}-{self.prev_point[0]}) {self.value}')
         self.prev_point=point
     def __float__(self):
         return self.value
@@ -290,11 +292,15 @@ class DriveStraightAccurate(Action):
             self.ultrasonic_reliable=False
         else:
             self.ultrasonic_reliable=True
-        self.imu_accel=PointIntegral((self.stopwatch.time()/1000, hub.imu.acceleration(Axis.Y)))
+        time=self.stopwatch.time()/1000
+        self.imu_vel=PointIntegral((time, hub.imu.acceleration(Axis.Y)), 'vel')
+        self.imu_pos=PointIntegral((time, self.imu_vel.value), 'pos')
         driveBase.reset()
         driveBase.straight(self.distance, wait=False)
     def update(self):
-        self.imu_accel.add_point((self.stopwatch.time()/1000, hub.imu.acceleration(Axis.Y)))
+        time=self.stopwatch.time()/1000
+        self.imu_vel.add_point((time, hub.imu.acceleration(Axis.Y)))
+        self.imu_pos.add_point((time, self.imu_vel.value))
     def done(self):
         end_ultrasonic_distance=ultrasonicSensor.distance()
         if end_ultrasonic_distance==2000:
@@ -306,7 +312,7 @@ class DriveStraightAccurate(Action):
                 print(f'ultrasonic\t{ultrasonic_distance} (init {self.start_ultrasonic_distance}, end {end_ultrasonic_distance})')
             else:
                 print('ultrasonic out of range')
-            print(f'imu       \t{self.imu_accel}')
+            print(f'imu       \t{self.imu_pos}')
             print(f'driveBase \t{driveBase_distance}')
             print(f'attempted \t{self.distance}')
     def isFinished(self):
