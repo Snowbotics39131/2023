@@ -273,7 +273,7 @@ class PointIntegral:
         max_added_area=point[1]*(point[0]-self.prev_point[0])
         self.value+=trap_added_area
         self.error+=abs(max_added_area-trap_added_area)
-        print(f'{self.name} {trap_added_area}=0.5*({point[1]}+{self.prev_point[1]})*({point[0]}-{self.prev_point[0]}) {self.value}')
+        #print(f'{self.name} {trap_added_area}=0.5*({point[1]}+{self.prev_point[1]})*({point[0]}-{self.prev_point[0]}) {self.value}')
         self.prev_point=point
     def __float__(self):
         return self.value
@@ -282,7 +282,7 @@ class PointIntegral:
     def __str__(self):
         return f'{self.value} +- {self.error}' #PyBricks cannot render ± sign
 class DriveStraightAccurate(Action):
-    def __init__(self, distance, verbose=False):
+    def __init__(self, distance, verbose=True):
         self.distance=distance
         self.verbose=verbose
         self.stopwatch=StopWatch()
