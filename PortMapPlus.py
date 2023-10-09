@@ -20,6 +20,7 @@ def hubType():
     except: pass
     try:
         hub = PrimeHub()
+        print(hub.battery.voltage())
         return 'prime'
     except: pass
     try:
