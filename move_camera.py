@@ -163,7 +163,7 @@ if __name__=='__main__':
     #attachment 90
     #facing north
     driveBase.settings(straight_speed=100, turn_rate=180)
-    DriveStraightAccurate(560*STRAIGHT_FACTOR).run()
+    DriveStraightAccurate(565*STRAIGHT_FACTOR).run()
     DriveTurnAction(-10*TURN_FACTOR).run()
     autotime.checkpoint('Travel to GetToPink', True)
     GetToPink().run()
@@ -174,7 +174,7 @@ if __name__=='__main__':
     DriveTurnAction(-90*TURN_FACTOR).run()
     DriveStraightAccurate(240*STRAIGHT_FACTOR).run()
     DriveTurnAction(90*TURN_FACTOR).run()
-    DriveStraightAccurate(70*STRAIGHT_FACTOR).run()
+    DriveStraightAccurate(20*STRAIGHT_FACTOR).run()
     autotime.checkpoint('Travel to Dragon', True)
     Dragon().run()
     DriveTurnAction(-45*TURN_FACTOR).run()
@@ -186,7 +186,7 @@ if __name__=='__main__':
     DriveStraightAction(-400*STRAIGHT_FACTOR).run()
     DriveStraightAccurate(70*STRAIGHT_FACTOR).run()
     DriveTurnAction(90*TURN_FACTOR).run()
-    DriveStraightAccurate(370*STRAIGHT_FACTOR).run()
+    DriveStraightAccurate(450*STRAIGHT_FACTOR).run()
     DriveTurnAction(-90*TURN_FACTOR).run()
     #SpinMotor(300*SPEED_GEAR_RATIO, 100*ANGLE_GEAR_RATIO).run()
     autotime.checkpoint('Travel to MoveCamera', True)
