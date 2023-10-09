@@ -39,7 +39,6 @@ if hubName == 'prime':
             print('using GyroDriveBase')
         except NameError:
             driveBase=DriveBase(motorLeft, motorRight, 56, 114)
-            print('not using GyroDriveBase')
         hubName += 'snow'
     except:
         driveBase=DriveBase(motorLeft, motorRight, 50, 50)
