@@ -72,17 +72,18 @@ class GoToPoint(SeriesAction):
 
 
 class PIDController:
-    def __init__(self, getfunc, setfunc, target, kP=1, kI=0.01, kD=0.1):
+    def __init__(self, getfunc, setfunc, target, kP=1, kI=0.01, kD=0.1, verbose=False):
         self.getfunc = getfunc
         self.setfunc = setfunc
         self.target = target
         self.kP = kP
         self.kI = kI
         self.kD = kD
+        self.verbose=verbose
         self.olderror = (self.target-self.getfunc())/self.target
         self.ierror = self.olderror
 
-    def config(self, target=None, kP=None, kI=None, kD=None, getfunc=None, setfunc=None):
+    def config(self, target=None, kP=None, kI=None, kD=None, getfunc=None, setfunc=None, verbose=None):
         if target != None:
             self.target = target
         if kP != None:
@@ -95,11 +96,16 @@ class PIDController:
             self.getfunc = getfunc
         if setfunc != None:
             self.setfunc = setfunc
+        if verbose!=None:
+            self.verbose=verbose
 
     def cycle(self):
         error = (self.target-self.getfunc())/self.target
         self.ierror += error
         derror = error-self.olderror
+        if self.verbose:
+            print(f'{self.kP*error+self.kI*self.ierror+self.kD*derror}={self.kP}*{error}+{self.kI}*{self.ierror}+{self.kD}*{derror}')
+            #print(self.kP*error+self.kI*self.ierror+self.kD*derror)
         self.setfunc(self.kP*error+self.kI*self.ierror+self.kD*derror)
         self.olderror = error
 
@@ -261,14 +267,149 @@ class FindLine(Action):
 
     def isFinished(self):
         return self.state_left == 'done' and self.state_right == 'done'
+class DriveStraightUltrasonicPID(Action):
+    def __init__(self, distance, speed_factor=100, error=1, kP=7, kI=0, kD=3):
+        self.distance=distance
+        self.error=error
+        def setfunc(speed):
+            motorLeft.run(-speed_factor*speed)
+            motorRight.run(-speed_factor*speed)
+        self.pid_controller=PIDController(ultrasonicSensor.distance,
+                                          setfunc,
+                                          distance,
+                                          kP,
+                                          kI,
+                                          kD,)
+    def start(self):
+        pass
+    def update(self):
+        self.pid_controller.cycle()
+    def done(self):
+        motorLeft.brake()
+        motorRight.brake()
+    def isFinished(self):
+        return abs(self.pid_controller.getfunc()-self.pid_controller.target)<=self.error
+        #distance sensor rounds to mm, so this works
+        #return self.pid_controller.getfunc()-self.pid_controller.target==0
+class DriveStraightUltrasonic(Action):
+    def __init__(self, distance, approaching=False, speed=300):
+        self.distance=distance
+        self.approaching=approaching
+        self.speed=speed
+        self.state='over' if approaching else 'under'
+    def start(self):
+        if self.state=='under':
+            motorLeft.run(self.speed)
+            motorRight.run(self.speed)
+        elif self.state=='over':
+            motorLeft.run(-self.speed)
+            motorRight.run(-self.speed)
+    def update(self):
+        if self.state=='under':
+            detected_distance=ultrasonicSensor.distance()
+            if detected_distance>self.distance:
+                self.state='over'
+                self.speed/=2
+                self.start()
+            elif detected_distance==self.distance:
+                self.state='done'
+                motorLeft.brake()
+                motorRight.brake()
+        elif self.state=='over':
+            detected_distance=ultrasonicSensor.distance()
+            if detected_distance<self.distance:
+                self.state='under'
+                self.speed/=2
+                self.start()
+            elif detected_distance==self.distance:
+                self.state='done'
+                motorLeft.brake()
+                motorRight.brake()
+    def done(self):
+        pass
+    def isFinished(self):
+        return self.state=='done'
+class DriveStraightUltrasonic(Action):
+    def __init__(self, distance, speed=300, max_switches=5):
+        self.distance=distance
+        self.speed=speed
+        self.max_switches=max_switches
+        self.switches=0
+    def _update_motors(self, measured_distance):
+        if measured_distance==self.distance:
+            motorLeft.brake()
+            motorRight.brake()
+        else:
+            if self.switches<self.max_switches:
+                self.switches+=1
+                if measured_distance>self.distance:
+                    motorLeft.run(self.speed)
+                    motorRight.run(self.speed)
+                elif measured_distance<self.distance:
+                    motorLeft.run(-self.speed)
+                    motorRight.run(-self.speed)
+            else:
+                print(f'Max switches reached! ({self.max_switches}) Error is {measured_distance-self.distance}mm; trying to correct.')
+                self.state='done'
+                DriveStraightAction(measured_distance-self.distance).run()
+                motorLeft.brake()
+                motorRight.brake()
+    def start(self):
+        measured_distance=ultrasonicSensor.distance()
+        self._update_motors(measured_distance)
+        if measured_distance<self.distance:
+            self.state='under'
+        elif measured_distance>self.distance:
+            self.state='over'
+        else:
+            self.state='done'
+    def update(self):
+        if self.state=='under':
+            measured_distance=ultrasonicSensor.distance()
+            if measured_distance>self.distance:
+                self.state='over'
+                self.speed/=2
+                self._update_motors(measured_distance)
+            elif measured_distance==self.distance:
+                self.state='done'
+                self._update_motors(measured_distance)
+        elif self.state=='over':
+            measured_distance=ultrasonicSensor.distance()
+            if measured_distance<self.distance:
+                self.state='under'
+                self.speed/=2
+                self._update_motors(measured_distance)
+            elif measured_distance==self.distance:
+                self.state='done'
+                self._update_motors(measured_distance)
+    def done(self):
+        pass
+    def isFinished(self):
+        return self.state=='done'
+class UltrasonicSquare(Action):
+    #jigs should be at (8,2) and (2,5)
+    #robot should be just above 'Challenge' logo
+    def start(self):
+        driveBase.settings(straight_speed=100, turn_rate=45)
+        DriveStraightAction(-200).run()
+        DriveTurnAction(90).run()
+        DriveStraightAction(-200).run() #wall square
+        DriveStraightAction(120).run()
+        DriveTurnAction(-90).run()
+        DriveStraightAction(150).run()
+        DriveStraightUltrasonic(75).run()
+        DriveTurnAction(-90).run()
+        DriveStraightUltrasonic(125).run()
+        DriveTurnAction(90).run()
+    def update(self):
+        pass
+    def done(self):
+        pass
+    def isFinished(self):
+        return True
 
 
 if __name__ == '__main__':
-    # gtp = GoToPoint(Pose(-250, 500, 180))
-    # while not gtp.isFinished():
-    #     gtp.update()
-    example = FollowLineRight(3000)
-    example.start()
-    while not example.isFinished():
-        example.update()
-    example.done()
+    us=UltrasonicSquare()
+    while True:
+        us.run()
