@@ -31,7 +31,7 @@ def hubType():
 
 def hubDef(): return hub
 class Device:
-    devicesList=["motorLeft","motorRight","driveBase","colorSensorLeft","colorSensorRight"] #offical name list
+    devicesList=["motorLeft","motorRight","driveBase","colorSensorLeft","colorSensorRight", "ultrasonicSensor"] #offical name list
     output = "PortMap.Device("
     def __init__(self):
         "procedurally generates variables like has_{capability}  ex: device.has_motorLeft"
