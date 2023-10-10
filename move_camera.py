@@ -81,12 +81,12 @@ class MoveCamera(MissionBase):
         self.runAction(ParallelAction(
             SpinMotorTime(20*SPEED_GEAR_RATIO, 3000),
             SeriesAction(
-                DriveStraightAccurate(-40*STRAIGHT_FACTOR, compensate=COMPENSATE),
+                DriveStraightAccurate(-60*STRAIGHT_FACTOR, compensate=COMPENSATE),
                 DriveTurnAction(-60*TURN_FACTOR)
             )
         ))
         self.runAction(DriveStraightAccurate(-15*STRAIGHT_FACTOR, compensate=COMPENSATE))
-        self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, -60*ANGLE_GEAR_RATIO))
+        self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
         #wait_for_button_press()
 #red home
 #13 squares north
@@ -199,7 +199,7 @@ if __name__=='__main__':
     print("The corner of the robot should be on the 'Lego Education' insignia.")
     wait_for_button_press('Starting SoundMixer on button press')
     DriveStraightAccurate(-200*STRAIGHT_FACTOR, compensate=COMPENSATE).run()
-    SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO).run()
+    SpinMotor(300*SPEED_GEAR_RATIO, -45*ANGLE_GEAR_RATIO).run()
     DriveTurnAction(135*TURN_FACTOR).run()
     DriveStraightAccurate(-200*STRAIGHT_FACTOR, compensate=COMPENSATE).run()
     autotime.checkpoint('Travel to SoundMixer', True)
