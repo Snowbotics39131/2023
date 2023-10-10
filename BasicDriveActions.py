@@ -344,8 +344,11 @@ class DriveStraightAccurate(Action):
                 attempted_distance
             ), (0, 2, 1))
         print(f'estimated \t{est_distance}')
-        print(f'driving {self.distance-est_distance}')
-        DriveStraightAction(self.distance-est_distance).run()
+        if self.compensate:
+            print(f'driving {self.distance-est_distance}')
+            DriveStraightAction(self.distance-est_distance).run()
+        else:
+            print('compensation disabled')
     def isFinished(self):
         return driveBase.done()
 
