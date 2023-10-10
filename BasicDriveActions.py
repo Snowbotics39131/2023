@@ -288,7 +288,7 @@ def weighted_average(values, weights=None):
         values=[i[0]*i[1] for i in zip(values, weights)]
         return sum(values)/sum(weights)
 class DriveStraightAccurate(Action):
-    def __init__(self, distance, weights=None, compensate=True, verbose=False):
+    def __init__(self, distance, weights=None, compensate=False, verbose=False):
         '''weights is [ultrasonic, imu, driveBase, attempted]'''
         self.distance=distance
         if weights is None:
@@ -355,8 +355,6 @@ class DriveStraightAccurate(Action):
         print(f'estimated \t{est_distance}')
         if self.compensate:
             print(f'driving {self.distance-est_distance}')
-            while not hub.buttons.pressed():
-                pass
             DriveStraightAction(self.distance-est_distance).run()
         else:
             print('compensation disabled')
@@ -365,5 +363,5 @@ class DriveStraightAccurate(Action):
 
 
 if __name__ == '__main__':
-    dsa=DriveStraightAccurate(100, verbose=True)
+    dsa=DriveStraightAccurate(100, compensate=True, verbose=True)
     dsa.run()
