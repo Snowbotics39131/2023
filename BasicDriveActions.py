@@ -288,12 +288,16 @@ def weighted_average(values, weights=None):
         values=[i[0]*i[1] for i in zip(values, weights)]
         return sum(values)/sum(weights)
 class DriveStraightAccurate(Action):
-    def __init__(self, distance, use_ultrasonic=True, compensate=True, verbose=True):
+    def __init__(self, distance, weights=(1, 0, 2, 1), compensate=True, verbose=True, use_ultrasonic=True, use_imu=True):
+        '''weights is (ultrasonic, imu, driveBase, attempted)'''
         self.distance=distance
-        self.use_ultrasonic=use_ultrasonic
+        self.weights=weights
         self.compensate=compensate
         self.verbose=verbose
-        self.stopwatch=StopWatch()
+        self.use_ultrasonic=use_ultrasonic
+        self.use_imu=use_imu
+        if self.use_imu:
+            self.stopwatch=StopWatch()
     def start(self):
         if self.use_ultrasonic:
             self.start_ultrasonic_distance=ultrasonicSensor.distance()
@@ -301,22 +305,25 @@ class DriveStraightAccurate(Action):
                 self.ultrasonic_reliable=False
             else:
                 self.ultrasonic_reliable=True
-        time=self.stopwatch.time()/1000
-        self.imu_vel=PointIntegral((time, hub.imu.acceleration(Axis.Y)), 'vel')
-        self.imu_pos=PointIntegral((time, self.imu_vel.value), 'pos')
+        if self.use_imu:
+            time=self.stopwatch.time()/1000
+            self.imu_vel=PointIntegral((time, hub.imu.acceleration(Axis.Y)), 'vel')
+            self.imu_pos=PointIntegral((time, self.imu_vel.value), 'pos')
         driveBase.reset()
         driveBase.straight(self.distance, wait=False)
     def update(self):
-        time=self.stopwatch.time()/1000
-        self.imu_vel.add_point((time, hub.imu.acceleration(Axis.Y)))
-        self.imu_pos.add_point((time, self.imu_vel.value))
+        if self.use_imu:
+            time=self.stopwatch.time()/1000
+            self.imu_vel.add_point((time, hub.imu.acceleration(Axis.Y)))
+            self.imu_pos.add_point((time, self.imu_vel.value))
     def done(self):
         if self.use_ultrasonic:
             end_ultrasonic_distance=ultrasonicSensor.distance()
             if end_ultrasonic_distance==2000:
                 self.ultrasonic_reliable=False
             ultrasonic_distance=self.start_ultrasonic_distance-end_ultrasonic_distance
-        imu_distance=self.imu_pos.value
+        if self.use_imu:
+            imu_distance=self.imu_pos.value
         driveBase_distance=driveBase.distance()
         attempted_distance=self.distance
         if self.verbose:
@@ -327,22 +334,43 @@ class DriveStraightAccurate(Action):
                     print('ultrasonic out of range')
             else:
                 print('ultrasonic disabled')
-            print(f'imu       \t{self.imu_pos}')
+            if self.use_imu:
+                print(f'imu       \t{self.imu_pos}')
+            else:
+                print('imu disabled')
             print(f'driveBase \t{driveBase_distance}')
             print(f'attempted \t{attempted_distance}')
+        if not self.ultrasonic_reliable:
+            self.use_ultrasonic=False
         if self.use_ultrasonic:
-            est_distance=weighted_average((
-                ultrasonic_distance,
-                imu_distance,
-                driveBase_distance,
-                attempted_distance
-            ), (1 if self.ultrasonic_reliable else 0, 0, 2, 1))
+            if self.use_imu:
+                est_distance=weighted_average((
+                    ultrasonic_distance,
+                    imu_distance,
+                    driveBase_distance,
+                    attempted_distance
+                ), self.weights)
+            else:
+                del(self.weights[1])
+                est_distance=weighted_average((
+                    ultrasonic_distance,
+                    driveBase_distance,
+                    attempted_distance
+                ), self.weights)
         else:
-            est_distance=weighted_average((
-                imu_distance,
-                driveBase_distance,
-                attempted_distance
-            ), (0, 2, 1))
+            del(self.weights[0])
+            if self.use_imu:
+                est_distance=weighted_average((
+                    imu_distance,
+                    driveBase_distance,
+                    attempted_distance
+                ), self.weights)
+            else:
+                del(self.weights[0])
+                est_distance=weighted_averate((
+                    driveBase_distance,
+                    attempted_distance
+                ), self.weights)
         print(f'estimated \t{est_distance}')
         if self.compensate:
             print(f'driving {self.distance-est_distance}')
