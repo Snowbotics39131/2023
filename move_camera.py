@@ -16,6 +16,7 @@ COMPENSATE=False
 def wait_for_button_press(message=None, checkpoint_message=None):
     if message is not None:
         print(message)
+    hub.speaker.beep()
     if WAIT:
         while not hub.buttons.pressed():
             pass
@@ -75,7 +76,7 @@ class MoveCamera(MissionBase):
         #self.runAction(SpinMotor(200*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
         self.runAction(DriveTurnAction(90*TURN_FACTOR))
         self.runAction(DriveStraightAccurate(20*STRAIGHT_FACTOR, compensate=COMPENSATE))
-        self.runAction(DriveTurnAction(8.5*TURN_FACTOR))
+        self.runAction(DriveTurnAction(7*TURN_FACTOR))
         self.runAction(DriveStraightAccurate(23*STRAIGHT_FACTOR, compensate=COMPENSATE))
         self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, 115*ANGLE_GEAR_RATIO))
         self.runAction(ParallelAction(
@@ -117,7 +118,7 @@ class GetToPink(MissionBase):
                 #SpinMotor(400*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO),
                 DriveStraightAccurate(30*STRAIGHT_FACTOR, compensate=COMPENSATE),
                 #SpinMotorTime(400*SPEED_GEAR_RATIO, 2000),
-                SpinMotorUntilStalled(400*SPEED_GEAR_RATIO),
+                SpinMotorUntilStalled(400*SPEED_GEAR_RATIO, duty_limit=85),
                 DriveStraightAccurate(-30*STRAIGHT_FACTOR, compensate=COMPENSATE)
             ))
 #start with blue piece on back up against sliders
