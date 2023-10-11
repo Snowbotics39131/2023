@@ -74,17 +74,17 @@ class ChangeDriveBaseSettings(Action):
 class MoveCamera(MissionBase):
     def routine(self):
         self.runAction(DriveStraightAccurate(20*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
-        self.runAction(DriveTurnAction(8*TURN_FACTOR))
+        self.runAction(DriveTurnAction(7*TURN_FACTOR))
         self.runAction(DriveStraightAccurate(23*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
         self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, 115*ANGLE_GEAR_RATIO))
         self.runAction(ParallelAction(
             SpinMotorTime(20*SPEED_GEAR_RATIO, 3000),
             SeriesAction(
-                DriveStraightAccurate(-100*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE),
-                DriveTurnAction(-60*TURN_FACTOR)
+                DriveStraightAccurate(-120*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE),
+                DriveTurnAction(-75*TURN_FACTOR)
             )
         ))
-        self.runAction(DriveStraightAccurate(-15*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
+        self.runAction(DriveStraightAccurate(-30*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
         self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
 #red home
 #13 squares north
@@ -193,9 +193,9 @@ if __name__=='__main__':
     autotime.checkpoint('Dragon', True)
     DriveTurnAction(-30*TURN_FACTOR).run()
     DriveStraightAction(-400*STRAIGHT_FACTOR, speed=FAST_SPEED).run()
-    DriveStraightAccurate(70*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
-    DriveTurnAction(90*TURN_FACTOR).run()
-    DriveStraightAccurate(150*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
+    #DriveStraightAccurate(70*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
+    #DriveTurnAction(90*TURN_FACTOR).run()
+    #DriveStraightAccurate(150*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
     autotime.checkpoint('', True)
     wait_for_button_press()
     DriveStraightAccurate(340*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
@@ -207,12 +207,12 @@ if __name__=='__main__':
     autotime.checkpoint('MoveCamera', True)
     DriveTurnAction(40*TURN_FACTOR).run()
     DriveStraightAccurate(-340*STRAIGHT_FACTOR, speed=FAST_SPEED, compensate=COMPENSATE).run()
-    SpinMotor(300*SPEED_GEAR_RATIO, -45*ANGLE_GEAR_RATIO).run()
+    SpinMotor(400*SPEED_GEAR_RATIO, -45*ANGLE_GEAR_RATIO).run()
     print("The corner of the robot should be on the dot of the i in of 'Foundation'.")
     wait_for_button_press('Starting SoundMixer on button press')
     DriveStraightAccurate(-90*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
     DriveTurnAction(135*TURN_FACTOR).run()
-    DriveStraightAccurate(-200*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
+    DriveStraightAccurate(-170*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
     autotime.checkpoint('Travel to SoundMixer', True)
     SoundMixer().run()
     autotime.checkpoint('SoundMixer', True)
