@@ -70,10 +70,6 @@ class ChangeDriveBaseSettings(Action):
 #1 north
 class MoveCamera(MissionBase):
     def routine(self):
-        ##driveBase.settings(straight_speed=100, turn_rate=90)
-        #self.runAction(DriveStraightAction(-200*STRAIGHT_FACTOR)) #square
-        #self.runAction(DriveStraightAccurate(40*STRAIGHT_FACTOR, compensate=COMPENSATE))
-        #self.runAction(DriveTurnAction(90*TURN_FACTOR))
         self.runAction(DriveStraightAccurate(20*STRAIGHT_FACTOR, compensate=COMPENSATE))
         self.runAction(DriveTurnAction(8*TURN_FACTOR))
         self.runAction(DriveStraightAccurate(23*STRAIGHT_FACTOR, compensate=COMPENSATE))
@@ -81,13 +77,12 @@ class MoveCamera(MissionBase):
         self.runAction(ParallelAction(
             SpinMotorTime(20*SPEED_GEAR_RATIO, 3000),
             SeriesAction(
-                DriveStraightAccurate(-80*STRAIGHT_FACTOR, compensate=COMPENSATE),
+                DriveStraightAccurate(-100*STRAIGHT_FACTOR, compensate=COMPENSATE),
                 DriveTurnAction(-60*TURN_FACTOR)
             )
         ))
         self.runAction(DriveStraightAccurate(-15*STRAIGHT_FACTOR, compensate=COMPENSATE))
         self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
-        #wait_for_button_press()
 #red home
 #13 squares north
 #1 square east
@@ -112,33 +107,31 @@ class GetToPink(MissionBase):
             times=1
         else:
             raise ValueError(f'Invalid color: {self.color}')
-        self.runAction(DriveTurnAction(-13))
-        self.runAction(DriveStraightAccurate(10, weights=[0, 0, 2, 1], compensate=True, verbose=True))
-        self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, 135*ANGLE_GEAR_RATIO))
-        self.runAction(DriveStraightAccurate(-25, weights=[0, 0, 2, 1], compensate=True, verbose=True))
+        self.runAction(DriveTurnAction(-15))
+        self.runAction(DriveStraightAccurate(20, weights=[0, 0, 2, 1], compensate=True, verbose=True))
+        self.runAction(SpinMotor(150*SPEED_GEAR_RATIO, 135*ANGLE_GEAR_RATIO))
         self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
+        self.runAction(DriveStraightAccurate(-35, weights=[0, 0, 2, 1], compensate=True, verbose=True))
         #If the guy didn't land in the zone, the corner of the robot can nudge it slightly forward.
         self.runAction(DriveStraightAccurate(60, weights=[0, 0, 2, 1], compensate=True, verbose=True))
         self.runAction(DriveStraightAccurate(-60, weights=[0, 0, 2, 1], compensate=True, verbose=True))
-        self.runAction(DriveTurnAction(13))
+        self.runAction(DriveTurnAction(15))
         DriveStraightAccurate(15, weights=[0, 0, 2, 1], compensate=True, verbose=True).run()
-        for i in range(times):
-            self.runAction(SeriesAction(
-                #SpinMotor(400*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO),
-                DriveStraightAccurate(30*STRAIGHT_FACTOR, compensate=COMPENSATE),
-                #SpinMotorTime(400*SPEED_GEAR_RATIO, 2000),
-                SpinMotorUntilStalled(400*SPEED_GEAR_RATIO, duty_limit=85),
-                DriveStraightAccurate(-30*STRAIGHT_FACTOR, compensate=COMPENSATE)
-            ))
+        self.runAction(SeriesAction(
+            #SpinMotor(400*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO),
+            DriveStraightAccurate(30*STRAIGHT_FACTOR, compensate=COMPENSATE),
+            DriveTurnAction(-20),
+            DriveTurnAction(20),
+            SpinMotorUntilStalled(400*SPEED_GEAR_RATIO, duty_limit=85),
+            DriveStraightAccurate(-30*STRAIGHT_FACTOR, compensate=COMPENSATE)
+        ))
 #start with blue piece on back up against sliders
 class SoundMixer(MissionBase):
     def routine(self):
-        #SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO).run()
         DriveTurnAction(-50).run()
         SpinMotorUntilStalled(-300*SPEED_GEAR_RATIO).run()
-        DriveTurnAction(53).run()
+        DriveTurnAction(52).run()
         SpinMotor(300*SPEED_GEAR_RATIO, 105*ANGLE_GEAR_RATIO).run()
-        #wait_for_button_press('Press button if back attachment fell')
         DriveStraightAction(-100*STRAIGHT_FACTOR).run()
         driveBase.settings(turn_rate=90)
         self.runAction(SeriesAction(
