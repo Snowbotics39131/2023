@@ -10,12 +10,15 @@ class DriveStraightAction(Action):
 
 #example action should probably share a drive actions file
     name = "DriveStraightAction"
-    def __init__(self,distance):
+    def __init__(self,distance, speed=None):
         self.distance = distance
+        self.speed=speed
         
     #overriding the method in the parent class
     def start(self):
         simpleEstimate.addAction(self.name)
+        if self.speed is not None:
+            driveBase.settings(straight_speed=self.speed)
         driveBase.straight(self.distance,wait=False)
     #override
     def update(self): pass
@@ -288,9 +291,10 @@ def weighted_average(values, weights=None):
         values=[i[0]*i[1] for i in zip(values, weights)]
         return sum(values)/sum(weights)
 class DriveStraightAccurate(Action):
-    def __init__(self, distance, weights=None, compensate=False, verbose=False):
+    def __init__(self, distance, speed=None, weights=None, compensate=False, verbose=False):
         '''weights is [ultrasonic, imu, driveBase, attempted]'''
         self.distance=distance
+        self.speed=speed
         if weights is None:
             self.weights=[1, 0, 2, 1]
         else:
@@ -310,6 +314,8 @@ class DriveStraightAccurate(Action):
         self.imu_vel=PointIntegral((time, hub.imu.acceleration(Axis.Y)), 'vel')
         self.imu_pos=PointIntegral((time, self.imu_vel.value), 'pos')
         driveBase.reset()
+        if self.speed is not None:
+            driveBase.settings(straight_speed=self.speed)
         driveBase.straight(self.distance, wait=False)
     def update(self):
         time=self.stopwatch.time()/1000
