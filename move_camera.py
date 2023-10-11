@@ -75,13 +75,13 @@ class MoveCamera(MissionBase):
         #self.runAction(DriveStraightAccurate(40*STRAIGHT_FACTOR, compensate=COMPENSATE))
         #self.runAction(DriveTurnAction(90*TURN_FACTOR))
         self.runAction(DriveStraightAccurate(20*STRAIGHT_FACTOR, compensate=COMPENSATE))
-        self.runAction(DriveTurnAction(7*TURN_FACTOR))
+        self.runAction(DriveTurnAction(8*TURN_FACTOR))
         self.runAction(DriveStraightAccurate(23*STRAIGHT_FACTOR, compensate=COMPENSATE))
         self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, 115*ANGLE_GEAR_RATIO))
         self.runAction(ParallelAction(
             SpinMotorTime(20*SPEED_GEAR_RATIO, 3000),
             SeriesAction(
-                DriveStraightAccurate(-60*STRAIGHT_FACTOR, compensate=COMPENSATE),
+                DriveStraightAccurate(-80*STRAIGHT_FACTOR, compensate=COMPENSATE),
                 DriveTurnAction(-60*TURN_FACTOR)
             )
         ))
@@ -105,13 +105,23 @@ class GetToPink(MissionBase):
         self.color=color
     def routine(self):
         if self.color=='blue':
-            times=0
+            times=3 #need to get the flag down
         elif self.color in ('orange', 'yellow'):
             times=2
         elif self.color=='pink':
             times=1
         else:
             raise ValueError(f'Invalid color: {self.color}')
+        self.runAction(DriveTurnAction(-13))
+        self.runAction(DriveStraightAccurate(10, weights=[0, 0, 2, 1], compensate=True, verbose=True))
+        self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, 135*ANGLE_GEAR_RATIO))
+        self.runAction(DriveStraightAccurate(-25, weights=[0, 0, 2, 1], compensate=True, verbose=True))
+        self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
+        #If the guy didn't land in the zone, the corner of the robot can nudge it slightly forward.
+        self.runAction(DriveStraightAccurate(60, weights=[0, 0, 2, 1], compensate=True, verbose=True))
+        self.runAction(DriveStraightAccurate(-60, weights=[0, 0, 2, 1], compensate=True, verbose=True))
+        self.runAction(DriveTurnAction(13))
+        DriveStraightAccurate(15, weights=[0, 0, 2, 1], compensate=True, verbose=True).run()
         for i in range(times):
             self.runAction(SeriesAction(
                 #SpinMotor(400*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO),
@@ -124,7 +134,9 @@ class GetToPink(MissionBase):
 class SoundMixer(MissionBase):
     def routine(self):
         #SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO).run()
+        DriveTurnAction(-50).run()
         SpinMotorUntilStalled(-300*SPEED_GEAR_RATIO).run()
+        DriveTurnAction(53).run()
         SpinMotor(300*SPEED_GEAR_RATIO, 105*ANGLE_GEAR_RATIO).run()
         #wait_for_button_press('Press button if back attachment fell')
         DriveStraightAction(-100*STRAIGHT_FACTOR).run()
@@ -164,8 +176,8 @@ if __name__=='__main__':
     #attachment 90
     #facing north
     driveBase.settings(straight_speed=100, turn_rate=180)
-    DriveStraightAccurate(565*STRAIGHT_FACTOR, compensate=COMPENSATE).run()
-    DriveTurnAction(-10*TURN_FACTOR).run()
+    DriveStraightAccurate(558*STRAIGHT_FACTOR, compensate=COMPENSATE).run()
+    DriveTurnAction(-8*TURN_FACTOR).run()
     autotime.checkpoint('Travel to GetToPink', True)
     GetToPink().run()
     autotime.checkpoint('GetToPink', True)
@@ -187,15 +199,18 @@ if __name__=='__main__':
     DriveStraightAction(-400*STRAIGHT_FACTOR).run()
     DriveStraightAccurate(70*STRAIGHT_FACTOR, compensate=COMPENSATE).run()
     DriveTurnAction(90*TURN_FACTOR).run()
-    DriveStraightAccurate(480*STRAIGHT_FACTOR, compensate=COMPENSATE).run()
+    DriveStraightAccurate(150*STRAIGHT_FACTOR, compensate=COMPENSATE).run()
+    autotime.checkpoint('', True)
+    wait_for_button_press()
+    DriveStraightAccurate(340*STRAIGHT_FACTOR, compensate=COMPENSATE).run()
     #DriveTurnAction(-90*TURN_FACTOR).run()
     #SpinMotor(300*SPEED_GEAR_RATIO, 100*ANGLE_GEAR_RATIO).run()
     autotime.checkpoint('Travel to MoveCamera', True)
     #wait_for_button_press('Starting MoveCamera on button press')
     MoveCamera().run()
     autotime.checkpoint('MoveCamera', True)
-    DriveTurnAction(55*TURN_FACTOR).run()
-    DriveStraightAccurate(-290*STRAIGHT_FACTOR, compensate=COMPENSATE).run()
+    DriveTurnAction(40*TURN_FACTOR).run()
+    DriveStraightAccurate(-340*STRAIGHT_FACTOR, compensate=COMPENSATE).run()
     SpinMotor(300*SPEED_GEAR_RATIO, -45*ANGLE_GEAR_RATIO).run()
     print("The corner of the robot should be on the tittle of 'Foundation'.")
     wait_for_button_press('Starting SoundMixer on button press')
