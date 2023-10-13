@@ -55,6 +55,19 @@ class DriveTurnAction(Action):
     def done(self): 
         simpleEstimate.bestPose.a = driveBase.angle() #better way
         simpleEstimate.removeAction(self.name)
+class DriveCurveAction(Action):
+    def __init__(self, *args, **kwargs):
+        self.args=args
+        self.kwargs=kwargs
+        self.kwargs['wait']=False
+    def start(self):
+        driveBase.curve(*self.args, **self.kwargs)
+    def update(self):
+        pass
+    def isFinished(self):
+        return driveBase.done()
+    def done(self):
+        pass
 
 #make a Action that drives to a point like the functions in new.py using sub actions shown above hint look at the SeriesAction 
 
