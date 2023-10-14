@@ -2,16 +2,16 @@
 #1 north, 6 west, blue home
 #facing north
 from BasicDriveActions import *
-stopwatch=StopWatch()
-start=stopwatch.time()
-DriveStraightAction(400).run()
-DriveTurnAction(-45).run()
-DriveStraightAction(250).run()
-DriveTurnAction(-45).run()
-DriveStraightAction(540).run()
-driveBase.settings(turn_rate=90)
-DriveTurnAction(90).run()
-#DriveStraightAction(70).run()
-#DriveStraightAction(-70).run()
-end=stopwatch.time()
-print(end-start)
+from MissionBase import *
+class PushTray(MissionBase):
+    def routine(self):
+        self.runAction(DriveStraightAction(400))
+        self.runAction(DriveTurnAction(-45))
+        self.runAction(DriveStraightAction(250))
+        self.runAction(DriveTurnAction(-45))
+        self.runAction(DriveStraightAction(540))
+        driveBase.settings(turn_rate=90)
+        self.runAction(DriveTurnAction(90))
+if __name__=='__main__':
+    push_tray=PushTray()
+    push_tray.run()
