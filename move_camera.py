@@ -147,6 +147,7 @@ class GetToPink(MissionBase):
             #DriveTurnAction(-20),
             #DriveTurnAction(20),
             SpinMotorUntilStalled(400*SPEED_GEAR_RATIO, duty_limit=85),
+            #SpinMotorAngleOrUntilStalled(400*SPEED_GEAR_RATIO, 135),
             DriveStraightAccurate(-30*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE)
         ))
         DriveTurnAction(13*TURN_FACTOR).run()
@@ -166,7 +167,7 @@ class SoundMixer(MissionBase):
         start_db_settings=driveBase.settings()
         DriveTurnAction(-50).run()
         SpinMotorUntilStalled(-300*SPEED_GEAR_RATIO).run()
-        DriveTurnAction(55).run()
+        DriveTurnAction(50).run()
         SpinMotor(300*SPEED_GEAR_RATIO, 105*ANGLE_GEAR_RATIO).run()
         DriveStraightAction(-120*STRAIGHT_FACTOR, speed=ACCURATE_SPEED).run()
         driveBase.settings(turn_rate=90)
@@ -221,7 +222,7 @@ class CombinedMissions(MissionBase):
         DriveTurnAction(90*TURN_FACTOR).run()
         DriveStraightAccurate(60*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE).run()
         autotime.checkpoint('Travel to Dragon', True)
-        Dragon(3).run()
+        Dragon().run()
         autotime.checkpoint('Dragon', True)
         DriveTurnAction(-30*TURN_FACTOR).run()
         DriveStraightAction(-400*STRAIGHT_FACTOR, speed=FAST_SPEED).run()
