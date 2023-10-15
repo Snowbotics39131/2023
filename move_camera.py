@@ -6,13 +6,7 @@ from MissionBase import *
 from Actions import *
 from BasicDriveActions import *
 from PortMap import *
-try:
-    from forklift_push import *
-except ImportError:
-    push=False
-    print('Failed to import forklift_push')
-else:
-    push=True
+from forklift_push import *
 import autotime
 SPEED_GEAR_RATIO=-2
 ANGLE_GEAR_RATIO=2
@@ -20,9 +14,9 @@ TURN_FACTOR=1
 STRAIGHT_FACTOR=1
 WAIT=True
 COMPENSATE=False
-ACCURATE_SPEED=100
-TRAVEL_SPEED=250
-FAST_SPEED=500
+ACCURATE_SPEED=150
+TRAVEL_SPEED=300
+FAST_SPEED=600
 def wait_for_button_press(message=None, checkpoint_message=None):
     if message is not None:
         print(message)
@@ -31,14 +25,6 @@ def wait_for_button_press(message=None, checkpoint_message=None):
         while not hub.buttons.pressed():
             pass
         autotime.checkpoint(f'wait_for_button_press({repr(message)})' if checkpoint_message is None else checkpoint_message, False)
-print(driveBase.settings())
-voltage=hub.battery.voltage()
-print(voltage)
-if voltage>=8000:
-    print('Battery OK')
-else:
-    print('Battery low')
-    wait_for_button_press('Press button to continue anyway')
 class SpinMotorTime(Action):
     def __init__(self, speed, time):
         self.speed=speed
@@ -65,7 +51,7 @@ class SpinMotorUntilStalled(Action):
     def isFinished(self):
         return motorCenter.done()
 class SpinMotorAngleOrUntilStalled(Action):
-    done_=False
+    done_=0
     def __init__(self, speed, angle):
         self.speed=speed
         self.angle=angle
@@ -73,11 +59,18 @@ class SpinMotorAngleOrUntilStalled(Action):
         motorCenter.run_angle(self.speed, self.angle, wait=False)
     def update(self):
         if motorCenter.stalled():
-            motorCenter.stop()
-            self.done_=True
-        if motorCenter.done():
-            self.done_=True
+            motorCenter.brake()
+            self.done_=2
+            print('motor stalled')
+        elif motorCenter.done():
+            self.done_=1
+            print('motor completed angle')
     def isFinished(self):
+        """
+        0 - not done before angle done
+        1 - completed angle
+        2 - stalled before angle done
+        """
         return self.done_
 class ChangeDriveBaseSettings(Action):
     def __init__(self, *args, **kwargs):
@@ -103,7 +96,7 @@ class MoveCamera(MissionBase):
             SpinMotorTime(20*SPEED_GEAR_RATIO, 3000),
             SeriesAction(
                 DriveStraightAccurate(-120*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE),
-                DriveTurnAction(-70*TURN_FACTOR)
+                DriveTurnAction(-55*TURN_FACTOR)
             )
         ))
         #self.runAction(DriveStraightAccurate(-30*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
@@ -160,10 +153,10 @@ class GetToPink(MissionBase):
         self.runAction(DriveStraightAccurate(-20, speed=ACCURATE_SPEED, weights=[0, 0, 2, 1], compensate=True, verbose=True))
         self.runAction(DriveTurnAction(35))
         self.runAction(DriveStraightAccurate(80, speed=ACCURATE_SPEED, weights=[0, 0, 2, 1], compensate=True, verbose=True))
-        self.runAction(DriveTurnAction(30))
+        self.runAction(DriveTurnAction(15))
         SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO).run()
         SpinMotor(-motorCenter.control.limits()[0], 90*ANGLE_GEAR_RATIO).run()
-        self.runAction(DriveTurnAction(-30))
+        self.runAction(DriveTurnAction(-15))
         self.runAction(DriveStraightAccurate(-80, speed=ACCURATE_SPEED, weights=[0, 0, 2, 1], compensate=True))
         self.runAction(DriveTurnAction(-35))
         #self.runAction(DriveStraightAccurate(20, speed=ACCURATE_SPEED, weights=[0, 0, 2, 1], compensate=True))
@@ -207,73 +200,86 @@ def countdown(time, message=''):
         wait(1000)
     print('now')
     hub.display.off()
+class CombinedMissions(MissionBase):
+    def __init__(self, push=True):
+        self.push=push
+    def routine(self):
+        #1 north
+        #16 east
+        #attachment 90
+        #facing north
+        driveBase.settings(turn_rate=180)
+        DriveStraightAccurate(558*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
+        DriveTurnAction(-8*TURN_FACTOR).run()
+        autotime.checkpoint('Travel to GetToPink', True)
+        GetToPink().run()
+        autotime.checkpoint('GetToPink', True)
+        DriveStraightAccurate(-300*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
+        SpinMotor(200*SPEED_GEAR_RATIO, -135*ANGLE_GEAR_RATIO).run()
+        DriveTurnAction(-90*TURN_FACTOR).run()
+        DriveStraightAccurate(240*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
+        DriveTurnAction(90*TURN_FACTOR).run()
+        DriveStraightAccurate(60*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE).run()
+        autotime.checkpoint('Travel to Dragon', True)
+        Dragon(3).run()
+        autotime.checkpoint('Dragon', True)
+        DriveTurnAction(-30*TURN_FACTOR).run()
+        DriveStraightAction(-400*STRAIGHT_FACTOR, speed=FAST_SPEED).run()
+        #DriveStraightAccurate(70*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
+        #DriveTurnAction(90*TURN_FACTOR).run()
+        #DriveStraightAccurate(150*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
+        autotime.checkpoint('Travel to MoveCamera alignment', True)
+        print('The back edge of the robot should be on the right edge of the C.')
+        print('The right edge should be 2 units south of the edge of the red.')
+        wait_for_button_press(checkpoint_message='Align for MoveCamera')
+        DriveStraightAccurate(340*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
+        #DriveTurnAction(-90*TURN_FACTOR).run()
+        #SpinMotor(300*SPEED_GEAR_RATIO, 100*ANGLE_GEAR_RATIO).run()
+        autotime.checkpoint('Travel to MoveCamera', True)
+        #wait_for_button_press('Starting MoveCamera on button press')
+        MoveCamera().run()
+        autotime.checkpoint('MoveCamera', True)
+        DriveTurnAction(30*TURN_FACTOR).run()
+        DriveStraightAccurate(-340*STRAIGHT_FACTOR, speed=FAST_SPEED, compensate=COMPENSATE).run()
+        SpinMotor(400*SPEED_GEAR_RATIO, -45*ANGLE_GEAR_RATIO).run()
+        autotime.checkpoint('Travel to SoundMixer alignment', True)
+        print("The corner of the robot should be on the dot of the i in of 'Foundation'.")
+        wait_for_button_press('Starting SoundMixer on button press')
+        DriveStraightAccurate(-90*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
+        DriveTurnAction(135*TURN_FACTOR).run()
+        DriveStraightAccurate(-170*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
+        autotime.checkpoint('Travel to SoundMixer', True)
+        SoundMixer().run()
+        autotime.checkpoint('SoundMixer', True)
+        DriveTurnAction(90).run()
+        DriveStraightAction(-300, speed=FAST_SPEED).run()
+        autotime.checkpoint('Return to home for alignment', True)
+        wait_for_button_press('Remove attachment and')
+        #faster than usual travel, but not like you're rushing back to align
+        DriveStraightAction(220, speed=(TRAVEL_SPEED+FAST_SPEED)/2).run()
+        DriveTurnAction(90).run()
+        DriveStraightAction(500).run()
+        DriveTurnAction(45).run()
+        DriveStraightAction(190).run()
+        DriveTurnAction(-45).run()
+        DriveStraightAction(700).run()
+        DriveTurnAction(45).run()
+        DriveStraightAction(250).run()
+        autotime.checkpoint('Travel to blue home', True)
+        if self.push:
+            wait_for_button_press('Prepare to push tray with forklift')
+            PushTray().run()
+            autotime.checkpoint('PushTray', True)
+        else:
+            print('not running PushTray')
+        autotime.print_all_deltas()
 if __name__=='__main__':
-    #1 north
-    #16 east
-    #attachment 90
-    #facing north
-    driveBase.settings(turn_rate=180)
-    DriveStraightAccurate(558*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
-    DriveTurnAction(-8*TURN_FACTOR).run()
-    autotime.checkpoint('Travel to GetToPink', True)
-    GetToPink().run()
-    autotime.checkpoint('GetToPink', True)
-    DriveStraightAccurate(-300*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
-    SpinMotor(200*SPEED_GEAR_RATIO, -135*ANGLE_GEAR_RATIO).run()
-    DriveTurnAction(-90*TURN_FACTOR).run()
-    DriveStraightAccurate(240*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
-    DriveTurnAction(90*TURN_FACTOR).run()
-    DriveStraightAccurate(60*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE).run()
-    autotime.checkpoint('Travel to Dragon', True)
-    Dragon(3).run()
-    autotime.checkpoint('Dragon', True)
-    DriveTurnAction(-30*TURN_FACTOR).run()
-    DriveStraightAction(-400*STRAIGHT_FACTOR, speed=FAST_SPEED).run()
-    #DriveStraightAccurate(70*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
-    #DriveTurnAction(90*TURN_FACTOR).run()
-    #DriveStraightAccurate(150*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
-    autotime.checkpoint('Travel to MoveCamera alignment', True)
-    print('The back edge of the robot should be on the right edge of the C.')
-    print('The right edge should be 2 units south of the edge of the red.')
-    wait_for_button_press(checkpoint_message='Align for MoveCamera')
-    DriveStraightAccurate(340*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
-    #DriveTurnAction(-90*TURN_FACTOR).run()
-    #SpinMotor(300*SPEED_GEAR_RATIO, 100*ANGLE_GEAR_RATIO).run()
-    autotime.checkpoint('Travel to MoveCamera', True)
-    #wait_for_button_press('Starting MoveCamera on button press')
-    MoveCamera().run()
-    autotime.checkpoint('MoveCamera', True)
-    DriveTurnAction(30*TURN_FACTOR).run()
-    DriveStraightAccurate(-340*STRAIGHT_FACTOR, speed=FAST_SPEED, compensate=COMPENSATE).run()
-    SpinMotor(400*SPEED_GEAR_RATIO, -45*ANGLE_GEAR_RATIO).run()
-    autotime.checkpoint('Travel to SoundMixer alignment', True)
-    print("The corner of the robot should be on the dot of the i in of 'Foundation'.")
-    wait_for_button_press('Starting SoundMixer on button press')
-    DriveStraightAccurate(-90*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
-    DriveTurnAction(135*TURN_FACTOR).run()
-    DriveStraightAccurate(-170*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
-    autotime.checkpoint('Travel to SoundMixer', True)
-    SoundMixer().run()
-    autotime.checkpoint('SoundMixer', True)
-    DriveTurnAction(90).run()
-    DriveStraightAction(-300, speed=FAST_SPEED).run()
-    autotime.checkpoint('Return to home for alignment', True)
-    wait_for_button_press('Remove attachment and')
-    #faster than usual travel, but not like you're rushing back to align
-    DriveStraightAction(220, speed=(TRAVEL_SPEED+FAST_SPEED)/2).run()
-    DriveTurnAction(100).run()
-    DriveStraightAction(500).run()
-    DriveTurnAction(45).run()
-    DriveStraightAction(190).run()
-    DriveTurnAction(-42).run()
-    DriveStraightAction(700).run()
-    DriveTurnAction(45).run()
-    DriveStraightAction(250).run()
-    autotime.checkpoint('Travel to blue home', True)
-    if push:
-        wait_for_button_press('Prepare to push tray with forklift')
-        PushTray().run()
-        autotime.checkpoint('PushTray', True)
+    voltage=hub.battery.voltage()
+    print(voltage)
+    if voltage>=8000:
+        print('Battery OK')
     else:
-        print('not running PushTray')
-    autotime.print_all_deltas()
+        print('Battery low')
+        wait_for_button_press('Press button to continue anyway')
+    combined_missions=CombinedMissions()
+    combined_missions.run()
