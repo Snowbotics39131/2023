@@ -10,9 +10,9 @@ class CraneMission(MissionBase):
         driveBase.settings(turn_rate=90),
         self.runAction(SeriesAction(
             DriveStraightAction(570),
-            DriveTurnAction(-180),
+            DriveTurnAction(-95),
             DriveStraightAction(615),
-            DriveTurnAction(-180),
+            DriveTurnAction(-75),
             DriveStraightAction(66),
             SpinMotor(180,1460),
             ParallelAction(

@@ -1,0 +1,16 @@
+from BasicDriveActions import *
+FAST_SPEED=400
+#DriveStraightAction(180, speed=FAST_SPEED).run()
+#DriveTurnAction(93).run()
+#DriveStraightAction(1300).run()
+#DriveTurnAction(45).run()
+#DriveStraightAction(350).run()
+DriveStraightAction(220, speed=500).run()
+DriveTurnAction(100).run()
+DriveStraightAction(500).run()
+DriveTurnAction(45).run()
+DriveStraightAction(190).run()
+DriveTurnAction(-42).run()
+DriveStraightAction(700).run()
+DriveTurnAction(45).run()
+DriveStraightAction(250).run()
