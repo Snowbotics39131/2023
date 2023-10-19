@@ -2,6 +2,7 @@
 from PortMap import *
 from Actions import *
 from Estimation import *
+from pybricks.geometry import Axis
 import jmath
 simpleEstimate.initial(0, 0, 0)  # not really sure what to do here
 
@@ -9,12 +10,15 @@ class DriveStraightAction(Action):
 
 #example action should probably share a drive actions file
     name = "DriveStraightAction"
-    def __init__(self,distance):
+    def __init__(self,distance, speed=None):
         self.distance = distance
+        self.speed=speed
         
     #overriding the method in the parent class
     def start(self):
         simpleEstimate.addAction(self.name)
+        if self.speed is not None:
+            driveBase.settings(straight_speed=self.speed)
         driveBase.straight(self.distance,wait=False)
     #override
     def update(self): pass
@@ -51,6 +55,19 @@ class DriveTurnAction(Action):
     def done(self): 
         simpleEstimate.bestPose.a = driveBase.angle() #better way
         simpleEstimate.removeAction(self.name)
+class DriveCurveAction(Action):
+    def __init__(self, *args, **kwargs):
+        self.args=args
+        self.kwargs=kwargs
+        self.kwargs['wait']=False
+    def start(self):
+        driveBase.curve(*self.args, **self.kwargs)
+    def update(self):
+        pass
+    def isFinished(self):
+        return driveBase.done()
+    def done(self):
+        pass
 
 #make a Action that drives to a point like the functions in new.py using sub actions shown above hint look at the SeriesAction 
 
@@ -261,14 +278,109 @@ class FindLine(Action):
 
     def isFinished(self):
         return self.state_left == 'done' and self.state_right == 'done'
+class PointIntegral:
+    def __init__(self, first_point, name=''): #name for testing only, remove later
+        self.value=0
+        self.error=0
+        self.prev_point=first_point
+        self.name=name
+    def add_point(self, point):
+        trap_added_area=0.5*(point[1]+self.prev_point[1])*(point[0]-self.prev_point[0])
+        max_added_area=point[1]*(point[0]-self.prev_point[0])
+        self.value+=trap_added_area
+        self.error+=abs(max_added_area-trap_added_area)
+        #print(f'{self.name} {trap_added_area}=0.5*({point[1]}+{self.prev_point[1]})*({point[0]}-{self.prev_point[0]}) {self.value}')
+        self.prev_point=point
+    def __float__(self):
+        return self.value
+    def __int__(self):
+        return int(self.value)
+    def __str__(self):
+        return f'{self.value} +- {self.error}' #PyBricks cannot render ± sign
+def weighted_average(values, weights=None):
+    if weights is None:
+        return sum(values)/len(values)
+    else:
+        values=[i[0]*i[1] for i in zip(values, weights)]
+        return sum(values)/sum(weights)
+class DriveStraightAccurate(Action):
+    def __init__(self, distance, speed=None, weights=None, compensate=False, verbose=False):
+        '''weights is [ultrasonic, imu, driveBase, attempted]'''
+        self.distance=distance
+        self.speed=speed
+        if weights is None:
+            self.weights=[1, 0, 2, 1]
+        else:
+            self.weights=weights
+        #print('init', self.weights, weights)
+        self.compensate=compensate
+        self.verbose=verbose
+        self.stopwatch=StopWatch()
+    def start(self):
+        if device.has_ultrasonicSensor:
+            self.start_ultrasonic_distance=ultrasonicSensor.distance()
+            if self.start_ultrasonic_distance==2000:
+                self.ultrasonic_reliable=False
+            else:
+                self.ultrasonic_reliable=True
+        time=self.stopwatch.time()/1000
+        self.imu_vel=PointIntegral((time, hub.imu.acceleration(Axis.Y)), 'vel')
+        self.imu_pos=PointIntegral((time, self.imu_vel.value), 'pos')
+        driveBase.reset()
+        if self.speed is not None:
+            driveBase.settings(straight_speed=self.speed)
+        driveBase.straight(self.distance, wait=False)
+    def update(self):
+        time=self.stopwatch.time()/1000
+        self.imu_vel.add_point((time, hub.imu.acceleration(Axis.Y)))
+        self.imu_pos.add_point((time, self.imu_vel.value))
+    def done(self):
+        if device.has_ultrasonicSensor:
+            end_ultrasonic_distance=ultrasonicSensor.distance()
+            if end_ultrasonic_distance==2000:
+                self.ultrasonic_reliable=False
+            ultrasonic_distance=self.start_ultrasonic_distance-end_ultrasonic_distance
+        imu_distance=self.imu_pos.value
+        driveBase_distance=driveBase.distance()
+        attempted_distance=self.distance
+        if self.verbose:
+            if device.has_ultrasonicSensor:
+                if self.ultrasonic_reliable:
+                    print(f'ultrasonic\t{ultrasonic_distance} (init {self.start_ultrasonic_distance}, end {end_ultrasonic_distance})')
+                else:
+                    print('ultrasonic out of range')
+            else:
+                print('ultrasonic sensor not connected')
+            print(f'imu       \t{self.imu_pos}')
+            print(f'driveBase \t{driveBase_distance}')
+        print(f'attempted \t{attempted_distance}')
+        if device.has_ultrasonicSensor and self.ultrasonic_reliable:
+            est_distance=weighted_average((
+                ultrasonic_distance,
+                imu_distance,
+                driveBase_distance,
+                attempted_distance
+            ), self.weights)
+        else:
+            #del(self.weights[0])
+            self.weights[0]=0
+            #print('after 0', self.weights)
+            est_distance=weighted_average((
+                0,
+                imu_distance,
+                driveBase_distance,
+                attempted_distance
+            ), self.weights)
+        print(f'estimated \t{est_distance}')
+        if self.compensate:
+            print(f'driving {self.distance-est_distance}')
+            DriveStraightAction(self.distance-est_distance).run()
+        else:
+            print('compensation disabled')
+    def isFinished(self):
+        return driveBase.done()
 
 
 if __name__ == '__main__':
-    # gtp = GoToPoint(Pose(-250, 500, 180))
-    # while not gtp.isFinished():
-    #     gtp.update()
-    example = FollowLineRight(3000)
-    example.start()
-    while not example.isFinished():
-        example.update()
-    example.done()
+    dsa=DriveStraightAccurate(100, compensate=True, verbose=True)
+    dsa.run()

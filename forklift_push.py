@@ -6,7 +6,7 @@ from MissionBase import *
 class PushTray(MissionBase):
     def routine(self):
         start_db_settings=driveBase.settings()
-        self.runAction(DriveStraightAction(400))
+        self.runAction(DriveStraightAction(420, speed=max(driveBase.settings()[0], 500)))
         self.runAction(DriveTurnAction(-45))
         self.runAction(DriveStraightAction(250))
         self.runAction(DriveTurnAction(-45))

@@ -12,6 +12,20 @@ try: from PortMapPlus import *
 except ImportError: print("PortMapPlus Needed")
 
 hubName = hubType()
+def attachment_change():
+    global motorBack
+    global ultrasonicSensor
+    global device
+    try:
+        motorBack=Motor(Port.D, Direction.COUNTERCLOCKWISE)
+        print('motorBack detected')
+    except:
+        try:
+            ultrasonicSensor=UltrasonicSensor(Port.D)
+            print('ultrasonicSensor detected')
+        except:
+            print('Port D disconnected')
+    device=Device()
 if hubName == 'prime':
     #if you are using the spike this is all you need to mess with
     motorRight=Motor(Port.A, Direction.CLOCKWISE)
@@ -21,8 +35,12 @@ if hubName == 'prime':
     try:
         colorSensorLeft=ColorSensor(Port.F)
         colorSensorRight=ColorSensor(Port.B)
-        motorBack=Motor(Port.D, Direction.COUNTERCLOCKWISE)
-        driveBase=DriveBase(motorLeft, motorRight, 56, 114)
+        attachment_change()
+        try:
+            driveBase=GyroDriveBase(motorLeft, motorRight, 56, 114)
+            print('using GyroDriveBase')
+        except NameError:
+            driveBase=DriveBase(motorLeft, motorRight, 56, 114)
         hubName += 'snow'
     except:
         driveBase=DriveBase(motorLeft, motorRight, 50, 50)
@@ -55,7 +73,7 @@ if hubName == 'essential':
     pass
 
 hub = hubDef()
-device = Device()
+device=Device()
 
 #demo remove later
 if __name__=='__main__':
@@ -64,3 +82,4 @@ if __name__=='__main__':
     print(device.has_colorSensorLeft)
     print(device.has_colorSensorRight)
     print(device.has_driveBase)
+    print(device.has_ultrasonicSensor)
