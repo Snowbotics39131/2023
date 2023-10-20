@@ -284,4 +284,3 @@ if __name__=='__main__':
         wait_for_button_press('Press button to continue anyway')
     combined_missions=CombinedMissions()
     combined_missions.run()
-    
