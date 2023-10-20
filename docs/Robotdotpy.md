@@ -1,3 +1,11 @@
+---
+title: robot.py
+layout: default
+---
+## Robot.py
+
+# Overveiw
+
 The file `robot.py` is a simple mission selector for a LEGO Mindstorms Hub and the first program run when the robot starts. 
 
 It works by first disabling the stop button, since the center button is going to be used for the menu. Then, it creates a list of mission names and a function to run each mission.
@@ -5,6 +13,8 @@ It works by first disabling the stop button, since the center button is going to
 The main loop of the program works by displaying the current mission name on the Hub's display and waiting for a button press. If the right button is pressed, the next mission is selected. If the left button is pressed, the previous mission is selected. If the center button is pressed, the program exits.
 
 Once a mission has been selected, the program sets the stop button back to the center button and then runs the selected mission.
+
+# Breakdown
 
 Here is a more detailed breakdown of the code:
 
