@@ -31,8 +31,8 @@ def print_all_deltas():
     total_grand = total_automatic+total_manual
     allowed_time = 150000
     print(f'Automatic Total:\t{total_automatic}ms\t{total_automatic/total_grand*100}%')
-    print(f'Manual Total:\t{total_manual}ms\t{total_manual/total_grand*100}%')
-    print(f'Grand Total:\t{total_grand}/{allowed_time}ms')
+    print(f'Manual Total:   \t{total_manual}ms\t{total_manual/total_grand*100}%')
+    print(f'Grand Total:    \t{total_grand}/{allowed_time}ms')
     print('Time OK' if total_grand <= allowed_time else f'{total_grand-allowed_time}ms too long')
 
 
