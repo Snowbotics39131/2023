@@ -1,3 +1,8 @@
+---
+title: MissionBase
+layout: default
+---
+
 ## MissionBase Class
 
 The `MissionBase` class is a base class for all missions. It has the following methods:
