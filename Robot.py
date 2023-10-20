@@ -8,15 +8,18 @@ missionList = ["1","2","3"] #add here for new mission
 
 def runProgram(mission):
     if mission == "1":
-        import SampleMission1
+        from move_camera import CombinedMissions
+        CombinedMissions().run()
     elif mission == "2":
         mission2()
     else:
         print("There is no mission:{mission}")
 
 pressed={}
+
 runBytes = hub.system.storage(offset=0,read=1,)
 n=int.from_bytes(runBytes, 'big')
+
 try: missionList[n]
 except: n=0
 while True:
