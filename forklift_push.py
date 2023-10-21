@@ -14,7 +14,7 @@ class PushTray(MissionBase):
     def routine(self):
         start_db_settings=driveBase.settings()
         driveBase.settings(turn_rate=90)
-        self.runAction(DriveStraightAction(420, speed=max(driveBase.settings()[0], 500)))
+        self.runAction(DriveStraightAction(420, speed=max(driveBase.settings()[0], 200)))
         self.runAction(DriveTurnAction(-45))
         self.runAction(DriveStraightAction(250))
         self.runAction(DriveTurnAction(-45))
