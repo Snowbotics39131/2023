@@ -1,4 +1,7 @@
 from PortMap import * #PortMap has all the import
+from move_camera import *
+from pushcamera import *
+from Crane_Mission import *
 
 # Normally, the center button stops the program. But we want to use the
 # center button for our menu. So we can disable the stop button.
@@ -8,10 +11,11 @@ missionList = ["1","2","3"] #add here for new mission
 
 def runProgram(mission):
     if mission == "1":
-        from move_camera import CombinedMissions
-        CombinedMissions().run()
+        CombinedMission1().run()
     elif mission == "2":
-        mission2()
+        CraneMission().run()
+    elif mission == "3":
+        PushCamera().run()
     else:
         print("There is no mission:{mission}")
 
