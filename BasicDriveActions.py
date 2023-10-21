@@ -10,9 +10,10 @@ class DriveStraightAction(Action):
 
 #example action should probably share a drive actions file
     name = "DriveStraightAction"
-    def __init__(self,distance, speed=None):
+    def __init__(self,distance, speed=None, stop=False):
         self.distance = distance
         self.speed=speed
+        self.stop=stop
         
     #overriding the method in the parent class
     def start(self):
@@ -30,8 +31,11 @@ class DriveStraightAction(Action):
         return False
     #override    
     def done(self):
+        if self.stop:
+            driveBase.stop()
         simpleEstimate.linearChange(driveBase.distance()) #better way
         simpleEstimate.removeAction(self.name)
+
 
 
 class DriveTurnAction(Action):
@@ -303,8 +307,9 @@ def weighted_average(values, weights=None):
     else:
         values=[i[0]*i[1] for i in zip(values, weights)]
         return sum(values)/sum(weights)
+#FIXME: stop does not work
 class DriveStraightAccurate(Action):
-    def __init__(self, distance, speed=None, weights=None, compensate=False, verbose=False):
+    def __init__(self, distance, speed=None, weights=None, compensate=False, verbose=False, stop=False):
         '''weights is [ultrasonic, imu, driveBase, attempted]'''
         self.distance=distance
         self.speed=speed
@@ -315,6 +320,7 @@ class DriveStraightAccurate(Action):
         #print('init', self.weights, weights)
         self.compensate=compensate
         self.verbose=verbose
+        self.stop=stop
         self.stopwatch=StopWatch()
     def start(self):
         if device.has_ultrasonicSensor:
@@ -335,6 +341,8 @@ class DriveStraightAccurate(Action):
         self.imu_vel.add_point((time, hub.imu.acceleration(Axis.Y)))
         self.imu_pos.add_point((time, self.imu_vel.value))
     def done(self):
+        if self.stop:
+            driveBase.stop
         if device.has_ultrasonicSensor:
             end_ultrasonic_distance=ultrasonicSensor.distance()
             if end_ultrasonic_distance==2000:

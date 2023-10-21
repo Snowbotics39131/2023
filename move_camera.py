@@ -88,6 +88,7 @@ class ChangeDriveBaseSettings(Action):
 #1 north
 class MoveCamera(MissionBase):
     def routine(self):
+        #FIXME: 7-degree angle is too much
         self.runAction(DriveStraightAccurate(20*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
         self.runAction(DriveTurnAction(7*TURN_FACTOR))
         self.runAction(DriveStraightAccurate(23*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
@@ -110,10 +111,10 @@ class Dragon(MissionBase):
     def __init__(self, tries=2):
         self.tries=tries
     def routine(self):
-        self.runAction(DriveTurnAction(50*TURN_FACTOR))
+        self.runAction(DriveTurnAction(30*TURN_FACTOR))
         for i in range(self.tries-1):
-            self.runAction(DriveTurnAction(-50*TURN_FACTOR))
-            self.runAction(DriveTurnAction(50*TURN_FACTOR))
+            self.runAction(DriveTurnAction(-30*TURN_FACTOR))
+            self.runAction(DriveTurnAction(30*TURN_FACTOR))
 #near red home
 #580mm north
 #230mm east
@@ -164,6 +165,7 @@ class GetToPink(MissionBase):
 #start with blue piece on back up against sliders
 class SoundMixer(MissionBase):
     def routine(self):
+        #FIXME: went to the right
         start_db_settings=driveBase.settings()
         DriveTurnAction(-50).run()
         SpinMotorUntilStalled(-300*SPEED_GEAR_RATIO).run()
@@ -225,7 +227,7 @@ class CombinedMissions(MissionBase):
         Dragon().run()
         autotime.checkpoint('Dragon', True)
         DriveTurnAction(-30*TURN_FACTOR).run()
-        DriveStraightAction(-400*STRAIGHT_FACTOR, speed=FAST_SPEED).run()
+        DriveStraightAction(-400*STRAIGHT_FACTOR, speed=FAST_SPEED, stop=True).run()
         #DriveStraightAccurate(70*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
         #DriveTurnAction(90*TURN_FACTOR).run()
         #DriveStraightAccurate(150*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
@@ -241,7 +243,9 @@ class CombinedMissions(MissionBase):
         MoveCamera().run()
         autotime.checkpoint('MoveCamera', True)
         DriveTurnAction(30*TURN_FACTOR).run()
-        DriveStraightAccurate(-340*STRAIGHT_FACTOR, speed=FAST_SPEED, compensate=COMPENSATE).run()
+        #stop does not work on DriveStraightAccurate
+        #DriveStraightAccurate(-340*STRAIGHT_FACTOR, speed=FAST_SPEED, compensate=COMPENSATE, stop=True).run()
+        DriveStraightAction(-340*STRAIGHT_FACTOR, speed=FAST_SPEED, stop=True).run()
         SpinMotor(400*SPEED_GEAR_RATIO, -45*ANGLE_GEAR_RATIO).run()
         autotime.checkpoint('Travel to SoundMixer alignment', True)
         print("The corner of the robot should be on the dot of the i in of 'Foundation'.")
@@ -253,9 +257,9 @@ class CombinedMissions(MissionBase):
         SoundMixer().run()
         autotime.checkpoint('SoundMixer', True)
         DriveTurnAction(90).run()
-        DriveStraightAction(-300, speed=FAST_SPEED).run()
+        DriveStraightAction(-300, speed=FAST_SPEED, stop=True).run()
         autotime.checkpoint('Return to home for alignment', True)
-        wait_for_button_press('Remove attachment and')
+        wait_for_button_press('Remove attachment and prepare to travel to blue home')
         #faster than usual travel, but not like you're rushing back to align
         DriveStraightAction(220, speed=(TRAVEL_SPEED+FAST_SPEED)/2).run()
         DriveTurnAction(90).run()
