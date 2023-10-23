@@ -4,7 +4,12 @@ from Actions import *
 from BasicDriveActions import *
 from Estimation import *
 
-
+#5 west
+#1 north
+#facing north
+#blue home
+#attachment down
+#tray loaded
 class CraneMission(MissionBase):
     def routine(self): 
         driveBase.settings(turn_rate=90),
@@ -13,14 +18,17 @@ class CraneMission(MissionBase):
             DriveTurnAction(-45),
             DriveStraightAction(250),
             DriveTurnAction(-45),
-            DriveStraightAction(580)))
+            DriveStraightAction(590)))
         driveBase.settings(turn_rate=45)
         self.runAction(SeriesAction(
             DriveTurnAction(90),
-            DriveStraightAction(110),
+            DriveStraightAction(150),
+            WaitForButtonPressAction(),
             DriveStraightAction(-50),
+            WaitForButtonPressAction(),
             SpinMotor(300, 145),
             DriveStraightAction(-45),
+            WaitForButtonPressAction(),
             DriveTurnAction(-180),
             DriveStraightAction(110),
             SpinMotor(180,1460),
