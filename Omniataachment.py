@@ -12,26 +12,28 @@ class OmniLiftAction(Action):
         self.height=height
 
     def start(self):
-        motorBack.run_angle(self.height-omni.height*(360+270),wait=False)
+        motorCenter.run_angle(1000,(self.height-omni.height)*(360+270),wait=False)
         omni.height = self.height
     #override
     def update(self): pass
 
     #override
     def isFinished(self):
-        return motorBack.done()
-
+        return motorCenter.done()
+  
     #override    
     def done(self):
-
-class OmniLiftAction(Action):
-    def __init__(self,spin):
-        self.spin=spin
+        pass
+        
+class OmniorientationAction(Action):
+    def __init__(self,orientation):
+        self.orientation=orientation
 
     def start(self):
-        spinDistance = jmath.shortestDirectionBetweenBearings(self.spin,omni.orientation)
-        motorBack.run_angle(spinDistance,wait=False)
-        omni.orientation = self.spin
+        orientationDistance = jmath.shortestDirectionBetweenBearings(self.orientation,omni.orientation)
+        motorBack.run_angle(500,self.orientation*5,wait=False)
+        motorCenter.run_angle(100,-self.orientation,wait=False)
+        omni.orientation = self.orientation
     #override
     def update(self): pass
 
@@ -40,4 +42,25 @@ class OmniLiftAction(Action):
         return motorBack.done()
         
     #override    
-    def done(self):
+    def done(self): pass
+        
+if __name__ == '__main__':
+    # gtp = GoToPoint(Pose(-250, 500, 180))
+    # while not gtp.isFinished():
+    #     gtp.update()
+    while True:
+        example = OmniLiftAction(0)
+        example.start()
+        while not example.isFinished():
+            example.update()
+        example.done()
+        example = OmniorientationAction(360)
+        example.start()
+        while not example.isFinished():
+            example.update()
+        example.done()
+        example = OmniLiftAction(1)
+        example.start()
+        while not example.isFinished():
+            example.update()
+        example.done()
