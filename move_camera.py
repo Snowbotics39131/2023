@@ -7,7 +7,6 @@ from Actions import *
 from BasicDriveActions import *
 from PortMap import *
 from forklift_push import *
-from Crane_Mission import *
 import autotime
 SPEED_GEAR_RATIO=-2
 ANGLE_GEAR_RATIO=2
@@ -170,7 +169,7 @@ class SoundMixer(MissionBase):
         start_db_settings=driveBase.settings()
         DriveTurnAction(-50).run()
         SpinMotorUntilStalled(-300*SPEED_GEAR_RATIO).run()
-        DriveTurnAction(45).run()
+        DriveTurnAction(50).run()
         SpinMotor(300*SPEED_GEAR_RATIO, 105*ANGLE_GEAR_RATIO).run()
         DriveStraightAction(-120*STRAIGHT_FACTOR, speed=ACCURATE_SPEED).run()
         driveBase.settings(turn_rate=90)
@@ -204,7 +203,7 @@ def countdown(time, message=''):
         wait(1000)
     print('now')
     hub.display.off()
-class CombinedMission1(MissionBase):
+class CombinedMissions(MissionBase):
     def __init__(self, push=True):
         self.push=push
     def routine(self):
@@ -266,21 +265,19 @@ class CombinedMission1(MissionBase):
         DriveTurnAction(90).run()
         DriveStraightAction(500).run()
         DriveTurnAction(45).run()
-        DriveStraightAction(160).run()
+        DriveStraightAction(190).run()
         DriveTurnAction(-45).run()
         DriveStraightAction(700).run()
         DriveTurnAction(45).run()
         DriveStraightAction(250).run()
         autotime.checkpoint('Travel to blue home', True)
+        if self.push:
+            wait_for_button_press('Prepare to push tray with forklift')
+            PushTray().run()
+            autotime.checkpoint('PushTray', True)
+        else:
+            print('not running PushTray')
         autotime.print_all_deltas()
-class CombinedMission2(MissionBase):
-    def routine(self):
-        wait_for_button_press('Prepare to push tray with forklift')
-        #PushTray().run()
-        CraneMission().run()
-        autotime.checkpoint('PushTray', True)
-        print('not running PushTray')
-        
 if __name__=='__main__':
     voltage=hub.battery.voltage()
     print(voltage)
@@ -289,5 +286,5 @@ if __name__=='__main__':
     else:
         print('Battery low')
         wait_for_button_press('Press button to continue anyway')
-    CombinedMission1().run()
-    CombinedMission2().run()
+    combined_missions=CombinedMissions()
+    combined_missions.run()

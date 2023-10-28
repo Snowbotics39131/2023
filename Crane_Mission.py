@@ -14,23 +14,20 @@ class CraneMission(MissionBase):
     def routine(self): 
         driveBase.settings(turn_rate=90),
         self.runAction(SeriesAction(
-            DriveStraightAction(440),
+            DriveStraightAction(420),
             DriveTurnAction(-45),
             DriveStraightAction(250),
             DriveTurnAction(-45),
             DriveStraightAction(590)))
         driveBase.settings(turn_rate=45)
         self.runAction(SeriesAction(
-            DriveTurnAction(90),
-            DriveStraightAction(150),
-            WaitForButtonPressAction(),
-            DriveStraightAction(-50),
+            DriveStraightAction(580),
             WaitForButtonPressAction(),
             SpinMotor(300, 145),
             DriveStraightAction(-45),
             WaitForButtonPressAction(),
             DriveTurnAction(-180),
-            DriveStraightAction(110),
+            DriveStraightAction(70),
             SpinMotor(180,1460),
             ParallelAction(
                 SpinMotor(230,-1460),
