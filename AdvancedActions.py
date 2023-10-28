@@ -8,6 +8,16 @@ def wait_for_button_press(message=None, checkpoint_message=None):
     while not hub.buttons.pressed():
         pass
     autotime.checkpoint(f'wait_for_button_press({repr(message)})' if checkpoint_message is None else checkpoint_message, False)
+class WaitForButtonPressAction(Action):
+    def __init__(self, message=None, checkpoint_message=None):
+        self.message=message
+        self.checkpoint_message=checkpoint_message
+    def start(self):
+        hub.speaker.beep()
+        while not hub.buttons.pressed():
+            pass
+    def done(self):
+        autotime.checkpoint(checkpoint_message if checkpoint_message else f'wait_for_button_press({repr(self.message)})')
 class SpinMotorTime(Action):
     def __init__(self, speed, time):
         self.speed=speed
