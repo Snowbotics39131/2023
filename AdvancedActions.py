@@ -13,6 +13,8 @@ class WaitForButtonPressAction(Action):
         self.message=message
         self.checkpoint_message=checkpoint_message
     def start(self):
+        if self.message:
+            print(self.message)
         hub.speaker.beep()
         while not hub.buttons.pressed():
             pass
