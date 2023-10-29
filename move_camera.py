@@ -4,6 +4,7 @@
 #facing east
 from MissionBase import *
 from Actions import *
+from AdvancedActions import *
 from BasicDriveActions import *
 from PortMap import *
 from forklift_push import *
@@ -13,78 +14,10 @@ SPEED_GEAR_RATIO=-2
 ANGLE_GEAR_RATIO=2
 TURN_FACTOR=1
 STRAIGHT_FACTOR=1
-WAIT=True
 COMPENSATE=False
 ACCURATE_SPEED=150
 TRAVEL_SPEED=300
 FAST_SPEED=600
-def wait_for_button_press(message=None, checkpoint_message=None):
-    if message is not None:
-        print(message)
-    hub.speaker.beep()
-    if WAIT:
-        while not hub.buttons.pressed():
-            pass
-        autotime.checkpoint(f'wait_for_button_press({repr(message)})' if checkpoint_message is None else checkpoint_message, False)
-class SpinMotorTime(Action):
-    def __init__(self, speed, time):
-        self.speed=speed
-        self.time=time
-    def start(self):
-        motorCenter.run_time(self.speed, self.time, wait=False)
-    def update(self):
-        pass
-    def done(self):
-        pass
-    def isFinished(self):
-        return motorCenter.done()
-class SpinMotorUntilStalled(Action):
-    def __init__(self, *args, **kwargs):
-        #kwargs['wait']=False
-        self.args=args
-        self.kwargs=kwargs
-    def start(self):
-        motorCenter.run_until_stalled(*self.args, **self.kwargs)
-    def update(self):
-        pass
-    def done(self):
-        pass
-    def isFinished(self):
-        return motorCenter.done()
-class SpinMotorAngleOrUntilStalled(Action):
-    done_=0
-    def __init__(self, speed, angle):
-        self.speed=speed
-        self.angle=angle
-    def start(self):
-        motorCenter.run_angle(self.speed, self.angle, wait=False)
-    def update(self):
-        if motorCenter.stalled():
-            motorCenter.brake()
-            self.done_=2
-            print('motor stalled')
-        elif motorCenter.done():
-            self.done_=1
-            print('motor completed angle')
-    def isFinished(self):
-        """
-        0 - not done before angle done
-        1 - completed angle
-        2 - stalled before angle done
-        """
-        return self.done_
-class ChangeDriveBaseSettings(Action):
-    def __init__(self, *args, **kwargs):
-        self.args=args
-        self.kwargs=kwargs
-    def start(self):
-        driveBase.settings(*self.args, **self.kwargs)
-    def update(self):
-        pass
-    def isFinished(self):
-        return True
-    def done(self):
-        pass
 #19 east
 #1 north
 class MoveCamera(MissionBase):
@@ -204,7 +137,7 @@ def countdown(time, message=''):
         wait(1000)
     print('now')
     hub.display.off()
-class CombinedMission1(MissionBase):
+class CombinedMission(MissionBase):
     def __init__(self, push=True):
         self.push=push
     def routine(self):
@@ -273,13 +206,6 @@ class CombinedMission1(MissionBase):
         DriveStraightAction(250).run()
         autotime.checkpoint('Travel to blue home', True)
         autotime.print_all_deltas()
-class CombinedMission2(MissionBase):
-    def routine(self):
-        wait_for_button_press('Prepare to push tray with forklift')
-        #PushTray().run()
-        CraneMission().run()
-        autotime.checkpoint('PushTray', True)
-        print('not running PushTray')
         
 if __name__=='__main__':
     voltage=hub.battery.voltage()
@@ -289,5 +215,4 @@ if __name__=='__main__':
     else:
         print('Battery low')
         wait_for_button_press('Press button to continue anyway')
-    CombinedMission1().run()
-    CombinedMission2().run()
+    CombinedMission().run()

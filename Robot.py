@@ -7,15 +7,17 @@ from Crane_Mission import *
 # center button for our menu. So we can disable the stop button.
 hub.system.set_stop_button(None)
 
-missionList = ["1","2","3"] #add here for new mission
+missionList = ["1","2","3", '4'] #add here for new mission
 
 def runProgram(mission):
     if mission == "1":
-        CombinedMission1().run()
+        CombinedMission().run()
     elif mission == "2":
         CraneMission().run()
     elif mission == "3":
         PushCamera().run()
+    elif mission=='4':
+        CraftCreator().run()
     else:
         print("There is no mission:{mission}")
 
