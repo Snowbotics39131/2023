@@ -3,13 +3,8 @@
 #facing north
 from BasicDriveActions import *
 from MissionBase import *
+from AdvancedActions import *
 print(hub.battery.voltage())
-def wait_for_button_press(message=None, checkpoint_message=None):
-    if message is not None:
-        print(message)
-    hub.speaker.beep()
-    while not hub.buttons.pressed():
-        pass
 class PushTray(MissionBase):
     def routine(self):
         start_db_settings=driveBase.settings()
