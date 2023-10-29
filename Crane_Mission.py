@@ -3,24 +3,8 @@ from MissionBase import *
 from Actions import *
 from BasicDriveActions import *
 from Estimation import *
+from AdvancedActions import *
 import autotime
-class WaitForButtonPressAction(Action):
-    def __init__(self, message=None, checkpoint_message=None):
-        self.message=message
-        self.checkpoint_message=checkpoint_message
-    def start(self):
-        if self.message:
-            print(self.message)
-        hub.speaker.beep()
-        while not hub.buttons.pressed():
-            pass
-    def update(self):
-        if hub.buttons.pressed():
-            self._is_finished=True
-    def isFinished(self):
-        return self._is_finished
-    def done(self):
-        autotime.checkpoint(self.checkpoint_message if self.checkpoint_message else f'WaitForButtonPressAction({repr(self.message)})', False)
 #5 west
 #1 north
 #facing north
