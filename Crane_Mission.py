@@ -3,8 +3,24 @@ from MissionBase import *
 from Actions import *
 from BasicDriveActions import *
 from Estimation import *
-from AdvancedActions import *
 import autotime
+class WaitForButtonPressAction(Action):
+    def __init__(self, message=None, checkpoint_message=None):
+        self.message=message
+        self.checkpoint_message=checkpoint_message
+    def start(self):
+        if self.message:
+            print(self.message)
+        hub.speaker.beep()
+        while not hub.buttons.pressed():
+            pass
+    def update(self):
+        if hub.buttons.pressed():
+            self._is_finished=True
+    def isFinished(self):
+        return self._is_finished
+    def done(self):
+        autotime.checkpoint(self.checkpoint_message if self.checkpoint_message else f'WaitForButtonPressAction({repr(self.message)})', False)
 #5 west
 #1 north
 #facing north
@@ -12,7 +28,7 @@ import autotime
 #attachment down
 #tray loaded
 class CraneMission(MissionBase):
-    def routine(self): 
+    def routine(self):
         driveBase.settings(turn_rate=90),
         self.runAction(SeriesAction(
             DriveStraightAction(440),
@@ -23,7 +39,7 @@ class CraneMission(MissionBase):
         driveBase.settings(turn_rate=45)
         self.runAction(SeriesAction(
             DriveTurnAction(90),
-            DriveStraightAction(150),
+            DriveStraightAction(150), #square
             WaitForButtonPressAction(),
             DriveStraightAction(-50),
             WaitForButtonPressAction(),
