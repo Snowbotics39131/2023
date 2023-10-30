@@ -35,10 +35,12 @@ class CraneMission(MissionBase):
             DriveStraightAction(-200),
             DriveTurnAction(90),
             DriveStraightAction(-70),
-            DriveStraightAction(50),
-            DriveTurnAction(-90),
-            DriveStraightAction(790), 
-            ExitAction(),
+            DriveStraightAction(50),  #  \ Edit these values to change where the
+            DriveTurnAction(-90),     #  | robot ends up at the stage.
+            DriveStraightAction(790), #  /
+            #-----
+            ExitAction(), #This is a hacky way of doing this, but ExitAction
+                          #stops the program when its start method is called.
             ParallelAction(
                 SpinMotor(230,-1460),
                 SeriesAction(
@@ -46,6 +48,15 @@ class CraneMission(MissionBase):
                 DriveTurnAction(-90),
                 DriveStraightAction(700))),
             SpinMotor(430,1230),
+            #-----
+            #Kaitlynn: Based on your mom's text, it sounds like you may have
+            #already started, but hopefully these comments are still helpful.
+            #You may be able to use some of the following. If you decide to do
+            #so, you'll probably have to remove most of what's between the
+            #-----s, and definitely the ExitAction. You may still want the
+            #travel in a ParallelAction with a SpinMotor, but you might be able
+            #to just turn the motor by the delta of the heights instead of going
+            #all the way down and up again.
             DriveStraightAction(65),
             DriveTurnAction(-110),
             DriveStraightAction(20),
