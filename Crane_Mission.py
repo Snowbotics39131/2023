@@ -6,7 +6,7 @@ from Estimation import *
 from AdvancedActions import *
 import autotime
 #5 west
-#1 north
+#2 north
 #facing north
 #blue home
 #attachment down
@@ -15,7 +15,7 @@ class CraneMission(MissionBase):
     def routine(self): 
         driveBase.settings(turn_rate=90),
         self.runAction(SeriesAction(
-            DriveStraightAction(440),
+            DriveStraightAction(415),
             DriveTurnAction(-45),
             DriveStraightAction(250),
             DriveTurnAction(-45),
@@ -30,6 +30,15 @@ class CraneMission(MissionBase):
             DriveTurnAction(-180),
             DriveStraightAction(110),
             SpinMotor(180,1460),
+            DriveStraightAccurate(-60),
+            DriveTurnAction(-90),
+            DriveStraightAction(-200),
+            DriveTurnAction(90),
+            DriveStraightAction(-70),
+            DriveStraightAction(50),
+            DriveTurnAction(-90),
+            DriveStraightAction(790), 
+            ExitAction(),
             ParallelAction(
                 SpinMotor(230,-1460),
                 SeriesAction(

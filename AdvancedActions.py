@@ -83,3 +83,7 @@ class ChangeDriveBaseSettings(Action):
         return True
     def done(self):
         pass
+#This is a really hacky way of doing this.
+class ExitAction(Action):
+    def start(self):
+        exit()
