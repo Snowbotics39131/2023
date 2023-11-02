@@ -14,7 +14,7 @@ from PortMap import *
 #1 north
 #6 east
 #facing north
-class GoToBlueHome(MissionBase):
+class GoToBlueHomeScoopGuys(MissionBase):
     def routine(self):
         driveBase.straight(200)
         driveBase.turn(90)
@@ -35,7 +35,19 @@ class GoToBlueHome(MissionBase):
         driveBase.straight(120)
         driveBase.turn(135)
         driveBase.straight(200)
+class GoToBlueHomeGetIzzy(MissionBase):
+    def routine(self):
+        driveBase.straight(200)
+        driveBase.turn(90)
+        driveBase.straight(1125)
+        driveBase.turn(-45)
+        driveBase.straight(70)
+        driveBase.turn(90)
+        driveBase.straight(300)
+        driveBase.turn(-45)
+        driveBase.straight(200)
 class Chicken(MissionBase):
     pass
 if __name__=='__main__':
-    GoToBlueHome().run()
+    GoToBlueHomeScoopGuys().run()
+    autotime.checkpoint('GoToBlueHomeGetIzzy', True)
