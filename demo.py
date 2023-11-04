@@ -20,13 +20,12 @@ class ForkliftAttachment(MissionBase):
     def routine(self):
         self.runAction(SpinMotorUntilStalled(500))
         self.runAction(SpinMotorUntilStalled(-500))
-#This is the order they run on the field; we may present in a different order.
 if __name__=='__main__':
     MaiAttachment().run()
     wait_for_button_press()
-    motorBack=Motor(Port.D)
-    ChickenExpertAttachment().run()
+    ForkliftAttachment().run()
     wait_for_button_press()
     OmniAttachment().run()
     wait_for_button_press()
-    ForkliftAttachment().run()
+    motorBack=Motor(Port.D)
+    ChickenExpertAttachment().run()
