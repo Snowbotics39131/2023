@@ -46,8 +46,26 @@ class GoToBlueHomeGetIzzy(MissionBase):
         driveBase.straight(300)
         driveBase.turn(-45)
         driveBase.straight(200)
+class GoToBlueHomeCurves(MissionBase):
+    def routine(self):
+        self.runAction(DriveCurveAction(180, 90))
+        self.runAction(DriveStraightAction(40))
+        self.runAction(DriveCurveAction(370, -45))
+        self.runAction(DriveStraightAction(50))
+        self.runAction(DriveCurveAction(130, 90))
+        self.runAction(ParallelAction(
+            DriveCurveAction(800, -45),
+            SeriesAction(
+                WaitAction(400),
+                SpinMotorD(-90, 720)
+            )
+        ))
+        self.runAction(DriveCurveAction(100, -45))
+        self.runAction(DriveStraightAction(150))
+        self.runAction(DriveTurnAction(45))
+        self.runAction(DriveCurveAction(400, 45))
 class Chicken(MissionBase):
     pass
 if __name__=='__main__':
-    GoToBlueHomeScoopGuys().run()
-    autotime.checkpoint('GoToBlueHomeGetIzzy', True)
+    GoToBlueHomeCurves().run()
+    autotime.checkpoint('GoToBlueHome', True)

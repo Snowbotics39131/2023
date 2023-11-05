@@ -22,11 +22,10 @@ FAST_SPEED=600
 #1 north
 class MoveCamera(MissionBase):
     def routine(self):
-        #FIXME: 7-degree angle is too much
         self.runAction(DriveStraightAccurate(20*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
         self.runAction(DriveTurnAction(7*TURN_FACTOR))
-        self.runAction(DriveStraightAccurate(23*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
-        self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, 115*ANGLE_GEAR_RATIO))
+        self.runAction(DriveStraightAccurate(18*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
+        self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, 135*ANGLE_GEAR_RATIO))
         self.runAction(ParallelAction(
             SpinMotorTime(20*SPEED_GEAR_RATIO, 3000),
             SeriesAction(
@@ -99,7 +98,6 @@ class GetToPink(MissionBase):
 #start with blue piece on back up against sliders
 class SoundMixer(MissionBase):
     def routine(self):
-        #FIXME: went to the right
         start_db_settings=driveBase.settings()
         DriveTurnAction(-50).run()
         SpinMotorUntilStalled(-300*SPEED_GEAR_RATIO).run()
@@ -197,13 +195,9 @@ class CombinedMission(MissionBase):
         #faster than usual travel, but not like you're rushing back to align
         DriveStraightAction(220, speed=(TRAVEL_SPEED+FAST_SPEED)/2).run()
         DriveTurnAction(90).run()
-        DriveStraightAction(500).run()
+        DriveStraightAction(1200).run()
         DriveTurnAction(45).run()
-        DriveStraightAction(160).run()
-        DriveTurnAction(-45).run()
-        DriveStraightAction(700).run()
-        DriveTurnAction(45).run()
-        DriveStraightAction(250).run()
+        DriveStraightAction(350).run()
         autotime.checkpoint('Travel to blue home', True)
         autotime.print_all_deltas()
         

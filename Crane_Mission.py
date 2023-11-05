@@ -35,17 +35,31 @@ class CraneMission(MissionBase):
             DriveStraightAction(-200),
             DriveTurnAction(90),
             DriveStraightAction(-70),
-            DriveStraightAction(50),
+            DriveStraightAction(60),
             DriveTurnAction(-90),
             DriveStraightAction(790),
             ParallelAction(
-                DriveCurveAction(200, -45),
+                DriveCurveAction(150, -45),
                 SpinMotor(200, -270)
             ),
-            DriveStraightAction(10),
-            DriveTurnAction(-20),
-            DriveTurnAction(20),
-            DriveStraightAction(-10)
+            DriveStraightAction(100),
+            DriveTurnAction(-30),
+            DriveTurnAction(30),
+            DriveStraightAction(-100),
+            WaitForButtonPressAction(),
+            #SpinMotor(200, -1440),
+            #WaitForButtonPressAction(),
+            #DriveStraightAction(90),
+            #WaitForButtonPressAction(),
+            #DriveTurnAction(-30),
+            #WaitForButtonPressAction(),
+            #SpinMotor(200, 30),
+            #WaitForButtonPressAction(),
+            #DriveTurnAction(-30)
+            DriveTurnAction(-90),
+            DriveStraightAction(-200),
+            DriveTurnAction(45),
+            DriveStraightAction(-700)
             ))
 
 if __name__ == "__main__": #run on file run but not import

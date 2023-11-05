@@ -83,7 +83,38 @@ class ChangeDriveBaseSettings(Action):
         return True
     def done(self):
         pass
+class SpinMotorD(Action):
+    name = "SpinMotorD"
+    def __init__(self,*args,**kwargs):
+        '''run_angle(speed: Number, rotation_angle: Number, then: Stop=Stop.HOLD, wait: bool=True) -> None'''
+        self.args = args
+        self.kwargs = kwargs
+        self.kwargs['wait'] = False
+
+    def start(self):
+        simpleEstimate.addAction(self.name)
+        motorBack.run_angle(*self.args,**self.kwargs)
+
+    #override
+    def update(self): pass
+    #override
+    def isFinished(self):
+        if (motorCenter.done()):
+            print("Motor finished")
+            return True    
+        return False
+    #override    
+    def done(self): 
+        simpleEstimate.removeAction(self.name)
 #This is a really hacky way of doing this.
 class ExitAction(Action):
     def start(self):
         exit()
+class WaitAction(Action):
+    def __init__(self, time):
+        self.stopwatch=StopWatch()
+        self.time=time
+    def start(self):
+        self.start_time=self.stopwatch.time()
+    def isFinished(self):
+        return self.stopwatch.time()-self.start_time>=self.time
