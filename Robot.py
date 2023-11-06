@@ -44,7 +44,6 @@ def runProgram(mission):
 pressed={}
 
 runBytes = hub.system.storage(offset=0,read=1,)
-print(int.from_bytes(runBytes, 'big'))
 try:
     n=mission_numbers.index(int.from_bytes(runBytes, 'big'))
 except ValueError:
