@@ -27,10 +27,17 @@ mission_funcs=[
     PushCamera().run,
     CraftCreator().run
 ]
+mission_sounds=[
+    ['C3/8', 'C5/8'],
+    ['C3/8', 'C3/8', 'C5/8'],
+    ['C3/8', 'C3/8', 'C3/8', 'C5/8'],
+    ['C3/8', 'C3/8', 'C3/8', 'C5/8', 'C5/8']
+]
 missionList=mission_numbers
 
 def runProgram(mission):
     try:
+        hub.speaker.play_notes(mission_sounds[mission_numbers.index(mission)])
         mission_funcs[mission_numbers.index(mission)]()
     except KeyError:
         print(f'There is no mission: {mission}')
