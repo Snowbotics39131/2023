@@ -6,30 +6,48 @@ from Crane_Mission import *
 # Normally, the center button stops the program. But we want to use the
 # center button for our menu. So we can disable the stop button.
 hub.system.set_stop_button(None)
-
-missionList = ["1","2","3", '4'] #add here for new mission
+#Prime Mode works by assigning each attachment a prime number. This number is
+#raised to the power of the number of times the attachment is run.
+#2, 4, 8, 3, 9, 27, 5, 25, 125
+#2 Digit Mode works by having the first digit as the attachment and the second
+#digit as the number of the run.
+#11, 12, 13, 21, 22, 23, 31, 32, 33
+#Order Mode is works by increasing the number each subsequent mission.
+#1, 2, 3, 4, 5, 6, 7, 8, 9
+MODE='order'
+if MODE=='prime':
+    mission_numbers=['2', '3', '5', '25']
+elif MODE=='2digit':
+    mission_numbers=['11', '21', '31', '32']
+elif MODE=='order':
+    mission_numbers=['1', '2', '3', '4']
+mission_funcs=[
+    CombinedMission().run,
+    CraneMission().run,
+    PushCamera().run,
+    CraftCreator().run
+]
+missionList=mission_numbers
 
 def runProgram(mission):
-    if mission == "1":
-        CombinedMission().run()
-    elif mission == "2":
-        CraneMission().run()
-    elif mission == "3":
-        PushCamera().run()
-    elif mission=='4':
-        CraftCreator().run()
-    else:
-        print("There is no mission:{mission}")
+    try:
+        mission_funcs[mission_numbers.index(mission)]()
+    except KeyError:
+        print(f'There is no mission: {mission}')
 
 pressed={}
 
 runBytes = hub.system.storage(offset=0,read=1,)
-n=int.from_bytes(runBytes, 'big')
+print(int.from_bytes(runBytes, 'big'))
+try:
+    n=mission_numbers.index(int.from_bytes(runBytes, 'big'))
+except ValueError:
+    n=0
 
 try: missionList[n]
 except: n=0
 while True:
-    hub.display.char(missionList[n])
+    hub.display.number(int(missionList[n]))
 
     # Wait for any button.
     pressed = ()
