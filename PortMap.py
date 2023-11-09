@@ -45,7 +45,7 @@ if hubName == 'prime':
             except NameError:
                 pass
             else:
-                print('GyroDriveBase has been removed. Update your firmware to the newest beta.')
+                print('GyroDriveBase has been replaced by use_gyro. Update your firmware to the newest beta.')
             print('not using gyro')
         else:
             print('using gyro')
