@@ -36,11 +36,13 @@ if hubName == 'prime':
         colorSensorLeft=ColorSensor(Port.F)
         colorSensorRight=ColorSensor(Port.B)
         attachment_change()
+        driveBase=DriveBase(motorLeft, motorRight, 56, 114)
         try:
-            driveBase=GyroDriveBase(motorLeft, motorRight, 56, 114)
-            print('using GyroDriveBase')
+            driveBase.use_gyro(True)
         except NameError:
-            driveBase=DriveBase(motorLeft, motorRight, 56, 114)
+            print('not using gyro')
+        else:
+            print('using gyro')
         hubName += 'snow'
     except:
         driveBase=DriveBase(motorLeft, motorRight, 50, 50)
