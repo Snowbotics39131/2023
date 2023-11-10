@@ -4,48 +4,80 @@ from Actions import *
 from Estimation import *
 from pybricks.geometry import Axis
 import jmath
+from umath import pi
 simpleEstimate.initial(0, 0, 0)  # not really sure what to do here
 
+#class DriveStraightAction(Action):
+#
+##example action should probably share a drive actions file
+#    name = "DriveStraightAction"
+#    def __init__(self,distance, speed=None, stop=False, disable_gyro=False):
+#        self.distance = distance
+#        self.speed=speed
+#        self.stop=stop
+#        self.disable_gyro=disable_gyro
+#        
+#    #overriding the method in the parent class
+#    def start(self):
+#        simpleEstimate.addAction(self.name)
+#        if self.speed is not None:
+#            driveBase.settings(straight_speed=self.speed)
+#        if self.disable_gyro:
+#            driveBase.use_gyro(False)
+#        driveBase.straight(self.distance,wait=False)
+#    #override
+#    def update(self): pass
+#    #override
+#    def isFinished(self):
+#        if (driveBase.done()):
+#            print("Drive finished")
+#            return True    
+#        return False
+#    #override    
+#    def done(self):
+#        if self.stop:
+#            driveBase.stop()
+#        driveBase.use_gyro(True)
+#        simpleEstimate.linearChange(driveBase.distance()) #better way
+#        simpleEstimate.removeAction(self.name)
 class DriveStraightAction(Action):
-
-#example action should probably share a drive actions file
-    name = "DriveStraightAction"
-    def __init__(self,distance, speed=None, stop=False):
-        self.distance = distance
+    def __init__(self, distance, speed=None, stop=False, disable_gyro=False, compensate_angle=0):
+        self.distance=distance
         self.speed=speed
         self.stop=stop
-        
-    #overriding the method in the parent class
+        self.disable_gyro=disable_gyro
+        self.compensate_angle=compensate_angle
+        if self.compensate_angle!=0:
+            self._radius=(180*distance)/(compensate_angle*pi)
     def start(self):
-        simpleEstimate.addAction(self.name)
         if self.speed is not None:
             driveBase.settings(straight_speed=self.speed)
-        driveBase.straight(self.distance,wait=False)
-    #override
-    def update(self): pass
-    #override
+        if self.disable_gyro:
+            driveBase.use_gyro(False)
+        if self.compensate_angle!=0:
+            driveBase.curve(self._radius, self.compensate_angle, wait=False)
+        else:
+            driveBase.straight(self.distance, wait=False)
     def isFinished(self):
-        if (driveBase.done()):
-            print("Drive finished")
-            return True    
-        return False
-    #override    
+        return driveBase.done()
     def done(self):
         if self.stop:
             driveBase.stop()
-        simpleEstimate.linearChange(driveBase.distance()) #better way
-        simpleEstimate.removeAction(self.name)
+        driveBase.use_gyro(True)
 
 
 
 class DriveTurnAction(Action):
     name = "DriveTurnAction"
-    def __init__(self,angle):
+    def __init__(self,angle, disable_gyro=False):
         self.angle = angle
+        self.disable_gyro=disable_gyro
 
     #overriding the method in the parent class
     def start(self):
         simpleEstimate.addAction(self.name)
+        if self.disable_gyro:
+            driveBase.use_gyro(False)
         driveBase.turn(self.angle,wait=False)
     #override
     def update(self): pass
@@ -57,6 +89,7 @@ class DriveTurnAction(Action):
         return False
     #override    
     def done(self): 
+        driveBase.use_gyro(True)
         simpleEstimate.bestPose.a = driveBase.angle() #better way
         simpleEstimate.removeAction(self.name)
 class DriveCurveAction(Action):
