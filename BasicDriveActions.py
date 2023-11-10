@@ -10,16 +10,19 @@ class DriveStraightAction(Action):
 
 #example action should probably share a drive actions file
     name = "DriveStraightAction"
-    def __init__(self,distance, speed=None, stop=False):
+    def __init__(self,distance, speed=None, stop=False, disable_gyro=False):
         self.distance = distance
         self.speed=speed
         self.stop=stop
+        self.disable_gyro=disable_gyro
         
     #overriding the method in the parent class
     def start(self):
         simpleEstimate.addAction(self.name)
         if self.speed is not None:
             driveBase.settings(straight_speed=self.speed)
+        if self.disable_gyro:
+            driveBase.use_gyro(False)
         driveBase.straight(self.distance,wait=False)
     #override
     def update(self): pass
@@ -33,6 +36,7 @@ class DriveStraightAction(Action):
     def done(self):
         if self.stop:
             driveBase.stop()
+        driveBase.use_gyro(True)
         simpleEstimate.linearChange(driveBase.distance()) #better way
         simpleEstimate.removeAction(self.name)
 
@@ -40,12 +44,15 @@ class DriveStraightAction(Action):
 
 class DriveTurnAction(Action):
     name = "DriveTurnAction"
-    def __init__(self,angle):
+    def __init__(self,angle, disable_gyro=False):
         self.angle = angle
+        self.disable_gyro=disable_gyro
 
     #overriding the method in the parent class
     def start(self):
         simpleEstimate.addAction(self.name)
+        if self.disable_gyro:
+            driveBase.use_gyro(False)
         driveBase.turn(self.angle,wait=False)
     #override
     def update(self): pass
@@ -57,6 +64,7 @@ class DriveTurnAction(Action):
         return False
     #override    
     def done(self): 
+        driveBase.use_gyro(True)
         simpleEstimate.bestPose.a = driveBase.angle() #better way
         simpleEstimate.removeAction(self.name)
 class DriveCurveAction(Action):
