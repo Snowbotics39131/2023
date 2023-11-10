@@ -8,7 +8,7 @@ layout: default
 
 Snowbotics Framework is a Python programing system created by the members of FLL team 39131 Snowbotics that makes it easier for students to code FLL robots. It is built on top of the Pybricks software, which is a Python library for Lego robots.
 
-<https://github.com/Snowbotics39131/FLL-Pre-Season-Code>
+Repository: <https://github.com/Snowbotics39131/FLL-Pre-Season-Code>
 
 ## Why use Snowbotics Framework?
 
