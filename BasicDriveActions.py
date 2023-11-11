@@ -10,16 +10,19 @@ class DriveStraightAction(Action):
 
 #example action should probably share a drive actions file
     name = "DriveStraightAction"
-    def __init__(self,distance, speed=None, stop=False):
+    def __init__(self,distance, speed=None, stop=False, use_gyro=None):
         self.distance = distance
         self.speed=speed
         self.stop=stop
+        self.use_gyro=use_gyro
         
     #overriding the method in the parent class
     def start(self):
         simpleEstimate.addAction(self.name)
         if self.speed is not None:
             driveBase.settings(straight_speed=self.speed)
+        if self.use_gyro is not None:
+            driveBase.use_gyro(self.use_gyro)
         driveBase.straight(self.distance,wait=False)
     #override
     def update(self): pass
