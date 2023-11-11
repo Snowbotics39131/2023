@@ -44,10 +44,12 @@ class Dragon(MissionBase):
     def __init__(self, tries=2):
         self.tries=tries
     def routine(self):
-        self.runAction(DriveTurnAction(30*TURN_FACTOR))
+        driveBase.use_gyro(False)
+        self.runAction(DriveTurnAction(60*TURN_FACTOR))
         for i in range(self.tries-1):
-            self.runAction(DriveTurnAction(-30*TURN_FACTOR))
-            self.runAction(DriveTurnAction(30*TURN_FACTOR))
+            self.runAction(DriveTurnAction(-60*TURN_FACTOR))
+            self.runAction(DriveTurnAction(60*TURN_FACTOR))
+        driveBase.use_gyro(True)
 #near red home
 #580mm north
 #230mm east
