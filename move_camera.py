@@ -30,7 +30,8 @@ class MoveCamera(MissionBase):
             SpinMotorTime(20*SPEED_GEAR_RATIO, 3000),
             SeriesAction(
                 DriveStraightAccurate(-120*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE),
-                DriveTurnAction(-55*TURN_FACTOR)
+                DriveTurnAction(-55*TURN_FACTOR, use_gyro=False),
+                FunctionAction(driveBase.use_gyro, True)
             )
         ))
         #self.runAction(DriveStraightAccurate(-30*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
@@ -78,25 +79,12 @@ class GetToPink(MissionBase):
         self.runAction(DriveTurnAction(20))
         DriveStraightAccurate(20, speed=ACCURATE_SPEED, weights=[0, 0, 2, 1], compensate=True, verbose=True).run()
         self.runAction(SeriesAction(
-            #SpinMotor(400*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO),
             DriveStraightAccurate(30*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE),
-            #DriveTurnAction(-20),
-            #DriveTurnAction(20),
-            SpinMotorUntilStalled(400*SPEED_GEAR_RATIO, duty_limit=85),
-            #SpinMotorAngleOrUntilStalled(400*SPEED_GEAR_RATIO, 135),
+            SpinMotorUntilStalled(400*SPEED_GEAR_RATIO, duty_limit=100),
             DriveStraightAccurate(-30*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE)
         ))
-        DriveTurnAction(13*TURN_FACTOR).run()
+        DriveTurnAction(10*TURN_FACTOR).run()
         self.runAction(DriveStraightAccurate(-20, speed=ACCURATE_SPEED, weights=[0, 0, 2, 1], compensate=True, verbose=True))
-        self.runAction(DriveTurnAction(35))
-        self.runAction(DriveStraightAccurate(80, speed=ACCURATE_SPEED, weights=[0, 0, 2, 1], compensate=True, verbose=True))
-        self.runAction(DriveTurnAction(15))
-        SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO).run()
-        SpinMotor(-motorCenter.control.limits()[0], 90*ANGLE_GEAR_RATIO).run()
-        self.runAction(DriveTurnAction(-15))
-        self.runAction(DriveStraightAccurate(-80, speed=ACCURATE_SPEED, weights=[0, 0, 2, 1], compensate=True))
-        self.runAction(DriveTurnAction(-35))
-        #self.runAction(DriveStraightAccurate(20, speed=ACCURATE_SPEED, weights=[0, 0, 2, 1], compensate=True))
 #start with blue piece on back up against sliders
 class SoundMixer(MissionBase):
     def routine(self):
@@ -156,7 +144,7 @@ class CombinedMission(MissionBase):
         DriveTurnAction(-90*TURN_FACTOR).run()
         DriveStraightAccurate(240*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
         DriveTurnAction(90*TURN_FACTOR).run()
-        DriveStraightAccurate(60*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE).run()
+        DriveStraightAccurate(45*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE).run()
         autotime.checkpoint('Travel to Dragon', True)
         Dragon().run()
         autotime.checkpoint('Dragon', True)

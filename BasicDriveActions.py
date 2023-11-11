@@ -43,12 +43,15 @@ class DriveStraightAction(Action):
 
 class DriveTurnAction(Action):
     name = "DriveTurnAction"
-    def __init__(self,angle):
+    def __init__(self,angle, use_gyro=None):
         self.angle = angle
+        self.use_gyro=use_gyro
 
     #overriding the method in the parent class
     def start(self):
         simpleEstimate.addAction(self.name)
+        if self.use_gyro is not None:
+            driveBase.use_gyro(self.use_gyro)
         driveBase.turn(self.angle,wait=False)
     #override
     def update(self): pass
