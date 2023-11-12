@@ -1,7 +1,7 @@
 from pybricks.hubs import PrimeHub
 from pybricks.pupdevices import Motor
 from pybricks.parameters import Direction, Port
-from pybricks.robotics import GyroDriveBase, DriveBase
+from pybricks.robotics import DriveBase
 
 hub = PrimeHub()
 
@@ -17,7 +17,8 @@ def wait_for_button_press(message=None, checkpoint_message=None):
 
 motorRight=Motor(Port.A, Direction.CLOCKWISE)
 motorLeft=Motor(Port.E, Direction.COUNTERCLOCKWISE)
-driveBase=GyroDriveBase(motorLeft, motorRight, 56, 114)
+driveBase=DriveBase(motorLeft, motorRight, 56, 114)
+driveBase.use_gyro(True)
 output=[]
 for i in range(32):
     driveBase.reset()

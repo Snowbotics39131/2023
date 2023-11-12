@@ -23,14 +23,14 @@ FAST_SPEED=600
 class MoveCamera(MissionBase):
     def routine(self):
         self.runAction(DriveStraightAccurate(20*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
-        self.runAction(DriveTurnAction(7*TURN_FACTOR))
-        self.runAction(DriveStraightAccurate(18*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
+        self.runAction(DriveTurnAction(5*TURN_FACTOR))
+        self.runAction(DriveStraightAccurate(13*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
         self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, 135*ANGLE_GEAR_RATIO))
         self.runAction(ParallelAction(
             SpinMotorTime(20*SPEED_GEAR_RATIO, 3000),
             SeriesAction(
                 DriveStraightAccurate(-120*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE),
-                DriveTurnAction(-55*TURN_FACTOR, use_gyro=False),
+                DriveTurnAction(-70*TURN_FACTOR, use_gyro=False),
                 FunctionAction(driveBase.use_gyro, True)
             )
         ))
@@ -164,7 +164,7 @@ class CombinedMission(MissionBase):
         #wait_for_button_press('Starting MoveCamera on button press')
         MoveCamera().run()
         autotime.checkpoint('MoveCamera', True)
-        DriveTurnAction(30*TURN_FACTOR).run()
+        DriveTurnAction(20*TURN_FACTOR).run()
         #stop does not work on DriveStraightAccurate
         #DriveStraightAccurate(-340*STRAIGHT_FACTOR, speed=FAST_SPEED, compensate=COMPENSATE, stop=True).run()
         DriveStraightAction(-340*STRAIGHT_FACTOR, speed=FAST_SPEED, stop=True).run()
@@ -185,7 +185,7 @@ class CombinedMission(MissionBase):
         #faster than usual travel, but not like you're rushing back to align
         DriveStraightAction(220, speed=(TRAVEL_SPEED+FAST_SPEED)/2).run()
         DriveTurnAction(90).run()
-        DriveStraightAction(1200).run()
+        DriveStraightAction(1200, speed=FAST_SPEED).run() #capped at just under 1100
         DriveTurnAction(45).run()
         DriveStraightAction(350).run()
         autotime.checkpoint('Travel to blue home', True)
