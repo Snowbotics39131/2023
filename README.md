@@ -50,3 +50,9 @@ flowchart TD
     K[Actions.py] -.-> Actions
 
 ```
+
+-----------------------------------------------------------------------------------------------------------------------------------
+#License 
+This project is licensed under the Creative Commons Zero (CC0) license. You are free to use, modify, and distribute this project without any restrictions.
+
+[![License: CC0 1.0](https://img.shields.io/badge/License-CC0_1.0-lightgrey.svg)](https://creativecommons.org/publicdomain/zero/1.0/)
