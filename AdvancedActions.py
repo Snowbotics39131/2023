@@ -128,3 +128,29 @@ class FunctionAction(Action):
         self.func(*self.args, **self.kwargs)
     def isFinished(self):
         return True
+class IfAction(Action):
+    def __init__(self, test_func, true_action, false_action):
+        self.test_func=test_func
+        self.true_action=true_action
+        self.false_action=false_action
+    def start(self):
+        self.condition=self.test_func()
+        if self.condition:
+            self.true_action.start()
+        else:
+            self.false_action.start()
+    def update(self):
+        if self.condition:
+            self.true_action.update()
+        else:
+            self.false_action.update()
+    def isFinished(self):
+        if self.condtion:
+            return self.true_action.isFinished()
+        else:
+            return self.false_action.isFinished()
+    def done(self):
+        if self.condition:
+            self.true_action.done()
+        else:
+            self.false_action.done()
