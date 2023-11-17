@@ -116,3 +116,15 @@ class TryAction(Action):
             self.except_action.done()
         elif self.state=='else':
             self.else_action.done()
+class ExitAction(Action):
+    def start(self):
+        raise SystemExit
+class FunctionAction(Action):
+    def __init__(self, func, *args, **kwargs):
+        self.func=func
+        self.args=args
+        self.kwargs=kwargs
+    def start(self):
+        self.func(*self.args, **self.kwargs)
+    def isFinished(self):
+        return True
