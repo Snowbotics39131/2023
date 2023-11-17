@@ -19,7 +19,7 @@ class IfAction(Action):
         else:
             self.false_action.update()
     def isFinished(self):
-        if self.condtion:
+        if self.condition:
             return self.true_action.isFinished()
         else:
             return self.false_action.isFinished()
@@ -68,7 +68,7 @@ class WhileAction(Action):
         else:
             self.action.update()
     def isFinished(self):
-        return self.compete
+        return self.complete
     def done(self):
         pass
 class TryAction(Action):
@@ -128,3 +128,14 @@ class FunctionAction(Action):
         self.func(*self.args, **self.kwargs)
     def isFinished(self):
         return True
+if __name__=='__main__':
+    import urandom
+    NullAction().run()
+    FunctionAction(print, 'I am a function.').run()
+    IfAction(lambda: False, FunctionAction(print, 'True'), FunctionAction(print, 'False')).run()
+    IfAction(lambda: True, FunctionAction(print, 'True'), FunctionAction(print, 'False')).run()
+    RepeatAction(3, FunctionAction(print, 'RepeatAction')).run()
+    WhileAction(lambda: urandom.randrange(10)!=3, FunctionAction(print, 'WhileAction')).run()
+    TryAction(FunctionAction(print, 'try action successful'), FunctionAction(print, 'except action'), FunctionAction(print, 'else action')).run()
+    TryAction(FunctionAction(lambda: 2/0, 'try action fail'), FunctionAction(print, 'except action'), FunctionAction(print, 'else action')).run()
+    ExitAction().run()
