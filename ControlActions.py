@@ -2,9 +2,6 @@ from Actions import *
 class NullAction(Action):
     def isFinished(self):
         return True
-class EternalAction(Action):
-    def isFinished(self):
-        return False
 class IfAction(Action):
     def __init__(self, test_func, true_action, false_action=NullAction()):
         self.test_func=test_func
