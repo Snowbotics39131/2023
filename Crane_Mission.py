@@ -36,7 +36,7 @@ class CraneMission(MissionBase):
             #SpinMotor(360, 1460),
             SpinMotor(360, 1380),
             DriveStraightAccurate(-55),
-            DriveTurnAction(-90),
+            DriveTurnAction(-93),
             DriveStraightAction(-200),
             DriveTurnAction(90),
             DriveStraightAction(-70),
@@ -48,11 +48,21 @@ class CraneMission(MissionBase):
                 DriveCurveAction(150, -45),
                 SpinMotor(200, -180)
             ),
-            DriveStraightAction(100),
+            DriveStraightAction(115),
             DriveTurnAction(-30),
-            DriveTurnAction(30),
+            DriveTurnAction(35),
             DriveStraightAction(-100),
             DriveTurnAction(-90),
+            ParallelAction( 
+                DriveStraightAction(35),
+                SpinMotor(200, -1165),
+            ),
+            DriveStraightAction(35),
+            DriveTurnAction(80),
+            DriveStraightAction(45),
+            DriveTurnAction(-85),
+            
+            WaitForButtonPressAction(),
             DriveStraightAction(-200, speed=600),
             DriveTurnAction(45),
             DriveStraightAction(-700)
