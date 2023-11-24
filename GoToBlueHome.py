@@ -2,6 +2,11 @@ from Actions import *
 from AdvancedActions import wait_for_button_press
 from BasicDriveActions import *
 from MissionBase import *
+from PortMap import *
+try:
+    motorBack=Motor(Port.D, Direction.COUNTERCLOCKWISE)
+except OSError:
+    print('OSError happened, ignoring')
 class SpinMotorD(Action):
     name = "SpinMotorD"
     def __init__(self,*args,**kwargs):
@@ -40,11 +45,8 @@ class GoToBlueHome(MissionBase):
         self.runAction(DriveStraightAction(140))
         self.runAction(DriveCurveAction(-57, -45))
         self.runAction(DriveCurveAction(460, 90))
-if __name__=='__main__':
-    wait_for_button_press()
-    try:
-        motorBack=Motor(Port.D, Direction.COUNTERCLOCKWISE)
-    except OSError:
-        pass
-    motorBack.angle()
-    GoToBlueHome().run()
+#if __name__=='__main__':
+wait_for_button_press()
+
+print(motorBack.angle())
+GoToBlueHome().run()

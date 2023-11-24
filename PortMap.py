@@ -49,6 +49,10 @@ if hubName == 'prime':
             print('not using gyro')
         else:
             print('using gyro')
+        try:
+            motorBack=Motor(Port.D, Direction.COUNTERCLOCKWISE)
+            print('motorBack detected')
+        except: pass
         hubName += 'snow'
     except:
         driveBase=DriveBase(motorLeft, motorRight, 50, 50)
