@@ -125,19 +125,22 @@ class SeriesAction(ActionPlus):
     def done(self):
         pass
 
-class SpinMotor(Action):
+class SpinMotor(ActionPlus):
     name = "SpinMotor"
     def __init__(self,*args,**kwargs):
         '''run_angle(speed: Number, rotation_angle: Number, then: Stop=Stop.HOLD, wait: bool=True) -> None'''
         self.args = args
         self.kwargs = kwargs
         self.kwargs['wait'] = False
+        super().__init__(use_clock=False)
 
     def start(self):
         simpleEstimate.addAction(self.name)
         motorCenter.run_angle(*self.args,**self.kwargs)
+        super().start()
 
     #override
+    @update_dec
     def update(self): pass
     #override
     def isFinished(self):

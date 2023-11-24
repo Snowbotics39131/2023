@@ -6,7 +6,7 @@ from pybricks.geometry import Axis
 import jmath
 simpleEstimate.initial(0, 0, 0)  # not really sure what to do here
 
-class DriveStraightAction(Action):
+class DriveStraightAction(ActionPlus):
 
 #example action should probably share a drive actions file
     name = "DriveStraightAction"
@@ -15,6 +15,7 @@ class DriveStraightAction(Action):
         self.speed=speed
         self.stop=stop
         self.use_gyro=use_gyro
+        super().__init__(use_clock=False)
         
     #overriding the method in the parent class
     def start(self):
@@ -24,7 +25,9 @@ class DriveStraightAction(Action):
         if self.use_gyro is not None:
             driveBase.use_gyro(self.use_gyro)
         driveBase.straight(self.distance,wait=False)
+        super().start()
     #override
+    @update_dec
     def update(self): pass
     #override
     def isFinished(self):
@@ -41,11 +44,12 @@ class DriveStraightAction(Action):
 
 
 
-class DriveTurnAction(Action):
+class DriveTurnAction(ActionPlus):
     name = "DriveTurnAction"
     def __init__(self,angle, use_gyro=None):
         self.angle = angle
         self.use_gyro=use_gyro
+        super().__init__(use_clock=False)
 
     #overriding the method in the parent class
     def start(self):
@@ -53,7 +57,9 @@ class DriveTurnAction(Action):
         if self.use_gyro is not None:
             driveBase.use_gyro(self.use_gyro)
         driveBase.turn(self.angle,wait=False)
+        super().start()
     #override
+    @update_dec
     def update(self): pass
     #override
     def isFinished(self):
@@ -70,8 +76,11 @@ class DriveCurveAction(Action):
         self.args=args
         self.kwargs=kwargs
         self.kwargs['wait']=False
+        super().__init__(use_clock=False)
     def start(self):
         driveBase.curve(*self.args, **self.kwargs)
+        super().start()
+    @update_dec
     def update(self):
         pass
     def isFinished(self):
@@ -131,7 +140,7 @@ class PIDController:
         self.olderror = error
 
 
-class FollowLineLeft(Action):
+class FollowLineLeft(ActionPlus):
     name = 'FollowLineLeft'
 
     def __init__(self, distance, kP=1, kI=0, kD=0.1, reflecttarget=35):
@@ -152,10 +161,13 @@ class FollowLineLeft(Action):
                                  self.kD)
         self.old_angle = 0
         self.old_distance = 0
+        super().__init__(period=50)
 
     def start(self):
         driveBase.reset()
+        super().start()
 
+    @update_dec
     def update(self):
         self.pid.cycle()
         new_angle = driveBase.angle()
@@ -173,7 +185,7 @@ class FollowLineLeft(Action):
         motorRight.brake()
 
 
-class FollowLineRight(Action):
+class FollowLineRight(ActionPlus):
     name = 'FollowLineRight'
 
     def __init__(self, distance, kP=1, kI=0, kD=0.1, reflecttarget=35):
@@ -182,6 +194,7 @@ class FollowLineRight(Action):
         self.kI = kI
         self.kD = kD
         self.reflecttarget = reflecttarget
+        super().__init__(period=50)
 
         def setfunc(turn):
             motorLeft.run(200*(1-turn))
@@ -197,7 +210,9 @@ class FollowLineRight(Action):
 
     def start(self):
         driveBase.reset()
+        super().start()
 
+    @update_dec
     def update(self):
         self.pid.cycle()
         new_angle = driveBase.angle()
@@ -215,7 +230,7 @@ class FollowLineRight(Action):
         motorRight.brake()
 
 
-class FindLine(Action):
+class FindLine(ActionPlus):
     name = 'FindLine'
 
     def __init__(self, kP=1, kI=0, kD=0.1, reflecttarget=35):
@@ -241,12 +256,15 @@ class FindLine(Action):
         self.state_right = 'start'
         self.old_angle = 0
         self.old_distance = 0
+        super().__init__(period=50)
 
     def start(self):
         driveBase.reset()
         motorLeft.run(100)
         motorRight.run(100)
+        super().start()
 
+    @update_dec
     def update(self):
         # start -> white -> black -> pid -> done
         if self.state_left == 'start':
