@@ -106,10 +106,6 @@ class SpinMotorD(Action):
     #override    
     def done(self): 
         simpleEstimate.removeAction(self.name)
-#This is a really hacky way of doing this.
-class ExitAction(Action):
-    def start(self):
-        exit()
 class WaitAction(Action):
     def __init__(self, time):
         self.stopwatch=StopWatch()
@@ -118,13 +114,3 @@ class WaitAction(Action):
         self.start_time=self.stopwatch.time()
     def isFinished(self):
         return self.stopwatch.time()-self.start_time>=self.time
-#pretty hacky, don't do this if you don't have to
-class FunctionAction(Action):
-    def __init__(self, func, *args, **kwargs):
-        self.func=func
-        self.args=args
-        self.kwargs=kwargs
-    def start(self):
-        self.func(*self.args, **self.kwargs)
-    def isFinished(self):
-        return True
