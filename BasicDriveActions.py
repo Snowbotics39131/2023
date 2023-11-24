@@ -71,7 +71,7 @@ class DriveTurnAction(ActionPlus):
     def done(self): 
         simpleEstimate.bestPose.a = driveBase.angle() #better way
         simpleEstimate.removeAction(self.name)
-class DriveCurveAction(Action):
+class DriveCurveAction(ActionPlus):
     def __init__(self, *args, **kwargs):
         self.args=args
         self.kwargs=kwargs
