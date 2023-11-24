@@ -1,5 +1,5 @@
 from Actions import *
-from AdvancedActions import wait_for_button_press
+from AdvancedActions import *
 from BasicDriveActions import *
 from MissionBase import *
 class SpinMotorD(Action):
@@ -43,6 +43,16 @@ class GoToBlueHome(MissionBase):
         #self.runAction(DriveStraightAction(-10))
         self.runAction(DriveTurnAction(45))
         self.runAction(DriveCurveAction(460, 90))
+        driveBase.stop()
+#6 west 1 north
+class Chicken(MissionBase):
+    def routine(self):
+        self.runAction(DriveCurveAction(57, -90))
+        self.runAction(DriveStraightAction(50))
+        self.runAction(DriveCurveAction(330, 45))
+        self.runAction(DriveStraightAction(50))
+        motorBack.run_time(-1100, 2000)
+        self.runAction(DriveCurveAction(-600, 45))
 if __name__=='__main__':
     wait_for_button_press()
     try:
@@ -51,3 +61,5 @@ if __name__=='__main__':
         pass
     motorBack.angle()
     GoToBlueHome().run()
+    wait_for_button_press()
+    Chicken().run()
