@@ -24,20 +24,25 @@ class Action:
         self.done()
 def update_dec(func):
     def output(self, *args, **kwargs):
-        time=self._stopwatch.time()
-        if time<self.period:
-            self._update_rate_flag=True
+        if self.use_clock:
+            time=self._stopwatch.time()
+            if time<self.period:
+                self._update_rate_flag=True
+            else:
+                self._stopwatch.reset()
+                if not self._update_rate_flag:
+                    print(f'update rate too slow: {time}/{self.period}ms')
+                self._update_rate_flag=False
+                if not self.is_interrupted:
+                    func(self, *args, **kwargs)
         else:
-            self._stopwatch.reset()
-            if not self._update_rate_flag:
-                print(f'update rate too slow: {time}/{self.period}ms')
-            self._update_rate_flag=False
             if not self.is_interrupted:
                 func(self, *args, **kwargs)
     return output
 class ActionPlus:
-    def __init__(self, period=100):
+    def __init__(self, period=100, use_clock=True):
         self.period=period
+        self.use_clock=use_clock
         self.is_interrupted=False
         self._stopwatch=StopWatch()
         self._update_rate_flag=True
@@ -66,11 +71,14 @@ class ParallelAction(Action): #child class of class Action
  
     def __init__(self,*actions):
         self.mActions = actions
+        super().__init__(use_clock=False)
     #override
     def start(self):
         ''' Run code once when the action is started, for setup'''
         for action in self.mActions: action.start() 
+        super().start()
     #override    
+    @update_dec
     def update(self):
         '''Called by runAction in AutoModeBase iteratively until isFinished returns true.'''
         for action in self.mActions: action.update() 
@@ -87,16 +95,18 @@ class ParallelAction(Action): #child class of class Action
         ''' Run code once when the action finishes, usually for clean up'''
         for action in self.mActions: action.done() 
 
-class SeriesAction(Action):
+class SeriesAction(ActionPlus):
     mCurrentAction = None
     mRemainingActions = []
     def __init__(self,*actions):
         self.mRemainingActions = list(actions)
+        super().__init__(use_clock=False)
 
     #override
     def start(self):
-        pass
-    #override    
+        super().start()
+    #override
+    @update_dec
     def update(self):
         if(self.mCurrentAction == None):
             if(not self.mRemainingActions): return
