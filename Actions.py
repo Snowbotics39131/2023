@@ -67,7 +67,7 @@ class ActionPlus:
     def isInterrupted(self):
         return self.is_interrupted
  
-class ParallelAction(Action): #child class of class Action
+class ParallelAction(ActionPlus): #child class of class Action
  
     def __init__(self,*actions):
         self.mActions = actions
