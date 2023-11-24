@@ -10,11 +10,12 @@ class DriveStraightAction(Action):
 
 #example action should probably share a drive actions file
     name = "DriveStraightAction"
-    def __init__(self,distance, speed=None, stop=False, use_gyro=None):
+    def __init__(self,distance, speed=None, stop=False, use_gyro=None, then=Stop.HOLD):
         self.distance = distance
         self.speed=speed
         self.stop=stop
         self.use_gyro=use_gyro
+        self.then=then
         
     #overriding the method in the parent class
     def start(self):
@@ -23,7 +24,7 @@ class DriveStraightAction(Action):
             driveBase.settings(straight_speed=self.speed)
         if self.use_gyro is not None:
             driveBase.use_gyro(self.use_gyro)
-        driveBase.straight(self.distance,wait=False)
+        driveBase.straight(self.distance, then=self.then,wait=False)
     #override
     def update(self): pass
     #override
@@ -43,16 +44,17 @@ class DriveStraightAction(Action):
 
 class DriveTurnAction(Action):
     name = "DriveTurnAction"
-    def __init__(self,angle, use_gyro=None):
+    def __init__(self,angle, use_gyro=None, then=Stop.HOLD):
         self.angle = angle
         self.use_gyro=use_gyro
+        self.then=then
 
     #overriding the method in the parent class
     def start(self):
         simpleEstimate.addAction(self.name)
         if self.use_gyro is not None:
             driveBase.use_gyro(self.use_gyro)
-        driveBase.turn(self.angle,wait=False)
+        driveBase.turn(self.angle, then=self.then,wait=False)
     #override
     def update(self): pass
     #override
