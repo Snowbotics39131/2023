@@ -28,6 +28,7 @@ def update_dec(func):
         if time<self.period:
             self._update_rate_flag=True
         else:
+            self._stopwatch.reset()
             if not self._update_rate_flag:
                 print(f'update rate too slow: {time}/{self.period}ms')
             self._update_rate_flag=False
@@ -45,9 +46,8 @@ class ActionPlus:
     @update_dec
     def update(self):
         pass
-    #This is the only one that really needs to be implemented as it returns something.
     def isFinished(self):
-        raise NotImplementedError
+        raise NotImplementedError('Must implement isFinished method of ActionPlus')
     def done(self):
         pass
     def run(self):
@@ -138,3 +138,41 @@ class SpinMotor(Action):
     #override    
     def done(self): 
         simpleEstimate.removeAction(self.name)
+if __name__=='__main__':
+    class TestActionPlus(ActionPlus):
+        def __init__(self):
+            print('TestActionPlus __init__')
+            super().__init__(period=200)
+        def start(self):
+            print('TestActionPlus start')
+            super().start()
+        @update_dec
+        def update(self):
+            print('TestActionPlus update')
+        def isFinished(self):
+            pass
+        def done(self):
+            print('TestActionPlus done')
+    interrupt_1=False
+    resume_2=False
+    interrupt_3=False
+    resume_4=False
+    test_action_plus=TestActionPlus()
+    test_action_plus.start()
+    stopwatch=StopWatch()
+    while stopwatch.time()<5000:
+        second=int(stopwatch.time()/1000)
+        if second==1 and not interrupt_1:
+            test_action_plus.interrupt()
+            interrupt_1=True
+        elif second==2 and not resume_2:
+            test_action_plus.resume()
+            resume_2=True
+        elif second==3 and not interrupt_3:
+            test_action_plus.interrupt()
+            interrupt_3=True
+        elif second==4 and not resume_4:
+            test_action_plus.resume()
+            resume_4=True
+        test_action_plus.update()
+    test_action_plus.done()
