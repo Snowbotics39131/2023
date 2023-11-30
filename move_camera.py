@@ -6,6 +6,7 @@ from MissionBase import *
 from Actions import *
 from AdvancedActions import *
 from BasicDriveActions import *
+from ControlActions import *
 from PortMap import *
 from forklift_push import *
 from Crane_Mission import *
@@ -86,15 +87,22 @@ class GetToPink(MissionBase):
         for i in range(times):
             self.runAction(DriveStraightAction(200))
             self.runAction(DriveStraightAction(-100))
-        
-        self.runAction(SpinMotor(200*SPEED_GEAR_RATIO, 20*ANGLE_GEAR_RATIO))
-        self.runAction(DriveStraightAction(50))
-        self.runAction(DriveTurnAction(20))
-        #self.runAction(SpinMotor(200,5))
-        self.runAction(DriveStraightAction(20))
-        #self.runAction(DriveTurnAction(30))
-        #self.runAction(DriveStraightAction(-50))
-        self.runAction(DriveCurveAction(-200, -30))
+        #self.runAction(DriveTurnAction(15))
+        #self.runAction(DriveStraightAction(-25))
+        self.runAction(DriveStraightAction(-15))
+        self.runAction(DriveTurnAction(13))
+        self.runAction(SpinMotor(200*SPEED_GEAR_RATIO, 30*ANGLE_GEAR_RATIO))
+        self.runAction(DriveTurnAction(-10))
+        self.runAction(DriveStraightAction(25))
+        self.runAction(SpinMotor(150*SPEED_GEAR_RATIO, -100*ANGLE_GEAR_RATIO))
+                 
+        #self.runAction(DriveTurnAction(-20))
+
+
+
+
+
+        #self.runAction(Drive
         #wait_for_button_press()
         #DriveStraightAccurate(20, speed=ACCURATE_SPEED, weights=[0, 0, 2, 1], compensate=True, verbose=True).run()
         #self.runAction(SeriesAction(
