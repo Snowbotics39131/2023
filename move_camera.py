@@ -90,11 +90,20 @@ class GetToPink(MissionBase):
         #self.runAction(DriveTurnAction(15))
         #self.runAction(DriveStraightAction(-25))
         self.runAction(DriveStraightAction(-15))
-        self.runAction(DriveTurnAction(13))
-        self.runAction(SpinMotor(200*SPEED_GEAR_RATIO, 30*ANGLE_GEAR_RATIO))
-        self.runAction(DriveTurnAction(-10))
-        self.runAction(DriveStraightAction(25))
-        self.runAction(SpinMotor(150*SPEED_GEAR_RATIO, -100*ANGLE_GEAR_RATIO))
+        self.runAction(DriveTurnAction(25))
+        self.runAction(DriveStraightAction(-10))
+        self.runAction(SpinMotorAngleOrUntilStalled(200*SPEED_GEAR_RATIO, 43*ANGLE_GEAR_RATIO))
+        self.runAction(DriveStraightAction(10))
+        self.runAction(DriveTurnAction(-18))
+        self.runAction(DriveStraightAction(35))
+        #self.runAction(SpinMotor(150*SPEED_GEAR_RATIO, -100*ANGLE_GEAR_RATIO))
+        motorCenter.run(150)
+        driveBase.drive(-100, 0)
+        while motorCenter.stalled():
+            pass
+        driveBase.stop()
+        motorCenter.stop()
+        motorCenter.run_angle(150*SPEED_GEAR_RATIO, -100*ANGLE_GEAR_RATIO)
                  
         #self.runAction(DriveTurnAction(-20))
 

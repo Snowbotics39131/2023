@@ -36,6 +36,18 @@ class SpinMotorTime(Action):
         pass
     def isFinished(self):
         return motorCenter.done()
+class SpinMotorTarget(Action):
+    def __init__(self, *args, **kwargs):
+        self.args=args
+        self.kwargs=kwargs
+    def start(self):
+        motorCenter.run_target(*self.args, **self.kwargs, wait=False)
+    def update(self):
+        pass
+    def done(self):
+        pass
+    def isFinished(self):
+        return motorCenter.done()
 class SpinMotorUntilStalled(Action):
     def __init__(self, *args, **kwargs):
         #kwargs['wait']=False
