@@ -79,26 +79,17 @@ class GetToPink(MissionBase):
         self.runAction(DriveStraightAccurate(60, speed=ACCURATE_SPEED, weights=[0, 0, 2, 1], compensate=True, verbose=True))
         self.runAction(DriveStraightAccurate(-60, speed=ACCURATE_SPEED, weights=[0, 0, 2, 1], compensate=True, verbose=True))
         self.runAction(DriveTurnAction(20))
-        #wait_for_button_press()
-        #self.runAction(DriveStraightAction(50))
-        #self.runAction(DriveTurnAction(-30))
         self.runAction(DriveCurveAction(320, -30))
-        #while True:
         for i in range(times):
             self.runAction(DriveStraightAction(200))
             self.runAction(DriveStraightAction(-100))
-        #self.runAction(DriveTurnAction(30))
-        #self.runAction(DriveStraightAction(-50))
         self.runAction(DriveCurveAction(-200, -30))
-        #wait_for_button_press()
-        #DriveStraightAccurate(20, speed=ACCURATE_SPEED, weights=[0, 0, 2, 1], compensate=True, verbose=True).run()
-        #self.runAction(SeriesAction(
-        #    DriveStraightAccurate(30*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE),
-        #    SpinMotorUntilStalled(400*SPEED_GEAR_RATIO, duty_limit=100),
-        #    DriveStraightAccurate(-30*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE)
-        #))
         DriveTurnAction(10*TURN_FACTOR).run()
-        #self.runAction(DriveStraightAccurate(-20, speed=ACCURATE_SPEED, weights=[0, 0, 2, 1], compensate=True, verbose=True))
+        wait_for_button_press()
+        driveBase.curve(200, -35)
+        motorCenter.run_angle(100, -90)
+        driveBase.turn(35)
+        driveBase.straight(-100)
 #start with blue piece on back up against sliders
 class SoundMixer(MissionBase):
     def routine(self):
