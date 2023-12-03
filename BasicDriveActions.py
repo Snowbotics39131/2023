@@ -4,6 +4,7 @@ from Actions import *
 from Estimation import *
 from pybricks.geometry import Axis
 import jmath
+import umath
 simpleEstimate.initial(0, 0, 0)  # not really sure what to do here
 
 class DriveStraightAction(Action):
@@ -96,7 +97,11 @@ class GoToPoint(SeriesAction):
         super().__init__(DriveTurnAction(turn),
                          DriveStraightAction((vector[0]**2+vector[1]**2)**0.5),
                          DriveTurnAction(jmath.shortestDirectionBetweenBearings(destination.a, direction)))
-
+class DriveTranslateAction(SeriesAction):
+    def __init__(self, x, y):
+        self.angle=2*umath.atan(y/x)
+        self.radius=(x**2+y**2)**0.5/(4*umath.sin(self.angle/2))
+        super().__init__(DriveCurveAction(), DriveCurveAction())
 
 class PIDController:
     def __init__(self, getfunc, setfunc, target, kP=1, kI=0.01, kD=0.1):
