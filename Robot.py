@@ -1,23 +1,33 @@
 from PortMap import * #PortMap has all the import
-from move_camera import *
-from pushcamera import *
-from Crane_Mission import *
+import newscenechange
+import move_camera
+import GoToBlueHome
+import Crane_Mission
+import pushcamera
 
 # Normally, the center button stops the program. But we want to use the
 # center button for our menu. So we can disable the stop button.
 hub.system.set_stop_button(None)
 
-missionList = ["1","2","3", '4'] #add here for new mission
+#missionList = ["1","2","3", '4'] #add here for new mission
+MISSION_NUMBER=7
+missionList=[str(i) for i in range(1, MISSION_NUMBER+1)]
 
 def runProgram(mission):
     if mission == "1":
-        CombinedMission().run()
+        newscenechange.SceneChange().run()
     elif mission == "2":
-        CraneMission().run()
+        move_camera.MoveCamera().run()
     elif mission == "3":
-        PushCamera().run()
+        GoToBlueHome.GoToBlueHome().run()
     elif mission=='4':
-        CraftCreator().run()
+        GoToBlueHome.Chicken().run()
+    elif mission=='5':
+        Crane_Mission.CraneMission().run()
+    elif mission=='6':
+        pushcamera.PushCamera().run()
+    elif mission=='7':
+        pushcamera.CraftCreator().run()
     else:
         print("There is no mission:{mission}")
 

@@ -1,3 +1,4 @@
+from AdvancedActions import wait_for_button_press
 from MissionBase import *
 from PortMap import *
 class SceneChange(MissionBase):
@@ -14,21 +15,12 @@ class SceneChange(MissionBase):
         driveBase.straight(-10)
         motorCenter.run_until_stalled(-100)
         driveBase.turn(25)
-        driveBase.straight(-500)
-        driveBase.turn(-135)
-        driveBase.straight(50)
-        motorCenter.run_until_stalled(2000)
-        motorCenter.run_angle(2000, -180)
-        driveBase.curve(-92, 90)
-        driveBase.curve(-92, -90)
-        driveBase.straight(-100)
-        driveBase.turn(45)
-        driveBase.straight(290)
-        driveBase.turn(90)
-        driveBase.straight(150)
-        driveBase.turn(30)
-        driveBase.turn(-30)
+        driveBase.straight(-600)
+        driveBase.curve(120, -135)
+        motorCenter.run_until_stalled(22000)
+        motorCenter.run_angle(-2000, 180)
         driveBase.straight(-300)
+        driveBase.turn(45)
 if __name__=='__main__':
     scene_change=SceneChange(1)
     scene_change.run()

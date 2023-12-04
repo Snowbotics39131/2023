@@ -23,6 +23,7 @@ FAST_SPEED=600
 #1 north
 class MoveCamera(MissionBase):
     def routine(self):
+        self.runAction(DriveStraightAccurate(340*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE))
         self.runAction(DriveStraightAccurate(20*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
         self.runAction(DriveTurnAction(5*TURN_FACTOR))
         self.runAction(DriveStraightAccurate(13*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
@@ -72,8 +73,8 @@ class GetToPink(MissionBase):
             raise ValueError(f'Invalid color: {self.color}')
         self.runAction(DriveTurnAction(-20))
         self.runAction(DriveStraightAccurate(20, speed=ACCURATE_SPEED, weights=[0, 0, 2, 1], compensate=True, verbose=True))
-        self.runAction(SpinMotorAngleOrUntilStalled(150*SPEED_GEAR_RATIO, 135*ANGLE_GEAR_RATIO))
-        self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
+        #self.runAction(SpinMotorAngleOrUntilStalled(150*SPEED_GEAR_RATIO, 135*ANGLE_GEAR_RATIO))
+        #self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
         self.runAction(DriveStraightAccurate(-35, speed=ACCURATE_SPEED, weights=[0, 0, 2, 1], compensate=True, verbose=True))
         #If the guy didn't land in the zone, the corner of the robot can nudge it slightly forward.
         self.runAction(DriveStraightAccurate(60, speed=ACCURATE_SPEED, weights=[0, 0, 2, 1], compensate=True, verbose=True))
@@ -171,7 +172,7 @@ class CombinedMission(MissionBase):
         print('The back edge of the robot should be on the right edge of the C.')
         print('The right edge should be 2 units south of the edge of the red.')
         wait_for_button_press(checkpoint_message='Align for MoveCamera')
-        DriveStraightAccurate(340*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
+        #DriveStraightAccurate(340*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE).run()
         #DriveTurnAction(-90*TURN_FACTOR).run()
         #SpinMotor(300*SPEED_GEAR_RATIO, 100*ANGLE_GEAR_RATIO).run()
         autotime.checkpoint('Travel to MoveCamera', True)
