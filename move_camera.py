@@ -23,12 +23,13 @@ FAST_SPEED=600
 #1 north
 class MoveCamera(MissionBase):
     def routine(self):
-        self.runAction(DriveStraightAccurate(340*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE))
+        self.runAction(DriveStraightAccurate(338*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE))
         self.runAction(DriveStraightAccurate(20*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
-        self.runAction(DriveTurnAction(5*TURN_FACTOR))
+        self.runAction(DriveTurnAction(7*TURN_FACTOR))
         self.runAction(DriveStraightAccurate(13*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
         #self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, 135*ANGLE_GEAR_RATIO))
         self.runAction(SpinMotorUntilStalled(100*SPEED_GEAR_RATIO))
+        self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, -5*ANGLE_GEAR_RATIO))
         self.runAction(ParallelAction(
             SpinMotorTime(20*SPEED_GEAR_RATIO, 3000),
             SeriesAction(
@@ -38,7 +39,9 @@ class MoveCamera(MissionBase):
             )
         ))
         #self.runAction(DriveStraightAccurate(-30*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
-        self.runAction(SpinMotor(300*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
+        self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
+        self.runAction(DriveTurnAction(20*STRAIGHT_FACTOR))
+        self.runAction(DriveStraightAction(-340*STRAIGHT_FACTOR, speed=FAST_SPEED, stop=True))
 #red home
 #13 squares north
 #1 square east
