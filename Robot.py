@@ -5,6 +5,7 @@ import GoToBlueHome
 import GoToBlueHomeOneWay
 import Crane_Mission
 import pushcamera
+import finish_omni
 
 # Normally, the center button stops the program. But we want to use the
 # center button for our menu. So we can disable the stop button.
@@ -29,6 +30,8 @@ def runProgram(mission):
         pushcamera.PushCamera().run()
     elif mission=='7':
         pushcamera.CraftCreator().run()
+    elif mission=='8':
+        finish_omni.Finish().run()
     else:
         print("There is no mission:{mission}")
 
