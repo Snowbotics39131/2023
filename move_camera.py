@@ -8,7 +8,6 @@ from AdvancedActions import *
 from BasicDriveActions import *
 from ControlActions import *
 from PortMap import *
-from forklift_push import *
 from Crane_Mission import *
 import autotime
 SPEED_GEAR_RATIO=-2
@@ -23,26 +22,29 @@ FAST_SPEED=600
 #1 north
 class MoveCamera(MissionBase):
     def routine(self):
-        self.runAction(DriveStraightAccurate(338*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE))
+        self.runAction(DriveStraightAccurate(415*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE))
         self.runAction(DriveStraightAccurate(20*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
         self.runAction(DriveTurnAction(7*TURN_FACTOR))
         self.runAction(DriveStraightAccurate(13*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
         #self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, 135*ANGLE_GEAR_RATIO))
+        
         self.runAction(SpinMotorUntilStalled(100*SPEED_GEAR_RATIO))
-        self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, -5*ANGLE_GEAR_RATIO))
+        self.runAction(ParallelAction(DriveTurnAction(-3*TURN_FACTOR),SpinMotor(100*SPEED_GEAR_RATIO, -5*ANGLE_GEAR_RATIO)))
         self.runAction(ParallelAction(
             SpinMotorTime(20*SPEED_GEAR_RATIO, 3000),
             SeriesAction(
                 DriveStraightAccurate(-160*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE),
-                DriveTurnAction(-80*TURN_FACTOR, use_gyro=False),
+                DriveCurveAction(30,-40),
+                #DriveTurnAction(-85*TURN_FACTOR, use_gyro=False),
                 FunctionAction(driveBase.use_gyro, True)
             )
         ))
         #self.runAction(DriveStraightAccurate(-30*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
         self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
         self.runAction(DriveTurnAction(30*STRAIGHT_FACTOR))
-        self.runAction(DriveStraightAction(-340*STRAIGHT_FACTOR, speed=FAST_SPEED, stop=True))
+        self.runAction(ParallelAction(DriveStraightAction(-340*STRAIGHT_FACTOR, speed=FAST_SPEED, stop=True),SpinMotor(100*SPEED_GEAR_RATIO, -80*ANGLE_GEAR_RATIO)))
 #red home
+
 #13 squares north
 #1 square east
 #facing north
