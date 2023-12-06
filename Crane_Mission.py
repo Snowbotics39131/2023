@@ -22,7 +22,8 @@ class CraneMission(MissionBase):
             DriveTurnAction(-45),
             DriveStraightAction(250),
             DriveTurnAction(-45),
-            DriveStraightAction(620),
+            #DriveCurveAction(1/2**0.5*250, -90),
+            DriveStraightAction(630),
             FunctionAction(lambda x: exec(f'global prev_turn_rate; prev_turn_rate={x}'), driveBase.settings()[2]),
             FunctionAction(driveBase.settings, turn_rate=45),
             DriveTurnAction(90),
@@ -35,14 +36,19 @@ class CraneMission(MissionBase):
             DriveTurnAction(-180),
             DriveStraightAction(130),
             #SpinMotor(360, 1460),
-            SpinMotor(360, 1380),
-            DriveStraightAccurate(-75),
+            SpinMotor(500, 1380),
+            ParallelAction(
+                DriveStraightAccurate(-75),
+                SpinMotor(500, -70)),
             DriveTurnAction(-97),
             DriveStraightAction(-200),
             DriveTurnAction(97),
-            DriveStraightAction(-70),
+            DriveStraightAction(-83),
             DriveStraightAction(60, speed=300),
-            DriveTurnAction(-90),
+            ParallelAction(
+                DriveTurnAction(-90),
+                SpinMotor(900, -200)
+            ),
             ParallelAction(
                 DriveStraightAction(367),
                 SpinMotorUntilStalled(-1000),
@@ -67,10 +73,14 @@ class CraneMission(MissionBase):
             DriveTurnAction(-20),
             DriveTurnAction(35),
             DriveStraightAction(-100),
-            DriveTurnAction(-90),
+            ParallelAction( 
+                DriveTurnAction(-90),
+                SpinMotor(900, -300)
+            ),
             ParallelAction( 
                 DriveStraightAction(70),
                 SpinMotorUntilStalled(-1000),
+                SpinMotor(200, 40)
             ),
             DriveTurnAction(80),
             DriveStraightAction(55),

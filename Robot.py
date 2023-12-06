@@ -6,13 +6,14 @@ import GoToBlueHomeOneWay
 import Crane_Mission
 import pushcamera
 import finish_omni
+from autotime2 import *
 
 # Normally, the center button stops the program. But we want to use the
 # center button for our menu. So we can disable the stop button.
 hub.system.set_stop_button(None)
 
 #missionList = ["1","2","3", '4'] #add here for new mission
-MISSION_NUMBER=7
+MISSION_NUMBER=8
 missionList=[str(i) for i in range(1, MISSION_NUMBER+1)]
 
 def runProgram(mission):
@@ -70,4 +71,8 @@ wait(50)
 hub.system.set_stop_button(Button.CENTER) # Now we want to use the Center button as the stop button again.
 runBytes = n.to_bytes(1, 'big')
 hub.system.storage(offset=0,write=runBytes)
+timer = Event("Mission Time")
+timer.start()
 runProgram(missionList[n])
+timer.stop()
+print(str(timer))

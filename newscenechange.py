@@ -22,7 +22,7 @@ class SceneChange(MissionBase):
         motorCenter.run_until_stalled(22000)
         motorCenter.run_angle(-2000, 180)
         driveBase.straight(-380)
-        driveBase.settings(turn_rate=80)
+        driveBase.settings(turn_rate=70)
         driveBase.turn(45)
         driveBase.settings(turn_rate=180)
         driveBase.straight(340)
