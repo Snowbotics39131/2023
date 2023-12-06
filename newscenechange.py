@@ -16,6 +16,7 @@ class SceneChange(MissionBase):
         motorCenter.run_until_stalled(-100)
         driveBase.turn(25)
         driveBase.straight(-700)
+        wait(10)
         hub.imu.reset_heading(0)
         driveBase.curve(140, -135)
         motorCenter.run_until_stalled(22000)

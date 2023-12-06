@@ -2,6 +2,7 @@ from PortMap import * #PortMap has all the import
 import newscenechange
 import move_camera
 import GoToBlueHome
+import GoToBlueHomeOneWay
 import Crane_Mission
 import pushcamera
 
@@ -19,7 +20,7 @@ def runProgram(mission):
     elif mission == "2":
         move_camera.MoveCamera().run()
     elif mission == "3":
-        GoToBlueHome.GoToBlueHome().run()
+        GoToBlueHomeOneWay.GoToBlueHome().run()
     elif mission=='4':
         GoToBlueHome.Chicken().run()
     elif mission=='5':
