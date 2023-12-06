@@ -33,14 +33,14 @@ class MoveCamera(MissionBase):
         self.runAction(ParallelAction(
             SpinMotorTime(20*SPEED_GEAR_RATIO, 3000),
             SeriesAction(
-                DriveStraightAccurate(-120*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE),
-                DriveTurnAction(-70*TURN_FACTOR, use_gyro=False),
+                DriveStraightAccurate(-160*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE),
+                DriveTurnAction(-80*TURN_FACTOR, use_gyro=False),
                 FunctionAction(driveBase.use_gyro, True)
             )
         ))
         #self.runAction(DriveStraightAccurate(-30*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
         self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, -90*ANGLE_GEAR_RATIO))
-        self.runAction(DriveTurnAction(20*STRAIGHT_FACTOR))
+        self.runAction(DriveTurnAction(30*STRAIGHT_FACTOR))
         self.runAction(DriveStraightAction(-340*STRAIGHT_FACTOR, speed=FAST_SPEED, stop=True))
 #red home
 #13 squares north
