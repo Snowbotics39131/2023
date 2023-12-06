@@ -11,11 +11,28 @@ class DriveStraightAction(Action):
 
 #example action should probably share a drive actions file
     name = "DriveStraightAction"
-    def __init__(self,distance, speed=None, stop=False, use_gyro=None):
+    #def __init__(self,distance, speed=None, stop=False, use_gyro=None):
+    def __init__(self, distance, **kwargs):
         self.distance = distance
-        self.speed=speed
-        self.stop=stop
-        self.use_gyro=use_gyro
+        try:
+            self.speed=kwargs['speed']
+        except KeyError:
+            self.speed=None
+        else:
+            del(kwargs['speed'])
+        try:
+            self.stop=kwargs['stop']
+        except KeyError:
+            self.stop=False
+        else:
+            del(kwargs['stop'])
+        try:
+            self.use_gyro=kwargs['use_gyro']
+        except KeyError:
+            self.use_gyro=None
+        else:
+            del(kwargs['use_gyro'])
+        self.kwargs=kwargs
         
     #overriding the method in the parent class
     def start(self):
@@ -24,7 +41,7 @@ class DriveStraightAction(Action):
             driveBase.settings(straight_speed=self.speed)
         if self.use_gyro is not None:
             driveBase.use_gyro(self.use_gyro)
-        driveBase.straight(self.distance,wait=False)
+        driveBase.straight(self.distance, **self.kwargs,wait=False)
     #override
     def update(self): pass
     #override
