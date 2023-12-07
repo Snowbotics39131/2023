@@ -11,7 +11,7 @@ class GoToBlueHome(MissionBase):
         try:
             motorBack.run_angle(200, 180)
         except:
-            hub.speaker.beep() #We have an error but we're in the middle of a competition and we don't want to waste time or lose a precision token.
+            hub.speaker.beep()
         self.runAction(DriveCurveAction(100, -20))
         driveBase.straight(245)
         driveBase.turn(30)
