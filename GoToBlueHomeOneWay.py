@@ -5,8 +5,7 @@ from MissionBase import *
 class GoToBlueHome(MissionBase):
     def routine(self):
         self.runAction(DriveCurveAction(270, 90))
-        self.runAction(DriveStraightAction(95))
-        self.runAction(DriveStraightAction(350))
+        self.runAction(DriveStraightAction(445))
         self.runAction(DriveTurnAction(20))
         try:
             motorBack.run_angle(200, 180)
