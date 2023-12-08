@@ -6,6 +6,7 @@ from pybricks.geometry import Axis
 import jmath
 import umath
 simpleEstimate.initial(0, 0, 0)  # not really sure what to do here
+distance_to_speed=lambda distance: min(max(distance, 100), 600)
 
 class DriveStraightAction(Action):
 
@@ -37,6 +38,7 @@ class DriveStraightAction(Action):
     #overriding the method in the parent class
     def start(self):
         simpleEstimate.addAction(self.name)
+        driveBase.settings(straight_speed=distance_to_speed(self.distance)
         if self.speed is not None:
             driveBase.settings(straight_speed=self.speed)
         if self.use_gyro is not None:
