@@ -210,6 +210,13 @@ class CombinedMission(MissionBase):
         DriveStraightAction(350).run()
         autotime.checkpoint('Travel to blue home', True)
         autotime.print_all_deltas()
+class GoToBlueHome(MissionBase):
+    def routine(self):
+        DriveStraightAction(220, speed=(TRAVEL_SPEED+FAST_SPEED)/2).run()
+        DriveTurnAction(90).run()
+        DriveStraightAction(1200, speed=FAST_SPEED).run() #capped at just under 1100
+        DriveTurnAction(45).run()
+        DriveStraightAction(350).run()
         
 if __name__=='__main__':
     voltage=hub.battery.voltage()

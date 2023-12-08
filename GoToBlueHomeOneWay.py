@@ -4,7 +4,7 @@ from AdvancedActions import *
 from MissionBase import *
 class GoToBlueHome(MissionBase):
     def routine(self):
-        self.runAction(DriveCurveAction(270, 90))
+        self.runAction(DriveCurveAction(250, 90))
         self.runAction(DriveStraightAction(445))
         self.runAction(DriveTurnAction(20))
         try:
@@ -12,7 +12,7 @@ class GoToBlueHome(MissionBase):
         except:
             hub.speaker.beep()
         self.runAction(DriveCurveAction(100, -20))
-        driveBase.straight(245)
+        driveBase.straight(260)
         driveBase.turn(30)
         driveBase.straight(200)
         driveBase.turn(-75)
