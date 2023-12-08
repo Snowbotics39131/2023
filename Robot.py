@@ -13,8 +13,9 @@ from autotime2 import *
 hub.system.set_stop_button(None)
 
 #missionList = ["1","2","3", '4'] #add here for new mission
-MISSION_NUMBER=8
-missionList=[str(i) for i in range(1, MISSION_NUMBER+1)]
+MIN_MISSION=0
+MAX_MISSION=8
+missionList=[str(i) for i in range(MIN_MISSION, MAX_MISSION+1)]
 
 def runProgram(mission):
     if mission == "1":
@@ -33,6 +34,8 @@ def runProgram(mission):
         pushcamera.CraftCreator().run()
     elif mission=='8':
         finish_omni.Finish().run()
+    elif mission=='0':
+        move_camera.GoToBlueHome().run()
     else:
         print("There is no mission:{mission}")
 

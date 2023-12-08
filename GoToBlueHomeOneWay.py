@@ -4,15 +4,15 @@ from AdvancedActions import *
 from MissionBase import *
 class GoToBlueHome(MissionBase):
     def routine(self):
-        self.runAction(DriveCurveAction(300, 90))
-        self.runAction(DriveStraightAction(65))
-        self.runAction(DriveCurveAction(230, -90))
-        self.runAction(DriveCurveAction(-260, -90))
-        self.runAction(DriveStraightAction(350))
+        self.runAction(DriveCurveAction(250, 90))
+        self.runAction(DriveStraightAction(445))
         self.runAction(DriveTurnAction(20))
-        motorBack.run_angle(200, 180)
+        try:
+            motorBack.run_angle(200, 180)
+        except:
+            hub.speaker.beep()
         self.runAction(DriveCurveAction(100, -20))
-        driveBase.straight(245)
+        driveBase.straight(260)
         driveBase.turn(30)
         driveBase.straight(200)
         driveBase.turn(-75)
