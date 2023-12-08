@@ -97,7 +97,7 @@ class DriveTurnAction(Action):
         if self.left_prev!=left_sign and self.left_prev is not None:
             motorLeft.run_angle(100, COMPENSATE*left_sign)
         if self.right_prev!=right_sign and self.right_prev is not None:
-            motorRight.run_angle(100, COMPENSATE*right_sign(
+            motorRight.run_angle(100, COMPENSATE*right_sign)
         driveBase.turn(self.angle,wait=False)
     #override
     def update(self): pass
