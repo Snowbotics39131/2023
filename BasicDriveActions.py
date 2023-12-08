@@ -6,7 +6,7 @@ from pybricks.geometry import Axis
 import jmath
 import umath
 simpleEstimate.initial(0, 0, 0)  # not really sure what to do here
-distance_to_speed=lambda distance: min(max(distance, 100), 600)
+distance_to_speed=lambda x: 20*x**0.5+50
 
 class DriveStraightAction(Action):
 
