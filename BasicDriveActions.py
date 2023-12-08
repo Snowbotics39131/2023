@@ -36,14 +36,14 @@ class DriveStraightAction(Action):
         try:
             self.left_prev=kwargs['left_prev']
         except KeyError:
-            self.left_prev=0
+            self.left_prev=None
         else:
             self.left_prev=self.left_prev/abs(self.left_prev)
             del(kwargs['left_prev'])
         try:
             self.right_prev=kwargs['right_prev']
         except KeyError:
-            self.right_prev=0
+            self.right_prev=None
         else:
             self.right_prev=self.right_prev/abs(self.right_prev)
             del(kwargs['right_prev'])
@@ -57,9 +57,9 @@ class DriveStraightAction(Action):
         if self.use_gyro is not None:
             driveBase.use_gyro(self.use_gyro)
         distance_sign=self.distance/abs(self.distance)
-        if self.left_prev!=distance_sign:
+        if self.left_prev!=distance_sign and self.left_prev is not None:
             motorLeft.run_angle(100, COMPENSATE*distance_sign)
-        if self.right_prev!=distance_sign:
+        if self.right_prev!=distance_sign and self.left_prev is not None:
             motorRight.run_angle(100, COMPENSATE*distance_sign)
         driveBase.straight(self.distance, **self.kwargs,wait=False)
     #override
@@ -81,15 +81,23 @@ class DriveStraightAction(Action):
 
 class DriveTurnAction(Action):
     name = "DriveTurnAction"
-    def __init__(self,angle, use_gyro=None):
+    def __init__(self,angle, use_gyro=None, left_prev=None, right_prev=None):
         self.angle = angle
         self.use_gyro=use_gyro
+        self.left_prev=left_prev
+        self.right_prev=right_prev
 
     #overriding the method in the parent class
     def start(self):
         simpleEstimate.addAction(self.name)
         if self.use_gyro is not None:
             driveBase.use_gyro(self.use_gyro)
+        left_sign=-self.angle/abs(self.angle)
+        right_sign=self.angle/abs(self.angle)
+        if self.left_prev!=left_sign and self.left_prev is not None:
+            motorLeft.run_angle(100, COMPENSATE*left_sign)
+        if self.right_prev!=right_sign and self.right_prev is not None:
+            motorRight.run_angle(100, COMPENSATE*right_sign(
         driveBase.turn(self.angle,wait=False)
     #override
     def update(self): pass
