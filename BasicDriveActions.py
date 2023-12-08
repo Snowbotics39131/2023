@@ -6,6 +6,7 @@ from pybricks.geometry import Axis
 import jmath
 import umath
 simpleEstimate.initial(0, 0, 0)  # not really sure what to do here
+COMPENSATE=2
 
 class DriveStraightAction(Action):
 
@@ -32,6 +33,20 @@ class DriveStraightAction(Action):
             self.use_gyro=None
         else:
             del(kwargs['use_gyro'])
+        try:
+            self.left_prev=kwargs['left_prev']
+        except KeyError:
+            self.left_prev=0
+        else:
+            self.left_prev=self.left_prev/abs(self.left_prev)
+            del(kwargs['left_prev'])
+        try:
+            self.right_prev=kwargs['right_prev']
+        except KeyError:
+            self.right_prev=0
+        else:
+            self.right_prev=self.right_prev/abs(self.right_prev)
+            del(kwargs['right_prev'])
         self.kwargs=kwargs
         
     #overriding the method in the parent class
@@ -41,6 +56,11 @@ class DriveStraightAction(Action):
             driveBase.settings(straight_speed=self.speed)
         if self.use_gyro is not None:
             driveBase.use_gyro(self.use_gyro)
+        distance_sign=self.distance/abs(self.distance)
+        if self.left_prev!=distance_sign:
+            motorLeft.run_angle(100, COMPENSATE*distance_sign)
+        if self.right_prev!=distance_sign:
+            motorRight.run_angle(100, COMPENSATE*distance_sign)
         driveBase.straight(self.distance, **self.kwargs,wait=False)
     #override
     def update(self): pass
