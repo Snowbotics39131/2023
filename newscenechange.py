@@ -5,7 +5,10 @@ class SceneChange(MissionBase):
     def __init__(self, changes=1):
         self.changes=changes
     def routine(self):
+        settings=driveBase.settings()
+        driveBase.settings(straight_speed=400)
         driveBase.straight(570)
+        driveBase.settings(*settings)
         driveBase.turn(-45)
         for i in range(self.changes):
             driveBase.straight(200)
@@ -13,9 +16,12 @@ class SceneChange(MissionBase):
         driveBase.straight(-50)
         driveBase.turn(20)
         driveBase.straight(-10)
-        motorCenter.run_until_stalled(-150)
+        #motorCenter.run_until_stalled(-150)
         driveBase.turn(25)
+        settings=driveBase.settings()
+        driveBase.settings(straight_speed=900)
         driveBase.straight(-700)
+        driveBase.settings(*settings)
         wait(25)
         hub.imu.reset_heading(0)
         driveBase.curve(110, -135)

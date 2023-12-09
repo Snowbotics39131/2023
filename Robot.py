@@ -18,12 +18,14 @@ MAX_MISSION=8
 missionList=[str(i) for i in range(MIN_MISSION, MAX_MISSION+1)]
 
 def runProgram(mission):
+    if mission=='0':
+        newscenechange.SceneChange(2).run() #yellow
     if mission == "1":
-        newscenechange.SceneChange().run()
+        newscenechange.SceneChange().run()  #pink
     elif mission == "2":
         move_camera.MoveCamera().run()
     elif mission == "3":
-        GoToBlueHomeOneWay.GoToBlueHome().run()
+        move_camera.GoToBlueHome().run()
     elif mission=='4':
         GoToBlueHome.Chicken().run()
     elif mission=='5':
@@ -34,10 +36,22 @@ def runProgram(mission):
         pushcamera.CraftCreator().run()
     elif mission=='8':
         finish_omni.Finish().run()
-    elif mission=='0':
-        move_camera.GoToBlueHome().run()
     else:
         print("There is no mission:{mission}")
+    #if mission=='1':
+    #    newscenechange.SceneChange().run()
+    #elif mission=='2':
+    #    move_camera.MoveCamera().run()
+    #elif mission=='3':
+    #    move_camera.GoToBlueHome().run()
+    #elif mission=='4':
+    #    Crane_Mission.CraneMission().run()
+    #elif mission=='5':
+    #    pushcamera.PushCamera().run()
+    #elif mission=='6':
+    #    pushcamera.CraftCreator().run()
+    #elif mission=='7':
+    #    GoToBlueHome.Chicken().run()
 
 pressed={}
 

@@ -27,15 +27,23 @@ class CraftCreator(MissionBase):
             DriveTurnAction(-45),
             SpinMotorUntilStalled(-400, duty_limit=70)
         ))
-        self.runAction(DriveStraightAction(570))
-        self.runAction(SpinMotor(400,450))
+        #self.runAction(DriveStraightAction(570))
+        #self.runAction(SpinMotor(400,450))
         self.runAction(ParallelAction(
-            DriveStraightAction(-100),
-            SpinMotor(400,270)
+            DriveStraightAction(570),
+            SeriesAction(
+                WaitAction(1000),
+                SpinMotor(400, 450)
+            )
         ))
         self.runAction(ParallelAction(
+            DriveStraightAction(-1, speed=50, then=Stop.NONE),
+            SpinMotor(1100,270)
+        ))
+        self.runAction(DriveStraightAction(-100, speed=900))
+        self.runAction(ParallelAction(
             DriveStraightAction(-450),
-            SpinMotorUntilStalled(-400, duty_limit=70)
+            #SpinMotorUntilStalled(-400, duty_limit=70)
         ))
         #motorCenter.run_until_stalled(-400, duty_limit=70)
         #driveBase.turn(-45)

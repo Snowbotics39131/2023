@@ -17,7 +17,7 @@ STRAIGHT_FACTOR=1
 COMPENSATE=False
 ACCURATE_SPEED=150
 TRAVEL_SPEED=300
-FAST_SPEED=600
+FAST_SPEED=900
 #19 east
 #1 north
 class MoveCamera(MissionBase):
@@ -212,12 +212,11 @@ class CombinedMission(MissionBase):
         autotime.print_all_deltas()
 class GoToBlueHome(MissionBase):
     def routine(self):
+        driveBase.use_gyro(True)
         DriveStraightAction(220, speed=(TRAVEL_SPEED+FAST_SPEED)/2).run()
-        DriveTurnAction(90).run()
-        DriveStraightAction(1200, speed=FAST_SPEED).run() #capped at just under 1100
-        DriveTurnAction(45).run()
-        DriveStraightAction(350).run()
-        
+        DriveTurnAction(93).run()
+        DriveStraightAction(1300, speed=FAST_SPEED, then=Stop.NONE).run() #capped at just under 1100
+        DriveCurveAction(457, 45).run()
 if __name__=='__main__':
     voltage=hub.battery.voltage()
     print(voltage)

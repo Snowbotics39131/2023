@@ -50,14 +50,18 @@ class Chicken(MissionBase):
         self.runAction(DriveCurveAction(57, -90))
         self.runAction(DriveStraightAction(50))
         self.runAction(DriveCurveAction(327, 45))
-        self.runAction(DriveStraightAction(70))
-        motorBack.run_time(-1100, 2000)
+        #self.runAction(DriveStraightAction(70))
+        self.runAction(DriveStraightAction(60))
+        try:
+            motorBack.run_time(-1100, 2000)
+        except:
+            hub.speaker.beep()
         driveBase.use_gyro(False)
-        driveBase.straight(-70, then=Stop.NONE)
+        '''driveBase.straight(-70, then=Stop.NONE)
         driveBase.turn(50, then=Stop.NONE)
         driveBase.straight(70, then=Stop.NONE)
         driveBase.turn(-50, then=Stop.NONE)
-        driveBase.straight(30, then=Stop.NONE)
+        driveBase.straight(30, then=Stop.NONE)'''
         driveBase.curve(-600, 45)
         driveBase.use_gyro(True)
 if __name__=='__main__':
