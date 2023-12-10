@@ -52,6 +52,8 @@ class Chicken(MissionBase):
         self.runAction(DriveCurveAction(327, 45))
         #self.runAction(DriveStraightAction(70))
         self.runAction(DriveStraightAction(60))
+        self.runAction(DriveTurnAction(30))
+        self.runAction(DriveTurnAction(-30))
         try:
             motorBack.run_time(-1100, 2000)
         except:
@@ -70,7 +72,7 @@ if __name__=='__main__':
         motorBack=Motor(Port.D, Direction.COUNTERCLOCKWISE)
     except OSError:
         pass
-    motorBack.angle()
-    GoToBlueHome().run()
-    wait_for_button_press()
+    #motorBack.angle()
+    #GoToBlueHome().run()
+    #wait_for_button_press()
     Chicken().run()

@@ -10,7 +10,7 @@ import autotime
 class PushCamera(MissionBase):
     def routine(self):
         #motorCenter.run_until_stalled(-400, duty_limit=70)
-        self.runAction(ParallelAction(DriveStraightAction(267),SpinMotorUntilStalled(-600,duty_limit=70)))
+        self.runAction(ParallelAction(DriveStraightAction(267),SpinMotorUntilStalled(-600,duty_limit=50)))
         self.runAction(SpinMotor(600, 540))
         self.runAction(DriveStraightAction(120, speed=400))
         self.runAction(DriveTurnAction(20))
@@ -25,14 +25,14 @@ class CraftCreator(MissionBase):
     def routine(self):
         self.runAction(ParallelAction(
             DriveTurnAction(-45),
-            SpinMotorUntilStalled(-400, duty_limit=70)
+            SpinMotorUntilStalled(-400, duty_limit=50)
         ))
         #self.runAction(DriveStraightAction(570))
         #self.runAction(SpinMotor(400,450))
         self.runAction(ParallelAction(
             DriveStraightAction(570),
             SeriesAction(
-                WaitAction(1000),
+                WaitAction(2000),
                 SpinMotor(400, 450)
             )
         ))
@@ -43,7 +43,7 @@ class CraftCreator(MissionBase):
         self.runAction(DriveStraightAction(-100, speed=900))
         self.runAction(ParallelAction(
             DriveStraightAction(-450),
-            #SpinMotorUntilStalled(-400, duty_limit=70)
+            #SpinMotorUntilStalled(-400, duty_limit=50)
         ))
         #motorCenter.run_until_stalled(-400, duty_limit=70)
         #driveBase.turn(-45)

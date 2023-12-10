@@ -18,7 +18,7 @@ class CraneMission(MissionBase):
         self.runAction(SeriesAction(
             SpinMotorUntilStalled(-200),
             SpinMotor(200, 90),
-            DriveStraightAction(425),
+            DriveStraightAction(430),
             DriveTurnAction(-45),
             DriveStraightAction(250),
             DriveTurnAction(-45),
@@ -50,7 +50,7 @@ class CraneMission(MissionBase):
                 SpinMotor(900, -200)
             ),
             ParallelAction(
-                DriveStraightAction(367),
+                DriveStraightAction(360),
                 SpinMotorUntilStalled(-1000),
                 ),
             DriveTurnAction(-65),

@@ -24,7 +24,7 @@ class MoveCamera(MissionBase):
     def routine(self):
         self.runAction(DriveStraightAccurate(415*STRAIGHT_FACTOR, speed=TRAVEL_SPEED, compensate=COMPENSATE))
         self.runAction(DriveStraightAccurate(20*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
-        self.runAction(DriveTurnAction(7*TURN_FACTOR))
+        self.runAction(DriveTurnAction(8*TURN_FACTOR))
         self.runAction(DriveStraightAccurate(13*STRAIGHT_FACTOR, speed=ACCURATE_SPEED, compensate=COMPENSATE))
         #self.runAction(SpinMotor(100*SPEED_GEAR_RATIO, 135*ANGLE_GEAR_RATIO))
         
